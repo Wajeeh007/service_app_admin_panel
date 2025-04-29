@@ -29,6 +29,14 @@ class English {
     key.servicesList: 'Services List',
     key.subServicesList: 'Sub-Services List',
     key.itemsList: 'Items List',
+
+    /// Withdraws
+    key.withdraws: 'Withdraw',
+    key.withdrawRequests: 'Withdraw Requests',
+
+    /// Settings
+    key.businessSetup: 'Business Setup',
+    key.settings: 'Settings',
   };
 
 }

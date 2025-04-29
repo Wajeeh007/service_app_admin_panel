@@ -23,3 +23,9 @@ const serviceManagement = 'serviceManagement',
     servicesList = 'servicesList',
     subServicesList = 'subServicesList',
     itemsList = 'itemsList';
+
+const withdraws = 'withdraws',
+    withdrawRequests = 'withdrawRequests';
+
+const settings = 'settings',
+    businessSetup = 'businessSetup';
