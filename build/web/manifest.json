@@ -1,6 +1,6 @@
 {
-    "name": "service_app_admin_panel",
-    "short_name": "service_app_admin_panel",
+    "name": "Admin Panel",
+    "short_name": "AP",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
