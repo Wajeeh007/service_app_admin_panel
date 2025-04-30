@@ -1,9 +1,11 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/constants.dart';
 import 'package:service_app_admin_panel/helpers/custom_widgets/custom_appbar.dart';
 import 'package:service_app_admin_panel/helpers/custom_widgets/custom_dropdown.dart';
 import 'package:service_app_admin_panel/helpers/custom_widgets/sidepanel.dart';
+import 'package:service_app_admin_panel/helpers/global_variables.dart';
 import 'package:service_app_admin_panel/helpers/images_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_viewmodel.dart';
@@ -21,38 +23,46 @@ class DashboardView extends StatelessWidget {
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => _viewModel.toggleOverlayPortalController(),
-        child: Row(
+        onTap: () => _viewModel.hideAllOverlayPortalControllers(),
+        child: Stack(
           children: [
-            SidePanel(selectedItem: lang_key.dashboard.tr,),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 10,
-                    children: [
-                      _WelcomeText(),
-                      LayoutBuilder(builder: (context, constraints) {
-                        return SizedBox(
-                          height: 313,
-                          width: constraints.maxWidth,
-                          child: Row(
-                            spacing: 15,
-                            children: [
-                              _TextStats(),
-                              _ZoneWiseOrderStats()
-                            ],
-                          ),
-                        );
-                      })
-                    ],
+            Row(
+              children: [
+                SidePanel(selectedItem: lang_key.dashboard.tr,),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 10,
+                        children: [
+                          _WelcomeText(),
+                          LayoutBuilder(builder: (context, constraints) {
+                            return SizedBox(
+                              height: 313,
+                              width: constraints.maxWidth,
+                              child: Row(
+                                spacing: 15,
+                                children: [
+                                  _TextStats(),
+                                  _ZoneWiseOrderStats()
+                                ],
+                              ),
+                            );
+                          }),
+                          _AdminEarningStatsGraph()
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
+                )
+              ],
+            ),
+            ProfileDropDown(),
+            ProfileDropDownContainer(),
+
           ],
         ),
       )
@@ -169,17 +179,15 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                 ),
                 Flexible(
                   child: CustomDropdown(
-                    suffixIcon: _viewModel.suffixIcon,
-                    overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(),
-                    buttonBorderColor: primaryGrey.withValues(alpha: 0.2),
-                    buttonColor: primaryGrey.withValues(alpha: 0.2),
-                    selectedItem: _viewModel.selectedItem,
-                    textEditingController: _viewModel.controller,
-                    dropDownList: _viewModel.dropDownList,
-                    overlayPortalController: _viewModel.overlayPortalController,
-                    link: _viewModel.link,
-                    width: 130,
-                    height: 30,
+                    suffixIcon: _viewModel.zoneWiseStatsSuffixIcon,
+                    overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
+                        overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
+                      suffixIcon: _viewModel.zoneWiseStatsSuffixIcon
+                    ),
+                    selectedItemIndex: _viewModel.zoneWiseStatSelectedItemIndex,
+                    dropDownList: _viewModel.zoneWiseStatsDropDownList,
+                    overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
+                    link: _viewModel.zoneWiseStatLink,
                   ),
                 ),
               ],
@@ -339,3 +347,339 @@ class SmallStatisticTile extends StatelessWidget {
   }
 }
 
+/// Admin Earning Statistics graph
+class _AdminEarningStatsGraph extends StatelessWidget {
+  _AdminEarningStatsGraph();
+
+  final DashboardViewModel _viewModel = Get.find();
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      width: double.infinity,
+      height: 380,
+      decoration: BoxDecoration(
+          borderRadius: kContainerBorderRadius,
+          color: primaryWhite,
+          border: kContainerBorderSide
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _AdminEarningHeadingAndZoneName(),
+              Row(
+                spacing: 10,
+                children: [
+                  CustomDropdown(
+                      dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
+                      overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
+                      link: _viewModel.adminEarningTimePeriodLink,
+                      selectedItemIndex: _viewModel.adminEarningTimePeriodSelectedItemIndex,
+                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
+                        overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
+                        suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon
+                      ), suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon,
+                  ),
+                  CustomDropdown(
+                      dropDownList: _viewModel.adminEarningZoneSelectionList,
+                      overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
+                      link: _viewModel.adminEarningZoneSelectionLink,
+                      selectedItemIndex: _viewModel.adminEarningZoneSelectionSelectedItemIndex,
+                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
+                        overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
+                        suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon
+                      ), suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon,
+                  ),
+                ],
+              )
+            ],
+          ),
+          Divider(),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: LineChart(
+                  LineChartData(
+                    lineTouchData: const LineTouchData(
+                        enabled: false
+                    ),
+                    borderData: FlBorderData(
+                        show: false,
+                        // border: Border.all(
+                        //     color: Theme.of(context).colorScheme.secondary
+                        // )
+                    ),
+                    gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        horizontalInterval: 1,
+                        verticalInterval: 1,
+                        getDrawingHorizontalLine: (value) {
+                          return FlLine(
+                              color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                              strokeWidth: 1
+                          );
+                        },
+                        // getDrawingVerticalLine: (value) {
+                        //   return FlLine(
+                        //       color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                        //       strokeWidth: 0.5
+                        //   );
+                        // }
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) => BottomTitleWidget(value: value, meta: meta,),
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) => LeftTitleWidget(value: value, meta: meta),
+                          reservedSize: 42,
+                        ),
+                      ),
+                    ),
+                    minX: 0,
+                    maxX: 11,
+                    minY: 0,
+                    maxY: 6,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: const [
+                          FlSpot(0, 3),
+                          FlSpot(2.6, 2),
+                          FlSpot(4.9, 5),
+                          FlSpot(6.8, 3.1),
+                          FlSpot(8, 4),
+                          FlSpot(9.5, 3),
+                          FlSpot(11, 4),
+                        ],
+                        isCurved: false,
+                        barWidth: 2,
+                        color: Theme.of(context).colorScheme.primary,
+                        isStrokeCapRound: true,
+                        dotData: const FlDotData(
+                          show: false,
+                        ),
+                        belowBarData: BarAreaData(
+                            show: true,
+                            color: Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+/// Widget for returning text at the bottom of chart
+class BottomTitleWidget extends StatelessWidget {
+  const BottomTitleWidget({super.key, required this.value, required this.meta});
+
+  final double value;
+  final TitleMeta meta;
+
+  @override
+  Widget build(BuildContext context) {
+
+    String text;
+    final style = Theme.of(context).textTheme.labelMedium;
+
+    text = months[value.toInt()].substring(0, 3);
+
+    return SideTitleWidget(
+      meta: meta,
+      child: Text(text, style: style,),
+    );
+  }
+}
+
+/// Widget for returning text at left side of the chart
+class LeftTitleWidget extends StatelessWidget {
+  const LeftTitleWidget({super.key, required this.value, required this.meta});
+
+  final double value;
+  final TitleMeta meta;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.labelMedium;
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = '0';
+        break;
+      case 1:
+        text = '10K';
+        break;
+      case 3:
+        text = '30K';
+        break;
+      case 5:
+        text = '50K';
+        break;
+      default:
+        return Container();
+    }
+
+    return Text(text, style: style, textAlign: TextAlign.left);
+  }
+}
+
+/// Admin earning heading and selected zone text
+class _AdminEarningHeadingAndZoneName extends StatelessWidget {
+  _AdminEarningHeadingAndZoneName();
+
+  final DashboardViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        Text(
+          lang_key.adminEarningStatistics.tr,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600
+          ),
+        ),
+        Obx(() => Text(
+          _viewModel.adminEarningZoneSelectionList[_viewModel.adminEarningZoneSelectionSelectedItemIndex.value].label,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: primaryGrey
+          ),
+        ))
+      ],
+    );
+  }
+}
+
+/// Base widget for the profile dropdown
+class ProfileDropDown extends StatelessWidget {
+  const ProfileDropDown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
+      right: 20,
+      top: 0,
+      child: CustomPaint(
+        painter: TrianglePainter(
+            strokeColor: primaryWhite,
+            strokeWidth: 10,
+            paintingStyle: PaintingStyle.fill
+        ),
+        child: const SizedBox(
+          height: 8,
+          width: 10,
+        ),
+      ),
+    ) : const SizedBox()
+    );
+  }
+}
+
+/// Container beneath the triangle for the profile dropdown
+class ProfileDropDownContainer extends StatelessWidget {
+  const ProfileDropDownContainer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
+      right: 10,
+      top: 7,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: primaryWhite
+        ),
+        child: SizedBox(
+          width: 180,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                minTileHeight: 20,
+                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 3),
+                title: Text(
+                  lang_key.logout.tr,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.logout_rounded,
+                  size: 20,
+                  color: Colors.red,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    ) : const SizedBox()
+    );
+  }
+}
+
+/// Custom painter class for creating a triangle
+class TrianglePainter extends CustomPainter {
+
+  final Color strokeColor;
+  final PaintingStyle paintingStyle;
+  final double strokeWidth;
+
+  TrianglePainter({
+    this.strokeColor = Colors.black,
+    this.strokeWidth = 3,
+    this.paintingStyle = PaintingStyle.stroke
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = strokeColor
+      ..strokeWidth = strokeWidth
+      ..style = paintingStyle;
+    canvas.drawPath(getTrianglePath(size.width, size.height), paint);
+  }
+
+  Path getTrianglePath(double x, double y) {
+    return Path()
+      ..moveTo(0, y)
+      ..lineTo(x / 2, 0)
+      ..lineTo(x, y)
+      ..lineTo(0, y);
+  }
+
+  @override
+  bool shouldRepaint(TrianglePainter oldDelegate) {
+    return oldDelegate.strokeColor != strokeColor ||
+        oldDelegate.paintingStyle != paintingStyle ||
+        oldDelegate.strokeWidth != strokeWidth;
+  }
+}

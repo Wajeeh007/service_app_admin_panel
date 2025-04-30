@@ -6,7 +6,10 @@ const dashboard = 'dashboard',
     activeServicemen = 'totalActiveServicemen',
     totalOrders = 'totalOrders',
     totalEarnings = 'totalEarnings',
-    zoneWiseOrders = 'zoneWiseOrders';
+    zoneWiseOrders = 'zoneWiseOrders',
+    adminEarningStatistics = 'adminEarningStatistics',
+    noZoneSelected = 'noZoneSelected',
+    logout = 'logout';
 
 /// Side Panel
   /// Zone Setup

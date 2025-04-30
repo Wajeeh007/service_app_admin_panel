@@ -13,6 +13,9 @@ class English {
     key.totalOrders: 'Total Orders',
     key.totalEarnings: 'Total Earnings',
     key.zoneWiseOrders: 'Zone-Wise Orders',
+    key.adminEarningStatistics: 'Admin Earning Statistics',
+    key.noZoneSelected: 'No Zone Selected',
+    key.logout: 'Logout',
 
     /// Side Panel
       /// Zone Setup
