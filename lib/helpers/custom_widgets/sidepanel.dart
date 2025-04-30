@@ -41,6 +41,10 @@ class SidePanel extends StatelessWidget {
             SidePanelItem(text: lang_key.servicesList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.servicesList,),
             SidePanelItem(text: lang_key.subServicesList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.subServicesList,),
             SidePanelItem(text: lang_key.itemsList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.item,),
+            SidePanelHeading(text: lang_key.withdraws.tr),
+            SidePanelItem(text: lang_key.withdrawRequests.tr, onTap: () {}, selectedItem: selectedItem, icon: CupertinoIcons.money_dollar,),
+            SidePanelHeading(text: lang_key.settings.tr),
+            SidePanelItem(text: lang_key.businessSetup.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.business,),
           ],
         ),
       ),
@@ -57,7 +61,7 @@ class SidePanelHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 2, top: 10),
+      padding: const EdgeInsets.only(bottom: 2, top: 10, right: 5),
       child: Text(
         text,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

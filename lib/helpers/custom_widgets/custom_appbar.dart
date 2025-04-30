@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
+import 'package:service_app_admin_panel/helpers/global_variables.dart';
 
 import '../images_paths.dart';
 
@@ -63,6 +62,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: InkWell(
+            splashFactory: NoSplash.splashFactory,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            onTap: () => GlobalVariables.openProfileDropdown.value = !GlobalVariables.openProfileDropdown.value,
             child: Icon(
               CupertinoIcons.person_crop_circle,
               size: 35,

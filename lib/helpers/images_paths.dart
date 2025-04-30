@@ -13,4 +13,5 @@ class ImagesPaths {
   static String servicesList = '${_iconsPath}services_list.png';
   static String subServicesList = '${_iconsPath}sub_services_list.png';
   static String item = '${_iconsPath}item.png';
+  static String servicemen = '${_iconsPath}servicemen.png';
 }

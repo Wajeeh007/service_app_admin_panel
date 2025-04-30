@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
-
 class TextThemes {
   static TextTheme textTheme({required Color color}) => TextTheme(
     headlineLarge: TextStyle(
