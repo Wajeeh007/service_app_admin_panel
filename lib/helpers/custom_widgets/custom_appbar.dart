@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
 
 import '../images_paths.dart';
 
