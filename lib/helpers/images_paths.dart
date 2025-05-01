@@ -4,6 +4,9 @@ class ImagesPaths {
   static final String _logosPath = 'assets/logos/';
   static final String _imagesPath = 'assets/images/';
 
+  /// Images
+  static final String zoneSetupExample = '${_imagesPath}zone_setup_example.png';
+
   /// Logos
   static String adawatLogo = '${_logosPath}adawat.jpg';
 

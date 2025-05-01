@@ -13,7 +13,10 @@ const dashboard = 'dashboard',
 
 /// Side Panel
   /// Zone Setup
-  const zoneSetup = 'zoneSetup';
+  const zoneSetup = 'zoneSetup',
+      instructions = 'instructions',
+      zoneName = 'zoneName',
+      zoneSetupInstructions = 'zoneSetupInstructions';
 
   /// Order Management
   const orderManagement = 'orderManagement';
@@ -35,8 +38,16 @@ const dashboard = 'dashboard',
       subServicesList = 'subServicesList',
       itemsList = 'itemsList';
 
+  /// Withdraws
   const withdraws = 'withdraws',
       withdrawRequests = 'withdrawRequests';
 
+  /// Settings
   const settings = 'settings',
       businessSetup = 'businessSetup';
+
+/// Side Panel End
+
+/// General
+const fieldIsRequired = 'fieldIsRequired',
+    invalidEmail = 'invalidEmail';

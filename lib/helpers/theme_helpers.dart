@@ -18,7 +18,15 @@ class ThemeHelpers {
       elevation: 0,
       shadowColor: Colors.black12
     ),
-    scaffoldBackgroundColor: panelBackground
+    scaffoldBackgroundColor: panelBackground,
+    inputDecorationTheme: InputDecorationTheme(
+      enabledBorder: kEnabledBorder,
+      focusedBorder: kFocusedBorder,
+      errorBorder: kErrorBorder,
+      focusedErrorBorder: kFocusedErrorBorder,
+      filled: true,
+      fillColor: primaryGrey20
+    )
   );
 
 }

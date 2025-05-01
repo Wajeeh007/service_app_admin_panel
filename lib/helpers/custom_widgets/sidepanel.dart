@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_app_admin_panel/helpers/images_paths.dart';
+import 'package:service_app_admin_panel/helpers/routes.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 import '../constants.dart';
@@ -25,26 +26,26 @@ class SidePanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SidePanelHeading(text: lang_key.dashboard.tr),
-            SidePanelItem(text: lang_key.dashboard.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.dashboard_outlined,),
+            SidePanelItem(text: lang_key.dashboard.tr, routeName: Routes.dashboard, selectedItem: selectedItem, icon: Icons.dashboard_outlined,),
             SidePanelHeading(text: lang_key.zoneSetup.tr),
-            SidePanelItem(text: lang_key.zoneSetup.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.zoneManagement,),
+            SidePanelItem(text: lang_key.zoneSetup.tr, routeName: Routes.zoneSetup, selectedItem: selectedItem, image: ImagesPaths.zoneManagement,),
             SidePanelHeading(text: lang_key.orderManagement.tr),
-            SidePanelItem(text: lang_key.orderManagement.tr, onTap: () {}, selectedItem: selectedItem, icon: CupertinoIcons.doc,),
+            SidePanelItem(text: lang_key.orderManagement.tr, routeName: '', selectedItem: selectedItem, icon: CupertinoIcons.doc,),
             SidePanelHeading(text: lang_key.customerManagement.tr),
-            SidePanelItem(text: lang_key.customerList.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
-            SidePanelItem(text: lang_key.suspendedCustomers.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.person_off_outlined,),
+            SidePanelItem(text: lang_key.customerList.tr, routeName: '', selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
+            SidePanelItem(text: lang_key.suspendedCustomers.tr, routeName: '', selectedItem: selectedItem, icon: Icons.person_off_outlined,),
             SidePanelHeading(text: lang_key.serviceManManagement.tr),
-            SidePanelItem(text: lang_key.newRequests.tr, onTap: () {}, selectedItem: selectedItem, icon: CupertinoIcons.doc_on_clipboard,),
-            SidePanelItem(text: lang_key.suspendedServiceMen.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.person_off_outlined,),
-            SidePanelItem(text: lang_key.suspendedServiceMen.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
+            SidePanelItem(text: lang_key.newRequests.tr, routeName: '', selectedItem: selectedItem, icon: CupertinoIcons.doc_on_clipboard,),
+            SidePanelItem(text: lang_key.suspendedServiceMen.tr, routeName: '', selectedItem: selectedItem, icon: Icons.person_off_outlined,),
+            SidePanelItem(text: lang_key.suspendedServiceMen.tr, routeName: '', selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
             SidePanelHeading(text: lang_key.serviceManagement.tr),
-            SidePanelItem(text: lang_key.servicesList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.servicesList,),
-            SidePanelItem(text: lang_key.subServicesList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.subServicesList,),
-            SidePanelItem(text: lang_key.itemsList.tr, onTap: () {}, selectedItem: selectedItem, image: ImagesPaths.item,),
+            SidePanelItem(text: lang_key.servicesList.tr, routeName: '', selectedItem: selectedItem, image: ImagesPaths.servicesList,),
+            SidePanelItem(text: lang_key.subServicesList.tr, routeName: '', selectedItem: selectedItem, image: ImagesPaths.subServicesList,),
+            SidePanelItem(text: lang_key.itemsList.tr, routeName: '', selectedItem: selectedItem, image: ImagesPaths.item,),
             SidePanelHeading(text: lang_key.withdraws.tr),
-            SidePanelItem(text: lang_key.withdrawRequests.tr, onTap: () {}, selectedItem: selectedItem, icon: CupertinoIcons.money_dollar,),
+            SidePanelItem(text: lang_key.withdrawRequests.tr, routeName: '', selectedItem: selectedItem, icon: CupertinoIcons.money_dollar,),
             SidePanelHeading(text: lang_key.settings.tr),
-            SidePanelItem(text: lang_key.businessSetup.tr, onTap: () {}, selectedItem: selectedItem, icon: Icons.business,),
+            SidePanelItem(text: lang_key.businessSetup.tr, routeName: '', selectedItem: selectedItem, icon: Icons.business,),
           ],
         ),
       ),
@@ -79,10 +80,11 @@ class SidePanelItem extends StatelessWidget {
   const SidePanelItem({
     super.key,
     required this.text,
-    required this.onTap,
+    required this.routeName,
     required this.selectedItem,
     this.image,
-    this.icon
+    this.icon,
+    this.args,
   }) : assert(icon != null || image != null, 'Either provide icon or image'),
         assert(icon == null || image == null, 'Cannot provide both icon and image');
 
@@ -90,7 +92,8 @@ class SidePanelItem extends StatelessWidget {
   final String text;
   final String? image;
   final String? selectedItem;
-  final VoidCallback onTap;
+  final String routeName;
+  final Map<String, dynamic>? args;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +107,7 @@ class SidePanelItem extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 15),
         minVerticalPadding: 0,
-        onTap: onTap,
+        onTap: () => Get.offNamed(routeName, arguments: args),
         leading: icon != null ? Icon(
           icon!,
           size: 25,

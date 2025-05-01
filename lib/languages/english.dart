@@ -20,6 +20,9 @@ class English {
     /// Side Panel
       /// Zone Setup
       key.zoneSetup: 'Zone Setup',
+      key.instructions: 'Instructions',
+      key.zoneName: 'Zone Name',
+      key.zoneSetupInstructions: '\t• Create Zones By Clicking On Map And Connect The Dots Together.\n\n\t• Use The Drag Map To Find Proper Area\n\n\t• Click the Icon to start pin points in the map and connect them to draw a zone. Minimum 3 points required ',
 
       /// Order Management
       key.orderManagement: 'Order Management',
@@ -48,6 +51,10 @@ class English {
       /// Settings
       key.businessSetup: 'Business Setup',
       key.settings: 'Settings',
+
+    /// General
+    key.fieldIsRequired: 'Field is required',
+    key.invalidEmail: 'Invalid email',
   };
 
 }
