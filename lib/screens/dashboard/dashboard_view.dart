@@ -420,16 +420,10 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                         verticalInterval: 1,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                              color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
                               strokeWidth: 1
                           );
                         },
-                        // getDrawingVerticalLine: (value) {
-                        //   return FlLine(
-                        //       color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-                        //       strokeWidth: 0.5
-                        //   );
-                        // }
                     ),
                     titlesData: FlTitlesData(
                       show: true,
@@ -480,7 +474,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                         ),
                         belowBarData: BarAreaData(
                             show: true,
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
                         ),
                       ),
                     ],

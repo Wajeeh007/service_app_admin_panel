@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:service_app_admin_panel/helpers/constants.dart';
 import 'package:service_app_admin_panel/helpers/custom_widgets/custom_google_maps.dart';
 import 'package:service_app_admin_panel/helpers/custom_widgets/custom_text_form_field.dart';

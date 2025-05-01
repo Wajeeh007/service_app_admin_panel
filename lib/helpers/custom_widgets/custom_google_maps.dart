@@ -1,10 +1,11 @@
 @JS()
-library google_maps_interop;
+library;
 
 import 'package:js/js.dart';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
+import 'package:service_app_admin_panel/helpers/constants.dart';
 
 import '../web_only.dart';
 
@@ -58,8 +59,8 @@ class GoogleMapWidget extends StatelessWidget {
       ];
 
       GMap(elem, MapOptions(
-        center: LatLng(lat: 37.7749, lng: -122.4194), // Example: San Francisco
-        zoom: 13,
+        center: LatLng(lat: initialCameraPosition.target.latitude, lng: initialCameraPosition.target.longitude),
+        zoom: mapsZoomLevel,
         clickableIcons: false,
         styles: mapStyles,
       ));
