@@ -1,12 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/custom_appbar.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/custom_dropdown.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/sidepanel.dart';
-import 'package:service_app_admin_panel/helpers/global_variables.dart';
-import 'package:service_app_admin_panel/helpers/images_paths.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_appbar.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/images_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_viewmodel.dart';
 
@@ -420,16 +420,10 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                         verticalInterval: 1,
                         getDrawingHorizontalLine: (value) {
                           return FlLine(
-                              color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+                              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
                               strokeWidth: 1
                           );
                         },
-                        // getDrawingVerticalLine: (value) {
-                        //   return FlLine(
-                        //       color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
-                        //       strokeWidth: 0.5
-                        //   );
-                        // }
                     ),
                     titlesData: FlTitlesData(
                       show: true,
@@ -480,7 +474,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                         ),
                         belowBarData: BarAreaData(
                             show: true,
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
                         ),
                       ),
                     ],

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/helpers/global_variables.dart';
 
+import '../global_variables.dart';
 import '../images_paths.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       {super.key,
         this.titleText,
         this.titleWidget,
-        this.centerTitle = true,
+        this.centerTitle = false,
         this.includeNotification = true,
         this.action,
         this.leading,
