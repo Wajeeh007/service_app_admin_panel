@@ -6,15 +6,15 @@ import 'package:js/js.dart';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_viewmodel.dart';
 
-import '../custom_google_map_models/drawing_manager.dart';
-import '../custom_google_map_models/g_map.dart';
-import '../custom_google_map_models/lat_lng.dart';
-import '../custom_google_map_models/map_options.dart';
-import '../custom_google_map_models/overlay_complete.dart';
-import '../custom_google_map_models/web_only.dart';
+import '../custom_google_map_libraries/drawing_manager.dart';
+import '../custom_google_map_libraries/g_map.dart';
+import '../custom_google_map_libraries/lat_lng.dart';
+import '../custom_google_map_libraries/map_options.dart';
+import '../custom_google_map_libraries/overlay_complete.dart';
+import '../custom_google_map_libraries/web_only.dart';
 
 class GoogleMapWidget extends StatelessWidget {
   final String _viewType = 'google-map-view';

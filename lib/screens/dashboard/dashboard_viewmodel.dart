@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/custom_dropdown.dart';
-import 'package:service_app_admin_panel/helpers/global_variables.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
 
 import 'models/zone_wise_order_volume.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 
 class ZoneSetupViewModel extends GetxController {
 

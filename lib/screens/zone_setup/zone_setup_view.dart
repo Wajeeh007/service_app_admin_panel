@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/custom_google_maps.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/custom_text_form_field.dart';
-import 'package:service_app_admin_panel/helpers/custom_widgets/sidepanel.dart';
-import 'package:service_app_admin_panel/helpers/images_paths.dart';
-import 'package:service_app_admin_panel/helpers/validators.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_google_maps.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
+import 'package:service_app_admin_panel/utils/images_paths.dart';
+import 'package:service_app_admin_panel/utils/validators.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_viewmodel.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
-import '../../helpers/custom_widgets/custom_appbar.dart';
+import '../../utils/custom_widgets/custom_appbar.dart';
 
 class ZoneSetupView extends StatelessWidget {
   ZoneSetupView({super.key});

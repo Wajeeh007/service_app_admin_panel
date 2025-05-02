@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:service_app_admin_panel/helpers/routes.dart';
-import 'package:service_app_admin_panel/helpers/theme_helpers.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
+import 'package:service_app_admin_panel/utils/theme_helpers.dart';
 import 'package:service_app_admin_panel/languages/app_languages.dart';
 
 import 'bindings/init.dart';

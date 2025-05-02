@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/helpers/constants.dart';
-import 'package:service_app_admin_panel/helpers/text_themes.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/text_themes.dart';
 
 class ThemeHelpers {
 
