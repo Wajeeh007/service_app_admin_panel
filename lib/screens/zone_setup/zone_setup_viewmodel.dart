@@ -20,8 +20,8 @@ class ZoneSetupViewModel extends GetxController {
     /// Maps loader
     RxBool showMapsLoader = false.obs;
 
-    /// Variables to control drawing and movement of Google maps and polylines
-    RxBool isDrawing = false.obs;
+    /// Polygons of an area
+    String areaPolygons = '';
 
   /// Variables for Google Maps End ///
   @override
@@ -83,10 +83,5 @@ class ZoneSetupViewModel extends GetxController {
             )
         )
     );
-  }
-
-  /// Toggle drawing and movement values
-  void toggleMapControls(bool value) {
-    isDrawing.value = value;
   }
 }

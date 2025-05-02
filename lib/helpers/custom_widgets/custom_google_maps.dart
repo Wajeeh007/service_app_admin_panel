@@ -1,53 +1,39 @@
 @JS()
 library;
 
+import 'package:get/get.dart';
 import 'package:js/js.dart';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:service_app_admin_panel/helpers/constants.dart';
+import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_viewmodel.dart';
 
-import '../web_only.dart';
-
-@JS('google.maps.Map')
-class GMap {
-  external GMap(dynamic mapDiv, MapOptions options);
-}
-
-@JS()
-@anonymous
-class MapOptions {
-  external factory MapOptions({
-    LatLng center,
-    num zoom,
-    bool clickableIcons,
-    dynamic styles,
-  });
-
-  external LatLng get center;
-  external num get zoom;
-  external bool get clickableIcons;
-  external dynamic get styles;
-}
-
-@JS()
-@anonymous
-class LatLng {
-  external factory LatLng({num lat, num lng});
-}
+import '../custom_google_map_models/drawing_manager.dart';
+import '../custom_google_map_models/g_map.dart';
+import '../custom_google_map_models/lat_lng.dart';
+import '../custom_google_map_models/map_options.dart';
+import '../custom_google_map_models/overlay_complete.dart';
+import '../custom_google_map_models/web_only.dart';
 
 class GoogleMapWidget extends StatelessWidget {
   final String _viewType = 'google-map-view';
 
   GoogleMapWidget({super.key}) {
-    // Register custom HTML view
+
     registerWebView(_viewType, (int viewId) {
-      final elem = html.DivElement()
+      final container = html.DivElement()
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.position = 'relative';
+
+      final mapDiv = html.DivElement()
         ..id = 'map'
         ..style.width = '100%'
         ..style.height = '100%';
 
-      // Map styles to hide POIs (optional)
+      container.append(mapDiv);
+
       final mapStyles = [
         {
           'featureType': 'poi',
@@ -58,14 +44,85 @@ class GoogleMapWidget extends StatelessWidget {
         }
       ];
 
-      GMap(elem, MapOptions(
+      final map = GMap(mapDiv, MapOptions(
         center: LatLng(lat: initialCameraPosition.target.latitude, lng: initialCameraPosition.target.longitude),
         zoom: mapsZoomLevel,
         clickableIcons: false,
         styles: mapStyles,
       ));
 
-      return elem;
+      final drawingManager = DrawingManager(DrawingManagerOptions(
+        drawingMode: null,
+        drawingControl: false,
+        polygonOptions: {
+          'fillColor': '#FF0000',
+          'fillOpacity': 0.5,
+          'strokeWeight': 1.5,
+          'clickable': false,
+          'editable': true,
+          'zIndex': 1
+        },
+      ));
+
+      drawingManager.setMap(map);
+      ZoneSetupViewModel viewModel = Get.find<ZoneSetupViewModel>();
+      addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
+
+        if(viewModel.areaPolygons != '') {
+          html.window.alert('Only one polygon is allowed.');
+          return;
+        }
+
+        final event = e as OverlayCompleteEvent;
+        final path = event.overlay.getPath();
+        final points = <String>[];
+
+        for (var i = 0; i < path.getLength(); i++) {
+          final point = path.getAt(i);
+          final lat = point.lat();
+          final lng = point.lng();
+          points.add('$lng $lat');
+        }
+
+        if (points.first != points.last) {
+          points.add(points.first);
+        }
+        Get.find<ZoneSetupViewModel>().areaPolygons = points.join(', ');
+        drawingManager.setDrawingMode(null);
+      }));
+
+      final dragButton = html.ButtonElement()
+        ..text = '🧭 Drag'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '130px'
+        ..style.zIndex = '5';
+
+      final drawButton = html.ButtonElement()
+        ..text = '✏️ Draw'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '60px'
+        ..style.zIndex = '5';
+
+      dragButton.onClick.listen((_) {
+        drawingManager.setDrawingMode(null);
+        mapDiv.style.pointerEvents = 'auto';
+      });
+
+      drawButton.onClick.listen((_) {
+        if(viewModel.areaPolygons != '') {
+          html.window.alert('Only one polygon is allowed.');
+          return;
+        }
+        drawingManager.setDrawingMode('polygon');
+        mapDiv.style.pointerEvents = 'auto';
+      });
+
+      container.append(dragButton);
+      container.append(drawButton);
+
+      return container;
     });
   }
 
