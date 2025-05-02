@@ -1,5 +1,5 @@
 import 'dart:html' as html;
-import 'dart:ui' as ui;
+import 'dart:ui_web' as ui;
 
 void registerWebView(String viewType, html.Element Function(int) viewFactory) {
 

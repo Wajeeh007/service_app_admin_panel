@@ -10,10 +10,12 @@ class MapOptions {
     num zoom,
     bool clickableIcons,
     dynamic styles,
+    String mapId,
   });
 
   external LatLng get center;
   external num get zoom;
   external bool get clickableIcons;
   external dynamic get styles;
+  external dynamic get mapId;
 }

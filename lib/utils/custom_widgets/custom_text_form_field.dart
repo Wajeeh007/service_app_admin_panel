@@ -73,7 +73,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if(title != null && title != '') Padding(
           padding: EdgeInsets.only(left: 8, bottom: 5),

@@ -1,22 +1,9 @@
 /// Dashboard
-const dashboard = 'dashboard',
-    welcomeAdmin = 'welcomeAdmin',
-    monitorYourBusinessStatistics = 'monitorYourBusinessStatistics',
-    activeCustomers = 'totalActiveCustomers',
-    activeServicemen = 'totalActiveServicemen',
-    totalOrders = 'totalOrders',
-    totalEarnings = 'totalEarnings',
-    zoneWiseOrders = 'zoneWiseOrders',
-    adminEarningStatistics = 'adminEarningStatistics',
-    noZoneSelected = 'noZoneSelected',
-    logout = 'logout';
+const dashboard = 'dashboard';
 
 /// Side Panel
   /// Zone Setup
-  const zoneSetup = 'zoneSetup',
-      instructions = 'instructions',
-      zoneName = 'zoneName',
-      zoneSetupInstructions = 'zoneSetupInstructions';
+  const zoneSetup = 'zoneSetup';
 
   /// Order Management
   const orderManagement = 'orderManagement';
@@ -48,6 +35,35 @@ const dashboard = 'dashboard',
 
 /// Side Panel End
 
+/// Dashboard
+const welcomeAdmin = 'welcomeAdmin',
+    monitorYourBusinessStatistics = 'monitorYourBusinessStatistics',
+    activeCustomers = 'totalActiveCustomers',
+    activeServicemen = 'totalActiveServicemen',
+    totalOrders = 'totalOrders',
+    totalEarnings = 'totalEarnings',
+    zoneWiseOrders = 'zoneWiseOrders',
+    adminEarningStatistics = 'adminEarningStatistics',
+    noZoneSelected = 'noZoneSelected',
+    logout = 'logout';
+/// Dashboard End ///
+
+/// Zone Setup Screen
+const instructions = 'instructions',
+    zoneName = 'zoneName',
+    zoneList = 'zoneList',
+    zoneSetupInstructions = 'zoneSetupInstructions',
+    searchZone = 'searchZone',
+    orderVolume = 'orderVolume';
+/// Zone Setup End ///
+
 /// General
 const fieldIsRequired = 'fieldIsRequired',
-    invalidEmail = 'invalidEmail';
+    invalidEmail = 'invalidEmail',
+    save = 'save',
+    search = 'search',
+    page = 'page',
+    of = 'of',
+    status = 'status',
+    actions = 'actions',
+    noDataAvailable = 'noDataAvailable';

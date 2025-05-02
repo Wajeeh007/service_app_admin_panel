@@ -10,6 +10,9 @@ class ThemeHelpers {
     colorScheme: ColorScheme.fromSeed(
         seedColor: primaryBlue,
     ),
+    iconTheme: IconThemeData(
+      size: 22
+    ),
     textTheme: TextThemes.textTheme(color: primaryBlack),
     appBarTheme: AppBarTheme(
       backgroundColor: primaryWhite,

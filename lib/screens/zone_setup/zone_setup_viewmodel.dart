@@ -1,22 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/screens/zone_setup/zone_model.dart';
 
 class ZoneSetupViewModel extends GetxController {
 
   /// Controller(s) & Global Key(s)
   TextEditingController zoneNameController = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController zoneSearchController = TextEditingController();
+  GlobalKey<FormState> zoneNameFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> zoneSearchFormKey = GlobalKey<FormState>();
 
   /// Variables for Google Maps ///
-    /// Variable to store the location of device when location is fetched
-    late LatLng currentCoordinates;
-
-    /// Google Map Controller
-    late GoogleMapController googleMapController;
-
     /// Maps loader
     RxBool showMapsLoader = false.obs;
 
@@ -24,21 +19,29 @@ class ZoneSetupViewModel extends GetxController {
     String areaPolygons = '';
 
   /// Variables for Google Maps End ///
+
+  /// Variable for page toggling
+  RxInt currentPage = 1.obs;
+  RxInt totalPages = 3.obs;
+
+  /// Zone list page data
+  RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
+
   @override
   void onReady() {
-    _determinePosition();
+    determinePosition();
     super.onReady();  
   }
 
   @override
   void onClose() {
-    googleMapController.dispose();
     zoneNameController.dispose();
+    zoneSearchController.dispose();
     super.onClose();
   }
   
   /// Fetch the current position of the device
-  Future<void> _determinePosition() async {
+  Future<Position> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -62,26 +65,8 @@ class ZoneSetupViewModel extends GetxController {
     }
 
     showMapsLoader.value = true;
-    await Geolocator.getCurrentPosition(
-      locationSettings: WebSettings(timeLimit: Duration(seconds: 20))
-    ).then((value) {
-      currentCoordinates = LatLng(value.latitude, value.longitude);
-      googleMapCreated();
-    }).catchError((error) {
-      showMapsLoader.value = false;
-    });
-    // currentCoordinates.value = LatLng(currentPosition.latitude, currentPosition.longitude);
-  }
-
-  /// Move Google Map to the given location when created
-  Future<void> googleMapCreated() async {
-    googleMapController.moveCamera(
-        CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: currentCoordinates,
-                zoom: mapsZoomLevel
-            )
-        )
+    return await Geolocator.getCurrentPosition(
+      locationSettings: WebSettings(timeLimit: Duration(seconds: 20), accuracy: LocationAccuracy.best)
     );
   }
 }
