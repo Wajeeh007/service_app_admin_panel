@@ -2,7 +2,7 @@
 library advanced_marker;
 
 import 'package:js/js.dart';
-import 'dart:html';
+import 'package:web/web.dart' show HTMLElement;
 import 'lat_lng.dart';
 import 'g_map.dart';
 
@@ -17,13 +17,13 @@ class AdvancedMarkerElement {
 class AdvancedMarkerOptions {
   external LatLng get position;
   external GMap get map;
-  external HtmlElement? get content;
+  external HTMLElement? get content;
   external String? get title;
 
   external factory AdvancedMarkerOptions({
     required LatLng position,
     required GMap map,
-    HtmlElement? content,
+    HTMLElement? content,
     String? title,
   });
 }

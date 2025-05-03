@@ -3,7 +3,7 @@ library;
 
 import 'package:get/get.dart';
 import 'package:js/js.dart';
-import 'dart:html' as html;
+import 'package:web/web.dart';
 
 import 'package:flutter/material.dart';
 import 'package:js/js_util.dart';
@@ -24,12 +24,12 @@ class GoogleMapWidget extends StatelessWidget {
   GoogleMapWidget({super.key}) {
 
     registerWebView(_viewType, (int viewId) {
-      final container = html.DivElement()
+      final container = HTMLElement.section()
         ..style.width = '100%'
         ..style.height = '100%'
         ..style.position = 'relative';
 
-      final mapDiv = html.DivElement()
+      final mapDiv = HTMLElement.section()
         ..id = 'map'
         ..style.width = '100%'
         ..style.height = '100%';
@@ -75,7 +75,7 @@ class GoogleMapWidget extends StatelessWidget {
       addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
 
         if(viewModel.areaPolygons != '') {
-          html.window.alert('Only one polygon is allowed.');
+          window.alert('Only one polygon is allowed.');
           return;
         }
 
@@ -97,22 +97,22 @@ class GoogleMapWidget extends StatelessWidget {
         drawingManager.setDrawingMode(null);
       }));
 
-      final dragButton = html.ButtonElement()
-        ..text = '🧭'
+      final dragButton = HTMLButtonElement()
+        ..textContent = '🧭'
         ..style.position = 'absolute'
         ..style.top = '10px'
         ..style.right = '140px'
         ..style.zIndex = '5';
 
-      final drawButton = html.ButtonElement()
-        ..text = '✏️'
+      final drawButton = HTMLButtonElement()
+        ..textContent = '✏️'
         ..style.position = 'absolute'
         ..style.top = '10px'
         ..style.right = '100px'
         ..style.zIndex = '5';
 
-      final locateButton = html.ButtonElement()
-        ..text = '📍'
+      final locateButton = HTMLButtonElement()
+        ..textContent = '📍'
         ..style.position = 'absolute'
         ..style.top = '10px'
         ..style.right = '60px'
@@ -129,7 +129,7 @@ class GoogleMapWidget extends StatelessWidget {
 
       drawButton.onClick.listen((_) {
         if(viewModel.areaPolygons != '') {
-          html.window.alert('Only one polygon is allowed.');
+          window.alert('Only one polygon is allowed.');
           return;
         }
         drawingManager.setDrawingMode('polygon');
@@ -154,8 +154,8 @@ class GoogleMapWidget extends StatelessWidget {
         userMarker = null;
       }
 
-      html.HtmlElement createBlueDot() {
-        final dot = html.DivElement()
+      HTMLElement createBlueDot() {
+        final dot = HTMLElement.section()
           ..style.width = '12px'
           ..style.height = '12px'
           ..style.borderRadius = '50%'
@@ -173,7 +173,7 @@ class GoogleMapWidget extends StatelessWidget {
           'title': 'Your Location',
         }));
       } catch (e) {
-        html.window.alert(e.toString());
+        window.alert(e.toString());
       }
     });
   }
