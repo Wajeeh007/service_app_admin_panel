@@ -1,8 +1,6 @@
 @JS()
 library;
 
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:js/js.dart';
 import 'dart:html' as html;
@@ -167,13 +165,16 @@ class GoogleMapWidget extends StatelessWidget {
         return dot;
       }
 
-      userMarker = AdvancedMarkerElement(jsify({
-        'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
-        'map': map,
-        'content': createBlueDot(),
-        'title': 'Your Location',
-      }));
-
+      try{
+        userMarker = AdvancedMarkerElement(jsify({
+          'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
+          'map': map,
+          'content': createBlueDot(),
+          'title': 'Your Location',
+        }));
+      } catch (e) {
+        html.window.alert(e.toString());
+      }
     });
   }
 
