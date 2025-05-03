@@ -22,126 +22,124 @@ class GoogleMapWidget extends StatelessWidget {
   final String _viewType = 'google-map-view';
 
   GoogleMapWidget({super.key}) {
+    try{
+      registerWebView(_viewType, (int viewId) {
+        final container = HTMLElement.section()
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..style.position = 'relative';
 
-    registerWebView(_viewType, (int viewId) {
-      final container = HTMLElement.section()
-        ..style.width = '100%'
-        ..style.height = '100%'
-        ..style.position = 'relative';
+        final mapDiv = HTMLElement.section()
+          ..id = 'map'
+          ..style.width = '100%'
+          ..style.height = '100%';
 
-      final mapDiv = HTMLElement.section()
-        ..id = 'map'
-        ..style.width = '100%'
-        ..style.height = '100%';
+        container.append(mapDiv);
 
-      container.append(mapDiv);
+        const mapId = String.fromEnvironment('MAPS_ID');
 
-      const mapId = String.fromEnvironment('MAPS_ID');
+        final map = GMap(
+            mapDiv,
+            MapOptions(
+              center: ltln.LatLng(
+                  lat: initialCameraPosition.target.latitude,
+                  lng: initialCameraPosition.target.longitude),
+              zoom: mapsZoomLevel,
+              clickableIcons: false,
+              mapId: mapId,
+            ));
 
-      final map = GMap(
-          mapDiv,
-          MapOptions(
-            center: ltln.LatLng(
-                lat: initialCameraPosition.target.latitude,
-                lng: initialCameraPosition.target.longitude
-            ),
-            zoom: mapsZoomLevel,
-            clickableIcons: false,
-            mapId: mapId,
-          )
-      );
+        final drawingManager = DrawingManager(DrawingManagerOptions(
+          drawingMode: null,
+          drawingControl: false,
+          polygonOptions: {
+            'fillColor': '#FF0000',
+            'fillOpacity': 0.5,
+            'strokeWeight': 1.5,
+            'clickable': false,
+            'editable': true,
+            'zIndex': 1
+          },
+        ));
 
-      final drawingManager = DrawingManager(
-          DrawingManagerOptions(
-            drawingMode: null,
-            drawingControl: false,
-            polygonOptions: {
-              'fillColor': '#FF0000',
-              'fillOpacity': 0.5,
-              'strokeWeight': 1.5,
-              'clickable': false,
-              'editable': true,
-              'zIndex': 1
-            },
-          )
-      );
+        AdvancedMarkerElement? userMarker;
 
-      AdvancedMarkerElement? userMarker;
-
-      moveCamera(map, userMarker);
-
-      drawingManager.setMap(map);
-      ZoneSetupViewModel viewModel = Get.find<ZoneSetupViewModel>();
-      addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
-
-        if(viewModel.areaPolygons != '') {
-          window.alert('Only one polygon is allowed.');
-          return;
-        }
-
-        final event = e as OverlayCompleteEvent;
-        final path = event.overlay.getPath();
-        final points = <String>[];
-
-        for (var i = 0; i < path.getLength(); i++) {
-          final point = path.getAt(i);
-          final lat = point.lat();
-          final lng = point.lng();
-          points.add('$lng $lat');
-        }
-
-        if (points.first != points.last) {
-          points.add(points.first);
-        }
-        viewModel.areaPolygons = points.join(', ');
-        drawingManager.setDrawingMode(null);
-      }));
-
-      final dragButton = HTMLButtonElement()
-        ..textContent = '🧭'
-        ..style.position = 'absolute'
-        ..style.top = '10px'
-        ..style.right = '140px'
-        ..style.zIndex = '5';
-
-      final drawButton = HTMLButtonElement()
-        ..textContent = '✏️'
-        ..style.position = 'absolute'
-        ..style.top = '10px'
-        ..style.right = '100px'
-        ..style.zIndex = '5';
-
-      final locateButton = HTMLButtonElement()
-        ..textContent = '📍'
-        ..style.position = 'absolute'
-        ..style.top = '10px'
-        ..style.right = '60px'
-        ..style.zIndex = '5';
-
-      locateButton.onClick.listen((_) {
         moveCamera(map, userMarker);
+
+        drawingManager.setMap(map);
+        ZoneSetupViewModel viewModel = Get.find<ZoneSetupViewModel>();
+        addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
+          if (viewModel.areaPolygons != '') {
+            window.alert('Only one polygon is allowed.');
+            return;
+          }
+
+          final event = e as OverlayCompleteEvent;
+          final path = event.overlay.getPath();
+          final points = <String>[];
+
+          for (var i = 0; i < path.getLength(); i++) {
+            final point = path.getAt(i);
+            final lat = point.lat();
+            final lng = point.lng();
+            points.add('$lng $lat');
+          }
+
+          if (points.first != points.last) {
+            points.add(points.first);
+          }
+          viewModel.areaPolygons = points.join(', ');
+          drawingManager.setDrawingMode(null);
+        }));
+
+        final dragButton = HTMLButtonElement()
+          ..textContent = '🧭'
+          ..style.position = 'absolute'
+          ..style.top = '10px'
+          ..style.right = '140px'
+          ..style.zIndex = '5';
+
+        final drawButton = HTMLButtonElement()
+          ..textContent = '✏️'
+          ..style.position = 'absolute'
+          ..style.top = '10px'
+          ..style.right = '100px'
+          ..style.zIndex = '5';
+
+        final locateButton = HTMLButtonElement()
+          ..textContent = '📍'
+          ..style.position = 'absolute'
+          ..style.top = '10px'
+          ..style.right = '60px'
+          ..style.zIndex = '5';
+
+        locateButton.onClick.listen((_) {
+          moveCamera(map, userMarker);
+        });
+
+        dragButton.onClick.listen((_) {
+          drawingManager.setDrawingMode(null);
+          mapDiv.style.pointerEvents = 'auto';
+        });
+
+        drawButton.onClick.listen((_) {
+          if (viewModel.areaPolygons != '') {
+            window.alert('Only one polygon is allowed.');
+            return;
+          }
+          drawingManager.setDrawingMode('polygon');
+          mapDiv.style.pointerEvents = 'auto';
+        });
+
+        container.append(dragButton);
+        container.append(drawButton);
+        container.append(locateButton);
+
+        return container;
       });
-
-      dragButton.onClick.listen((_) {
-        drawingManager.setDrawingMode(null);
-        mapDiv.style.pointerEvents = 'auto';
-      });
-
-      drawButton.onClick.listen((_) {
-        if(viewModel.areaPolygons != '') {
-          window.alert('Only one polygon is allowed.');
-          return;
-        }
-        drawingManager.setDrawingMode('polygon');
-        mapDiv.style.pointerEvents = 'auto';
-      });
-
-      container.append(dragButton);
-      container.append(drawButton);
-      container.append(locateButton);
-
-      return container;
-    });
+    } catch (e) {
+      window.alert(e.toString());
+    }
   }
 
   void moveCamera(GMap map, AdvancedMarkerElement? userMarker) {
