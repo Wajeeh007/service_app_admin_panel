@@ -146,34 +146,33 @@ class GoogleMapWidget extends StatelessWidget {
 
     ZoneSetupViewModel viewModel = Get.find();
 
-    viewModel.determinePosition().then((value) {
-      map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
-      if (userMarker != null) {
-        userMarker = null;
-      }
+    try{
+      viewModel.determinePosition().then((value) {
+        map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
+        if (userMarker != null) {
+          userMarker = null;
+        }
 
-      HTMLElement createBlueDot() {
-        final dot = HTMLElement.section()
-          ..style.width = '12px'
-          ..style.height = '12px'
-          ..style.borderRadius = '50%'
-          ..style.backgroundColor = '#4285F4'
-          ..style.border = '2px solid white'
-          ..style.boxShadow = '0 0 6px rgba(66,133,244,0.6)';
-        return dot;
-      }
-
-      try{
+        HTMLElement createBlueDot() {
+          final dot = HTMLElement.section()
+            ..style.width = '12px'
+            ..style.height = '12px'
+            ..style.borderRadius = '50%'
+            ..style.backgroundColor = '#4285F4'
+            ..style.border = '2px solid white'
+            ..style.boxShadow = '0 0 6px rgba(66,133,244,0.6)';
+          return dot;
+        }
         userMarker = AdvancedMarkerElement(jsify({
           'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
           'map': map,
           'content': createBlueDot(),
           'title': 'Your Location',
         }));
-      } catch (e) {
-        window.alert(e.toString());
-      }
-    });
+      });
+    } catch (e) {
+      window.alert(e.toString());
+    }
   }
 
   @override
