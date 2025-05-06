@@ -5,17 +5,13 @@ import 'lat_lng.dart';
 @JS()
 @anonymous
 class MapOptions {
+  external LatLng get center;
+  external num get zoom;
+  external String? get mapId;
+
   external factory MapOptions({
     LatLng center,
     num zoom,
-    bool clickableIcons,
-    dynamic styles,
-    String mapId,
+    String? mapId,
   });
-
-  external LatLng get center;
-  external num get zoom;
-  external bool get clickableIcons;
-  external dynamic get styles;
-  external dynamic get mapId;
 }

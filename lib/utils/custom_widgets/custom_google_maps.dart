@@ -3,10 +3,10 @@ library;
 
 import 'package:get/get.dart';
 import 'package:js/js.dart';
-import 'package:web/web.dart';
+import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
-import 'package:js/js_util.dart';
+import 'package:js/js_util.dart' as js_util;
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_viewmodel.dart';
 
@@ -22,14 +22,14 @@ class GoogleMapWidget extends StatelessWidget {
   final String _viewType = 'google-map-view';
 
   GoogleMapWidget({super.key}) {
-    try{
+
       registerWebView(_viewType, (int viewId) {
-        final container = HTMLElement.section()
+        final container = html.DivElement()
           ..style.width = '100%'
           ..style.height = '100%'
           ..style.position = 'relative';
 
-        final mapDiv = HTMLElement.section()
+        final mapDiv = html.DivElement()
           ..id = 'map'
           ..style.width = '100%'
           ..style.height = '100%';
@@ -38,16 +38,17 @@ class GoogleMapWidget extends StatelessWidget {
 
         const mapId = String.fromEnvironment('MAPS_ID');
 
-        final map = GMap(
+        final gMap = GMap(
             mapDiv,
             MapOptions(
               center: ltln.LatLng(
                   lat: initialCameraPosition.target.latitude,
                   lng: initialCameraPosition.target.longitude),
               zoom: mapsZoomLevel,
-              clickableIcons: false,
               mapId: mapId,
             ));
+
+        final rawMap = js_util.jsify(js_util.getProperty(gMap, '__proto__') != null ? gMap : js_util.getProperty(gMap, 'map'));
 
         final drawingManager = DrawingManager(DrawingManagerOptions(
           drawingMode: null,
@@ -64,13 +65,13 @@ class GoogleMapWidget extends StatelessWidget {
 
         AdvancedMarkerElement? userMarker;
 
-        moveCamera(map, userMarker);
+        moveCamera(gMap, userMarker, rawMap);
 
-        drawingManager.setMap(map);
+        drawingManager.setMap(gMap);
         ZoneSetupViewModel viewModel = Get.find<ZoneSetupViewModel>();
         addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
           if (viewModel.areaPolygons != '') {
-            window.alert('Only one polygon is allowed.');
+            html.window.alert('Only one polygon is allowed.');
             return;
           }
 
@@ -92,29 +93,29 @@ class GoogleMapWidget extends StatelessWidget {
           drawingManager.setDrawingMode(null);
         }));
 
-        final dragButton = HTMLButtonElement()
-          ..textContent = '🧭'
+        final dragButton = html.ButtonElement()
+          ..text = '🧭'
           ..style.position = 'absolute'
           ..style.top = '10px'
           ..style.right = '140px'
           ..style.zIndex = '5';
 
-        final drawButton = HTMLButtonElement()
-          ..textContent = '✏️'
+        final drawButton = html.ButtonElement()
+          ..text = '✏️'
           ..style.position = 'absolute'
           ..style.top = '10px'
           ..style.right = '100px'
           ..style.zIndex = '5';
 
-        final locateButton = HTMLButtonElement()
-          ..textContent = '📍'
+        final locateButton = html.ButtonElement()
+          ..text = '📍'
           ..style.position = 'absolute'
           ..style.top = '10px'
           ..style.right = '60px'
           ..style.zIndex = '5';
 
         locateButton.onClick.listen((_) {
-          moveCamera(map, userMarker);
+          moveCamera(gMap, userMarker, rawMap);
         });
 
         dragButton.onClick.listen((_) {
@@ -124,7 +125,7 @@ class GoogleMapWidget extends StatelessWidget {
 
         drawButton.onClick.listen((_) {
           if (viewModel.areaPolygons != '') {
-            window.alert('Only one polygon is allowed.');
+            html.window.alert('Only one polygon is allowed.');
             return;
           }
           drawingManager.setDrawingMode('polygon');
@@ -137,42 +138,54 @@ class GoogleMapWidget extends StatelessWidget {
 
         return container;
       });
-    } catch (e) {
-      window.alert(e.toString());
-    }
   }
 
-  void moveCamera(GMap map, AdvancedMarkerElement? userMarker) {
-
+  void moveCamera(GMap map, AdvancedMarkerElement? userMarker, dynamic rawMap) async {
     ZoneSetupViewModel viewModel = Get.find();
 
-    try{
-      viewModel.determinePosition().then((value) {
-        map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
-        if (userMarker != null) {
-          userMarker = null;
-        }
+    viewModel.determinePosition().then((value) async {
+      map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
 
-        HTMLElement createBlueDot() {
-          final dot = HTMLElement.section()
-            ..style.width = '12px'
-            ..style.height = '12px'
-            ..style.borderRadius = '50%'
-            ..style.backgroundColor = '#4285F4'
-            ..style.border = '2px solid white'
-            ..style.boxShadow = '0 0 6px rgba(66,133,244,0.6)';
-          return dot;
-        }
-        userMarker = AdvancedMarkerElement(jsify({
-          'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
-          'map': map,
-          'content': createBlueDot(),
-          'title': 'Your Location',
-        }));
-      });
-    } catch (e) {
-      window.alert(e.toString());
-    }
+      //   if (userMarker != null) {
+      //     userMarker = null;
+      //   }
+      //
+      //   Future.delayed(Duration(milliseconds: 800), () {
+      //     final markerOptions = js_util.newObject();
+      //     js_util.setProperty(markerOptions, 'position', js_util.jsify({'lat': value.latitude, 'lng': value.longitude}));
+      //     js_util.setProperty(markerOptions, 'map', rawMap); // Ensure 'map' is the raw JS map object
+      //     js_util.setProperty(markerOptions, 'title', 'Your Location');
+      //
+      //     // Create a simple HTML element for the marker's content
+      //     final content = html.DivElement()
+      //       ..style.width = '12px'
+      //       ..style.height = '12px'
+      //       ..style.borderRadius = '50%'
+      //       ..style.backgroundColor = '#4285F4'
+      //       ..style.border = '2px solid white'
+      //       ..style.boxShadow = '0 0 6px rgba(66,133,244,0.6)';
+      //
+      //     js_util.setProperty(markerOptions, 'content', content);
+      //     final AdvancedMarkerElement = getAdvancedMarkerElementConstructor();
+      //     js_util.callConstructor(AdvancedMarkerElement, [markerOptions]);
+      //
+      //   });
+      //
+      //   // userMarker = AdvancedMarkerElement(js_util.jsify({
+      //   //   'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
+      //   //   'map': map,
+      //   //   'content': createBlueDot(),
+      //   //   'title': 'Your Location',
+      //   // }));
+      // });
+
+      // await Future.delayed(Duration(milliseconds: 0));
+      // userMarker?.map = map;
+      // } catch (e) {
+      //   print("Error in moveCamera: $e");
+      //   html.window.alert(e.toString());
+      // }
+    });
   }
 
   @override

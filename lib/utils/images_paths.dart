@@ -5,7 +5,7 @@ class ImagesPaths {
   static final String _imagesPath = 'assets/images/';
 
   /// Images
-  static final String zoneSetupExample = '${_imagesPath}zone_setup_example.png';
+  static final String zoneSetupExample = '${_imagesPath}zone_setup_instructions.gif';
   static final String noData = '${_imagesPath}no_data.png';
 
   /// Logos

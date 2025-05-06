@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:js/js_util.dart' as js_util;
 import 'package:service_app_admin_panel/screens/zone_setup/zone_model.dart';
+// import 'dart:js_util' as js_util;
 
 class ZoneSetupViewModel extends GetxController {
 
@@ -28,6 +30,12 @@ class ZoneSetupViewModel extends GetxController {
   RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
 
   @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
+
+  @override
   void onReady() {
     determinePosition();
     super.onReady();  
@@ -39,7 +47,21 @@ class ZoneSetupViewModel extends GetxController {
     zoneSearchController.dispose();
     super.onClose();
   }
-  
+
+  Future<void> loadGoogleMapsLibraries() async {
+    final google = js_util.getProperty(js_util.globalThis, 'google');
+    final maps = js_util.getProperty(google, 'maps');
+
+    await js_util.promiseToFuture(
+      js_util.callMethod(maps, 'importLibrary', ['maps']),
+    );
+
+    await js_util.promiseToFuture(
+      js_util.callMethod(maps, 'importLibrary', ['marker']),
+    );
+  }
+
+
   /// Fetch the current position of the device
   Future<Position> determinePosition() async {
     bool serviceEnabled;
