@@ -17,7 +17,7 @@ class English {
 
       /// Customer Management
       key.customerManagement: 'Customer Management',
-      key.customerList: 'Customers List',
+      key.customersList: 'Customers List',
       key.suspendedCustomers: 'Suspended Customers',
 
       /// Service Man Management
@@ -84,6 +84,14 @@ class English {
     key.customer: 'Customer',
     /// Order List Screen End ///
 
+    /// Customer Management ///
+      /// Customers List Screen ///
+      key.customersAnalyticalData: 'Customers Analytical Data',
+      key.totalCustomers: 'Total Customers',
+      key.totalSpent: 'Total Spent',
+      key.gender: 'Gender',
+      /// Customers List Screen End ///
+
     /// General
     key.fieldIsRequired: 'Field is required',
     key.invalidEmail: 'Invalid email',
@@ -95,6 +103,12 @@ class English {
     key.actions: 'Actions',
     key.noDataAvailable: 'No Data Available',
     key.date: 'Date',
+    key.active: 'Active',
+    key.inactive: 'Inactive',
+    key.all: 'All',
+    key.name: 'Name',
+    key.contactInfo: 'Contact Info',
+
   };
 
 }

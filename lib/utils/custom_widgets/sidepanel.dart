@@ -32,7 +32,7 @@ class SidePanel extends StatelessWidget {
             SidePanelHeading(text: lang_key.orderManagement.tr),
             SidePanelItem(text: lang_key.orders.tr, routeName: Routes.orders, selectedItem: selectedItem, icon: CupertinoIcons.doc,),
             SidePanelHeading(text: lang_key.customerManagement.tr),
-            SidePanelItem(text: lang_key.customerList.tr, routeName: '', selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
+            SidePanelItem(text: lang_key.customersList.tr, routeName: Routes.customersList, selectedItem: selectedItem, icon: Icons.list_alt_rounded,),
             SidePanelItem(text: lang_key.suspendedCustomers.tr, routeName: '', selectedItem: selectedItem, icon: Icons.person_off_outlined,),
             SidePanelHeading(text: lang_key.serviceManManagement.tr),
             SidePanelItem(text: lang_key.newRequests.tr, routeName: '', selectedItem: selectedItem, icon: CupertinoIcons.doc_on_clipboard,),

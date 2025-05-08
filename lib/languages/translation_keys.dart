@@ -11,7 +11,7 @@ const dashboard = 'dashboard';
 
   /// Customer Management
   const customerManagement = 'customerManagement',
-      customerList = 'customerList',
+      customersList = 'customerList',
       suspendedCustomers = 'deletedCustomers';
 
   /// Serviceman Management
@@ -39,8 +39,8 @@ const dashboard = 'dashboard';
 /// Dashboard
 const welcomeAdmin = 'welcomeAdmin',
     monitorYourBusinessStatistics = 'monitorYourBusinessStatistics',
-    activeCustomers = 'totalActiveCustomers',
-    activeServicemen = 'totalActiveServicemen',
+    activeCustomers = 'activeCustomers',
+    activeServicemen = 'activeServicemen',
     totalOrders = 'totalOrders',
     totalEarnings = 'totalEarnings',
     zoneWiseOrders = 'zoneWiseOrders',
@@ -80,6 +80,17 @@ const ordersList = 'ordersList',
     customer = 'customer';
 /// Orders List Screen End ///
 
+/// Customer Management ///
+  /// Customer List Screen
+  const customersAnalyticalData = 'customersAnalyticalData',
+      totalCustomers = 'totalCustomers',
+      totalSpent = 'totalSpent',
+      gender = 'gender';
+  /// Customer List Screen End ///
+
+  /// Suspended Customer's List Screen
+  /// Suspended Customer's List Screen End ///
+
 /// General
 const fieldIsRequired = 'fieldIsRequired',
     invalidEmail = 'invalidEmail',
@@ -90,4 +101,9 @@ const fieldIsRequired = 'fieldIsRequired',
     status = 'status',
     actions = 'actions',
     date = 'date',
-    noDataAvailable = 'noDataAvailable';
+    noDataAvailable = 'noDataAvailable',
+    all = 'all',
+    active = 'active',
+    inactive = 'inactive',
+    name = 'name',
+    contactInfo = 'contactInfo';
