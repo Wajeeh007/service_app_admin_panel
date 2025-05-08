@@ -102,7 +102,7 @@ class SidePanelItem extends StatelessWidget {
       margin: EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: selectedItem == text ? primaryDullYellow : Colors.transparent
+          color: selectedItem == text ? primaryBlue : Colors.transparent
       ),
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 15),

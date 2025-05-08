@@ -73,7 +73,11 @@ const ordersList = 'ordersList',
     commission = 'commission',
     paymentStatus = 'paymentStatus',
     orderStatus = 'orderStatus',
-    searchOrder = 'searchOrder';
+    searchOrder = 'searchOrder',
+    customerName = 'customerName',
+    reason = 'reason',
+    serviceman = 'serviceman',
+    customer = 'customer';
 /// Orders List Screen End ///
 
 /// General

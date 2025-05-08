@@ -15,6 +15,7 @@ class ListBaseContainer extends StatelessWidget {
     required this.listData,
     required this.columnsNames,
     this.hintText,
+    this.expandFirstColumn = true
   });
 
   final GlobalKey<FormState> formKey;
@@ -22,6 +23,7 @@ class ListBaseContainer extends StatelessWidget {
   final RxList<dynamic> listData;
   final List<String> columnsNames;
   final String? hintText;
+  final bool expandFirstColumn;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class ListBaseContainer extends StatelessWidget {
               RefreshAndLogsButton(),
             ],
           ),
-          _ListColumNames(columnNames: columnsNames),
+          _ListColumNames(columnNames: columnsNames, expandFirstColumn: expandFirstColumn,),
           Obx(() => Column(
             children: listData.isEmpty ? [
               Image.asset(ImagesPaths.noData, height: 60,),
@@ -68,14 +70,19 @@ class ListBaseContainer extends StatelessWidget {
 
 /// List Columns names section
 class _ListColumNames extends StatelessWidget {
-  const _ListColumNames({required this.columnNames});
+  const _ListColumNames({
+    required this.columnNames,
+    this.expandFirstColumn = true
+  });
 
   final List<String> columnNames;
+  final bool expandFirstColumn;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 60,
+      padding: EdgeInsets.only(left: 15),
       decoration: BoxDecoration(
           color: primaryBlue.withValues(alpha: 0.2),
           border: Border.all(color: Colors.transparent),
@@ -85,7 +92,11 @@ class _ListColumNames extends StatelessWidget {
         children: List.generate(
             columnNames.length,
             (index) {
+              if(index == 0) {
+                return _ListColumnNameText(text: columnNames[index], shouldExpand: expandFirstColumn,);
+              }
               return _ListColumnNameText(text: columnNames[index]);
+
             }
         )
       ),
@@ -95,13 +106,14 @@ class _ListColumNames extends StatelessWidget {
 
 /// List column name text
 class _ListColumnNameText extends StatelessWidget {
-  const _ListColumnNameText({required this.text});
+  const _ListColumnNameText({required this.text, this.shouldExpand = true});
 
   final String text;
+  final bool shouldExpand;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return shouldExpand ? Expanded(
       child: Text(
         text,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -110,6 +122,13 @@ class _ListColumnNameText extends StatelessWidget {
         ),
         textAlign: TextAlign.center,
       ),
+    ) : Text(
+      text,
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: primaryBlue,
+          fontWeight: FontWeight.w600
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }

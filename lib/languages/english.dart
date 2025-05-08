@@ -78,6 +78,10 @@ class English {
     key.totalAmount: 'Total Amount',
     key.paymentStatus: 'Payment Status',
     key.orderStatus: 'Order Status',
+    key.customerName: 'Customer Name',
+    key.reason: 'Reason',
+    key.serviceman: 'Serviceman',
+    key.customer: 'Customer',
     /// Order List Screen End ///
 
     /// General

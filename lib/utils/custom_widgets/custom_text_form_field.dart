@@ -73,7 +73,6 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if(title != null && title != '') Padding(
           padding: EdgeInsets.only(left: 8, bottom: 5),
@@ -85,6 +84,7 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ),
         TextFormField(
+          onChanged: onChanged,
           enabled: enabled,
           readOnly: readOnly,
           maxLines: maxLines,
@@ -109,7 +109,7 @@ class CustomTextFormField extends StatelessWidget {
             errorText: errorText,
             errorStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: errorRed,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w600
             ),
             suffixIconConstraints: BoxConstraints(minWidth: suffixIconSize ?? 40, maxWidth: suffixIconSize ?? 40, minHeight: suffixIconSize ?? kMinInteractiveDimension),
             suffixIcon: suffixIcon != null ? InkWell(

@@ -7,7 +7,7 @@ import 'custom_material_button.dart';
 import 'custom_text_form_field.dart';
 
 class SearchFieldAndButton extends StatelessWidget {
-  const SearchFieldAndButton({
+  SearchFieldAndButton({
     super.key,
     required this.controller,
     required this.formKey,
@@ -18,8 +18,11 @@ class SearchFieldAndButton extends StatelessWidget {
   final TextEditingController controller;
   final String? hint;
 
+  RxBool changeValidateMode = false.obs;
+
   @override
   Widget build(BuildContext context) {
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       spacing: 10,
@@ -28,19 +31,32 @@ class SearchFieldAndButton extends StatelessWidget {
           width: 200,
           child: Form(
               key: formKey,
-              child: CustomTextFormField(
-                prefixIcon: Icon(
-                  Icons.search_rounded,
-                  size: 22,
-                ),
-                controller: controller,
-                validator: (value) => Validators.validateEmptyField(value),
-                hint: hint,
+              child: Obx(() => CustomTextFormField(
+                  onChanged: (value) {
+                    if(value == '' || value.isEmpty) {
+                      changeValidateMode.value = false;
+                    } else {
+                      changeValidateMode.value = true;
+                    }
+                  },
+                    autoValidateMode: changeValidateMode.value ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    prefixIcon: Icon(
+                      Icons.search_rounded,
+                      size: 22,
+                    ),
+                    controller: controller,
+                    validator: (value) => Validators.validateEmptyField(value),
+                    hint: hint,
+                  ),
+              ),
               )
           ),
-        ),
         CustomMaterialButton(
-          onPressed: () {},
+          onPressed: () {
+            if(formKey.currentState!.validate()) {
+
+            }
+          },
           text: lang_key.search.tr,
           width: 100,
         )

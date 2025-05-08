@@ -28,7 +28,7 @@ class OrderManagementView extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               constraints: BoxConstraints(
-                maxWidth: 650
+                maxWidth: 670
               ),
               decoration: BoxDecoration(
                 color: primaryWhite,
@@ -36,6 +36,7 @@ class OrderManagementView extends StatelessWidget {
                 border: kContainerBorderSide
               ),
               child: TabBar(
+                overlayColor: WidgetStatePropertyAll(Colors.transparent),
                 physics: NeverScrollableScrollPhysics(),
                 tabAlignment: TabAlignment.start,
                 padding: EdgeInsets.zero,
@@ -68,12 +69,12 @@ class OrderManagementView extends StatelessWidget {
                   controller: _viewModel.tabController,
                   children: [
                     _AllOrders(),
-                    _AllOrders(),
-                    _AllOrders(),
-                    _AllOrders(),
-                    _AllOrders(),
-                    _AllOrders(),
-                    _AllOrders(),
+                    _PendingOrdersTabView(),
+                    _AcceptedOrdersTabView(),
+                    _OngoingOrdersTabView(),
+                    _CompletedOrdersTabView(),
+                    _CancelledOrdersTabView(),
+                    _DisputedOrdersTabView(),
                   ]
               ),
             )
@@ -116,9 +117,10 @@ class _AllOrders extends StatelessWidget {
       children: [
         _AllOrdersStatsSection(),
         ListBaseContainer(
+          expandFirstColumn: false,
           hintText: lang_key.searchOrder.tr,
-            formKey: _viewModel.formKey,
-            controller: _viewModel.searchController,
+            formKey: _viewModel.allOrdersFormKey,
+            controller: _viewModel.allOrderSearchController,
             listData: _viewModel.allOrdersList,
           columnsNames: [
             'SL',
@@ -236,6 +238,192 @@ class _StatsContainer extends StatelessWidget {
 
         ],
       ),
+    );
+  }
+}
+
+/// Pending Orders tab view
+class _PendingOrdersTabView extends StatelessWidget {
+  _PendingOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+          expandFirstColumn: false,
+            formKey: _viewModel.pendingOrdersFormKey,
+            controller: _viewModel.pendingOrdersSearchController,
+            listData: _viewModel.pendingOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customer.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.commission.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
+    );
+  }
+}
+
+/// Accepted Orders tab view
+class _AcceptedOrdersTabView extends StatelessWidget {
+  _AcceptedOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+            expandFirstColumn: false,
+            formKey: _viewModel.acceptedOrdersFormKey,
+            controller: _viewModel.acceptedOrdersSearchController,
+            listData: _viewModel.acceptedOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customer.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.commission.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
+    );
+  }
+}
+
+/// Ongoing Orders tab view
+class _OngoingOrdersTabView extends StatelessWidget {
+  _OngoingOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+            expandFirstColumn: false,
+            formKey: _viewModel.ongoingOrdersFormKey,
+            controller: _viewModel.ongoingOrdersSearchController,
+            listData: _viewModel.ongoingOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customerName.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.commission.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
+    );
+  }
+}
+
+/// Completed Orders tab view
+class _CompletedOrdersTabView extends StatelessWidget {
+  _CompletedOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+            expandFirstColumn: false,
+            formKey: _viewModel.completedOrdersFormKey,
+            controller: _viewModel.completedOrdersSearchController,
+            listData: _viewModel.completedOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customer.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.commission.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
+    );
+  }
+}
+
+/// Cancelled Orders tab view
+class _CancelledOrdersTabView extends StatelessWidget {
+  _CancelledOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+            expandFirstColumn: false,
+            formKey: _viewModel.cancelledOrdersFormKey,
+            controller: _viewModel.cancelledOrdersSearchController,
+            listData: _viewModel.cancelledOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customer.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.commission.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
+    );
+  }
+}
+
+/// Disputed Orders tab view
+class _DisputedOrdersTabView extends StatelessWidget {
+  _DisputedOrdersTabView();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ListBaseContainer(
+            expandFirstColumn: false,
+            formKey: _viewModel.disputedOrdersFormKey,
+            controller: _viewModel.disputedOrdersSearchController,
+            listData: _viewModel.disputedOrdersList,
+            hintText: lang_key.searchOrder.tr,
+            columnsNames: [
+              'SL',
+              lang_key.date.tr,
+              lang_key.customer.tr,
+              lang_key.serviceman.tr,
+              lang_key.totalAmount.tr,
+              lang_key.reason.tr,
+              lang_key.actions.tr
+            ]
+        ),
+      ],
     );
   }
 }
