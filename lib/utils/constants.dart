@@ -66,6 +66,11 @@ CameraPosition initialCameraPosition = CameraPosition(
 );
 
 double mapsZoomLevel = 14.0;
+/// Google Maps constant values End ///
+
+/// Order Status Enum
+enum OrderStatus {pending, accepted, ongoing, completed, cancelled, dispute}
+/// Order Status Enum End ///
 
 /// Months list
 const List<String> months = [

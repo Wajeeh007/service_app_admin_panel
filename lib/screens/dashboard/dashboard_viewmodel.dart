@@ -97,13 +97,4 @@ class DashboardViewModel extends GetxController {
       controllerAndIcon.values.first.value = Icons.keyboard_arrow_down_rounded;
     }
   }
-
-  /// Hide all dropdowns and change the suffix icons
-  void hideAllOverlayPortalControllers() {
-    GlobalVariables.openProfileDropdown.value = false;
-    for(var controllerAndIcon in overlayPortalControllersAndIcons) {
-      controllerAndIcon.keys.first.hide();
-      controllerAndIcon.values.first.value = Icons.keyboard_arrow_down_rounded;
-    }
-  }
 }

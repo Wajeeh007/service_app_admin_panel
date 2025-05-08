@@ -2,10 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_appbar.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
-import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/images_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_viewmodel.dart';
@@ -17,55 +16,30 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        centerTitle: false,
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => _viewModel.hideAllOverlayPortalControllers(),
-        child: Stack(
+    return ScreensBaseWidget(
+        selectedSidePanelItem: lang_key.dashboard.tr,
+        overlayPortalControllersAndIcons: _viewModel.overlayPortalControllersAndIcons,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
           children: [
-            Row(
-              children: [
-                SidePanel(selectedItem: lang_key.dashboard.tr,),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          _WelcomeText(),
-                          LayoutBuilder(builder: (context, constraints) {
-                            return SizedBox(
-                              height: 313,
-                              width: constraints.maxWidth,
-                              child: Row(
-                                spacing: 15,
-                                children: [
-                                  _TextStats(),
-                                  _ZoneWiseOrderStats()
-                                ],
-                              ),
-                            );
-                          }),
-                          _AdminEarningStatsGraph()
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            ProfileDropDown(),
-            ProfileDropDownContainer(),
-
+            _WelcomeText(),
+            LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                height: 313,
+                width: constraints.maxWidth,
+                child: Row(
+                  spacing: 15,
+                  children: [
+                    _TextStats(),
+                    _ZoneWiseOrderStats()
+                  ],
+                ),
+              );
+            }),
+            _AdminEarningStatsGraph()
           ],
-        ),
-      )
+        )
     );
   }
 }
@@ -80,12 +54,7 @@ class _WelcomeText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        Text(
-          lang_key.welcomeAdmin.tr,
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.w600
-          ),
-        ),
+        SectionHeadingText(headingText: lang_key.welcomeAdmin.tr),
         Text(
           lang_key.monitorYourBusinessStatistics.tr,
           style: Theme.of(context).textTheme.bodyLarge,
@@ -568,112 +537,5 @@ class _AdminEarningHeadingAndZoneName extends StatelessWidget {
         ))
       ],
     );
-  }
-}
-
-/// Base widget for the profile dropdown
-class ProfileDropDown extends StatelessWidget {
-  const ProfileDropDown({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
-      right: 20,
-      top: 0,
-      child: CustomPaint(
-        painter: TrianglePainter(
-            strokeColor: primaryWhite,
-            strokeWidth: 10,
-            paintingStyle: PaintingStyle.fill
-        ),
-        child: const SizedBox(
-          height: 8,
-          width: 10,
-        ),
-      ),
-    ) : const SizedBox()
-    );
-  }
-}
-
-/// Container beneath the triangle for the profile dropdown
-class ProfileDropDownContainer extends StatelessWidget {
-  const ProfileDropDownContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
-      right: 10,
-      top: 7,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: primaryWhite
-        ),
-        child: SizedBox(
-          width: 180,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                minTileHeight: 20,
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 3),
-                title: Text(
-                  lang_key.logout.tr,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.logout_rounded,
-                  size: 20,
-                  color: Colors.red,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ) : const SizedBox()
-    );
-  }
-}
-
-/// Custom painter class for creating a triangle
-class TrianglePainter extends CustomPainter {
-
-  final Color strokeColor;
-  final PaintingStyle paintingStyle;
-  final double strokeWidth;
-
-  TrianglePainter({
-    this.strokeColor = Colors.black,
-    this.strokeWidth = 3,
-    this.paintingStyle = PaintingStyle.stroke
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = strokeColor
-      ..strokeWidth = strokeWidth
-      ..style = paintingStyle;
-    canvas.drawPath(getTrianglePath(size.width, size.height), paint);
-  }
-
-  Path getTrianglePath(double x, double y) {
-    return Path()
-      ..moveTo(0, y)
-      ..lineTo(x / 2, 0)
-      ..lineTo(x, y)
-      ..lineTo(0, y);
-  }
-
-  @override
-  bool shouldRepaint(TrianglePainter oldDelegate) {
-    return oldDelegate.strokeColor != strokeColor ||
-        oldDelegate.paintingStyle != paintingStyle ||
-        oldDelegate.strokeWidth != strokeWidth;
   }
 }

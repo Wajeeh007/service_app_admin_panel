@@ -13,6 +13,7 @@ class English {
 
       /// Order Management
       key.orderManagement: 'Order Management',
+      key.orders: 'Orders',
 
       /// Customer Management
       key.customerManagement: 'Customer Management',
@@ -61,6 +62,24 @@ class English {
     key.orderVolume: 'Order Volume',
     /// Zone Setup End ///
 
+    /// Orders List Screen
+    key.ordersList: 'Orders List',
+    key.allOrders: 'All Orders',
+    key.pending: 'Pending',
+    key.accepted: 'Accepted',
+    key.ongoing: 'Ongoing',
+    key.cancelled: 'Cancelled',
+    key.completed: 'Completed',
+    key.disputes: 'Disputes',
+    key.pendingRequest: 'Pending Request',
+    key.acceptedRequest: 'Accepted Request',
+    key.searchOrder: 'Search Order',
+    key.commission: 'Commission',
+    key.totalAmount: 'Total Amount',
+    key.paymentStatus: 'Payment Status',
+    key.orderStatus: 'Order Status',
+    /// Order List Screen End ///
+
     /// General
     key.fieldIsRequired: 'Field is required',
     key.invalidEmail: 'Invalid email',
@@ -71,6 +90,7 @@ class English {
     key.status: 'Status',
     key.actions: 'Actions',
     key.noDataAvailable: 'No Data Available',
+    key.date: 'Date',
   };
 
 }

@@ -6,7 +6,8 @@ const dashboard = 'dashboard';
   const zoneSetup = 'zoneSetup';
 
   /// Order Management
-  const orderManagement = 'orderManagement';
+  const orderManagement = 'orderManagement',
+      orders = 'orders';
 
   /// Customer Management
   const customerManagement = 'customerManagement',
@@ -57,6 +58,24 @@ const instructions = 'instructions',
     orderVolume = 'orderVolume';
 /// Zone Setup End ///
 
+/// Orders List Screen
+const ordersList = 'ordersList',
+    allOrders = 'allOrders',
+    pending = 'pending',
+    accepted = 'accepted',
+    ongoing = 'ongoing',
+    cancelled = 'cancelled',
+    completed = 'completed',
+    disputes = 'disputes',
+    pendingRequest = 'pendingRequest',
+    acceptedRequest = 'acceptedRequest',
+    totalAmount = 'totalAmount',
+    commission = 'commission',
+    paymentStatus = 'paymentStatus',
+    orderStatus = 'orderStatus',
+    searchOrder = 'searchOrder';
+/// Orders List Screen End ///
+
 /// General
 const fieldIsRequired = 'fieldIsRequired',
     invalidEmail = 'invalidEmail',
@@ -66,4 +85,5 @@ const fieldIsRequired = 'fieldIsRequired',
     of = 'of',
     status = 'status',
     actions = 'actions',
+    date = 'date',
     noDataAvailable = 'noDataAvailable';
