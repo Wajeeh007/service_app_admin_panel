@@ -1,23 +1,25 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_viewmodel.dart';
-import 'package:service_app_admin_panel/utils/constants.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
+import 'package:get/get.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/active_serviceman_list/active_serviceman_list_viewmodel.dart';
+
+import '../../../utils/constants.dart';
+import '../../../utils/custom_widgets/custom_tab_bar.dart';
+import '../../../utils/custom_widgets/list_base_container.dart';
+import '../../../utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
-import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/stats_container.dart';
 
-class CustomersListView extends StatelessWidget {
-  CustomersListView({super.key});
+import '../../../utils/custom_widgets/section_heading_text.dart';
+import '../../../utils/custom_widgets/stats_container.dart';
 
-  final CustomerListViewModel _viewModel = Get.put(CustomerListViewModel());
+class ActiveServiceManListView extends StatelessWidget {
+  ActiveServiceManListView({super.key});
+
+  final ActiveServiceManListViewModel _viewModel = Get.put(ActiveServiceManListViewModel());
 
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
-        selectedSidePanelItem: lang_key.customersList.tr,
+        selectedSidePanelItem: lang_key.activeServicemen.tr,
         overlayPortalControllersAndIcons: [],
         children: [
           _CustomerAnalyticsData(),
@@ -94,16 +96,16 @@ class _CustomerAnalyticsData extends StatelessWidget {
 class _AllCustomersListTabView extends StatelessWidget {
   _AllCustomersListTabView();
 
-  final CustomerListViewModel _viewModel = Get.find();
+  final ActiveServiceManListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.allCustomersFormKey,
-            controller: _viewModel.allCustomersSearchController,
-            listData: _viewModel.allCustomers,
+            formKey: _viewModel.allServiceMansFormKey,
+            controller: _viewModel.allServiceMansSearchController,
+            listData: _viewModel.allServiceMen,
             expandFirstColumn: false,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
@@ -111,7 +113,7 @@ class _AllCustomersListTabView extends StatelessWidget {
               lang_key.name.tr,
               lang_key.contactInfo.tr,
               lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
+              lang_key.earning.tr,
               lang_key.status.tr,
               lang_key.actions.tr
             ]
@@ -125,16 +127,16 @@ class _AllCustomersListTabView extends StatelessWidget {
 class _ActiveCustomersListTabView extends StatelessWidget {
   _ActiveCustomersListTabView();
 
-  final CustomerListViewModel _viewModel = Get.find();
+  final ActiveServiceManListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.activeCustomersFormKey,
-            controller: _viewModel.activeCustomersSearchController,
-            listData: _viewModel.activeCustomers,
+            formKey: _viewModel.activeServiceMansFormKey,
+            controller: _viewModel.activeServiceMansSearchController,
+            listData: _viewModel.activeServicemen,
             expandFirstColumn: false,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
@@ -143,7 +145,7 @@ class _ActiveCustomersListTabView extends StatelessWidget {
               lang_key.contactInfo.tr,
               lang_key.gender.tr,
               lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
+              lang_key.earning.tr,
               lang_key.actions.tr
             ]
         ),
@@ -156,16 +158,16 @@ class _ActiveCustomersListTabView extends StatelessWidget {
 class _InActiveCustomersListTabView extends StatelessWidget {
   _InActiveCustomersListTabView();
 
-  final CustomerListViewModel _viewModel = Get.find();
+  final ActiveServiceManListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.inActiveCustomersFormKey,
-            controller: _viewModel.inActiveCustomersSearchController,
-            listData: _viewModel.inActiveCustomers,
+            formKey: _viewModel.inActiveServiceMansFormKey,
+            controller: _viewModel.inActiveServiceMansSearchController,
+            listData: _viewModel.inActiveServicemen,
             expandFirstColumn: false,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
@@ -174,7 +176,7 @@ class _InActiveCustomersListTabView extends StatelessWidget {
               lang_key.contactInfo.tr,
               lang_key.gender.tr,
               lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
+              lang_key.earning.tr,
               lang_key.actions.tr
             ]
         ),

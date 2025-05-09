@@ -1,5 +1,5 @@
 @JS('google.maps.marker')
-library advanced_marker;
+library;
 
 import 'package:js/js.dart';
 import 'lat_lng.dart';

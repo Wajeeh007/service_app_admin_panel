@@ -80,7 +80,7 @@ class CustomDropdown extends StatelessWidget {
               children: [
                 Text(
                   dropDownList[selectedItemIndex.value].label,
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.labelMedium,
                 ),
                 Icon(
                   suffixIcon.value,

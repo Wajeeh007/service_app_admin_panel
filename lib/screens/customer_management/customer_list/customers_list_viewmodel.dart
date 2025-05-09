@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,14 +20,17 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
     GlobalKey<FormState> inActiveCustomersFormKey = GlobalKey<FormState>();
     
   /// All Customers data list
-  final RxList<Customer> allCustomers = <Customer>[].obs;
-  final RxList<Customer> activeCustomers = <Customer>[].obs;
-  final RxList<Customer> inActiveCustomers = <Customer>[].obs;
+  RxList<Customer> allCustomers = <Customer>[].obs;
+
+  /// Active Customers data list
+  RxList<Customer> activeCustomers = <Customer>[].obs;
+
+  /// In-Active Customers data list
+  RxList<Customer> inActiveCustomers = <Customer>[].obs;
 
   @override
   void onInit() {
     tabController = TabController(length: 3, vsync: this);
     super.onInit();
   }
-
 }

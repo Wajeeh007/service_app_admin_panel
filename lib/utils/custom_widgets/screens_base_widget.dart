@@ -12,13 +12,13 @@ class ScreensBaseWidget extends StatelessWidget {
   const ScreensBaseWidget({
     super.key,
     required this.selectedSidePanelItem,
-    required this.child,
-    required this.overlayPortalControllersAndIcons
+    required this.children,
+    this.overlayPortalControllersAndIcons,
   });
 
   final String selectedSidePanelItem;
-  final Widget child;
-  final List<Map<OverlayPortalController, Rx<IconData>>> overlayPortalControllersAndIcons;
+  final List<Widget> children;
+  final List<Map<OverlayPortalController, Rx<IconData>>>? overlayPortalControllersAndIcons;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,11 @@ class ScreensBaseWidget extends StatelessWidget {
                       alignment: Alignment.topLeft,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.all(20),
-                        child: child,
+                        child: Column(
+                          spacing: 15,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: children,
+                        ),
                       ),
                     )
                 ),

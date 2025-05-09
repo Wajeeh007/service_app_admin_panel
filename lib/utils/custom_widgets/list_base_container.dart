@@ -10,20 +10,22 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 class ListBaseContainer extends StatelessWidget {
   const ListBaseContainer({
     super.key,
-    required this.formKey,
-    required this.controller,
+    this.formKey,
+    this.controller,
     required this.listData,
     required this.columnsNames,
     this.hintText,
-    this.expandFirstColumn = true
-  });
+    this.expandFirstColumn = true,
+    this.includeSearchField = true
+  }) : assert((includeSearchField == false && (controller == null && formKey == null)) || (includeSearchField == true && (controller != null && formKey != null)), 'controller and formkey must be null, if search field is not included. And must be provided if search field is included.');
 
-  final GlobalKey<FormState> formKey;
-  final TextEditingController controller;
+  final GlobalKey<FormState>? formKey;
+  final TextEditingController? controller;
   final RxList<dynamic> listData;
   final List<String> columnsNames;
   final String? hintText;
   final bool expandFirstColumn;
+  final bool includeSearchField;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +43,11 @@ class ListBaseContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SearchFieldAndButton(
-                formKey: formKey,
-                controller: controller,
+              includeSearchField ? SearchFieldAndButton(
+                formKey: formKey!,
+                controller: controller!,
                 hint: hintText,
-              ),
+              ) : SizedBox(),
               RefreshAndLogsButton(),
             ],
           ),

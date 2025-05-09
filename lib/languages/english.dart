@@ -92,6 +92,22 @@ class English {
       key.gender: 'Gender',
       /// Customers List Screen End ///
 
+      /// Suspended Customers List Screen
+      key.adminNote: 'Admin Note',
+      /// Suspended Customers List Screen End ///
+
+    /// Customer Management End ///
+
+    /// Serviceman Management ///
+      /// New Requests List Screen ///
+      key.identificationNo: 'Identification No',
+      key.dateOfExpiry: 'Date Of Expiry',
+      key.timeOfRequest: 'Time Of Request',
+      /// New Requests List Screen End ///
+
+      /// Active servicemen list screen ///
+      key.earning: 'Earning',
+      /// Active servicemen list screen end ///
     /// General
     key.fieldIsRequired: 'Field is required',
     key.invalidEmail: 'Invalid email',

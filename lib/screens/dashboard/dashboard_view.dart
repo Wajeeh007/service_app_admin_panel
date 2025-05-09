@@ -19,27 +19,23 @@ class DashboardView extends StatelessWidget {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.dashboard.tr,
         overlayPortalControllersAndIcons: _viewModel.overlayPortalControllersAndIcons,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 10,
-          children: [
-            _WelcomeText(),
-            LayoutBuilder(builder: (context, constraints) {
-              return SizedBox(
-                height: 313,
-                width: constraints.maxWidth,
-                child: Row(
-                  spacing: 15,
-                  children: [
-                    _TextStats(),
-                    _ZoneWiseOrderStats()
-                  ],
-                ),
-              );
-            }),
-            _AdminEarningStatsGraph()
-          ],
-        )
+        children: [
+          _WelcomeText(),
+          LayoutBuilder(builder: (context, constraints) {
+            return SizedBox(
+              height: 313,
+              width: constraints.maxWidth,
+              child: Row(
+                spacing: 15,
+                children: [
+                  _TextStats(),
+                  _ZoneWiseOrderStats()
+                ],
+              ),
+            );
+          }),
+          _AdminEarningStatsGraph()
+        ]
     );
   }
 }
@@ -57,7 +53,9 @@ class _WelcomeText extends StatelessWidget {
         SectionHeadingText(headingText: lang_key.welcomeAdmin.tr),
         Text(
           lang_key.monitorYourBusinessStatistics.tr,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500
+          ),
         )
       ],
     );
@@ -72,7 +70,7 @@ class _TextStats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
-        spacing: 10,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -89,7 +87,7 @@ class _TextStats extends StatelessWidget {
                 value: '\$ 10',
                 iconOrImageBgColor: Color(0xffF89D1F),
                 icon: Icons.currency_exchange_outlined,
-              )
+              ),
             ],
           ),
           Row(
@@ -144,7 +142,7 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                   lang_key.zoneWiseOrders.tr,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600
-                  ),
+                  )
                 ),
                 Flexible(
                   child: CustomDropdown(
@@ -199,15 +197,13 @@ class _ZoneOrderVolumeItem extends StatelessWidget {
           children: [
             Text(
               _viewModel.zoneWiseOrderVolumeList[index].zoneName!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: primaryGrey
               ),
             ),
             Text(
               '${_viewModel.zoneWiseOrderVolumeList[index].percentage! * 100}% Order Volume',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: primaryGrey
               ),
             )
@@ -277,7 +273,7 @@ class SmallStatisticTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               decoration: BoxDecoration(
                 borderRadius: kContainerBorderRadius,
                 border: Border.all(color: iconOrImageBgColor),
@@ -304,7 +300,7 @@ class SmallStatisticTile extends StatelessWidget {
             ),
             Text(
               text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: primaryGrey
               ),
               maxLines: 1,

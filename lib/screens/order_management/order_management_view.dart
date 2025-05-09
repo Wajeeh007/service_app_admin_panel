@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
@@ -22,14 +21,11 @@ class OrderManagementView extends StatelessWidget {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.orders.tr,
         overlayPortalControllersAndIcons: [],
-        child: Column(
-          spacing: 10,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SectionHeadingText(headingText: lang_key.ordersList.tr),
-            CustomTabBar(
-                controller: _viewModel.tabController,
-                tabsNames: [
+        children: [
+          SectionHeadingText(headingText: lang_key.ordersList.tr),
+          CustomTabBar(
+              controller: _viewModel.tabController,
+              tabsNames: [
                 lang_key.allOrders.tr,
                 lang_key.pending.tr,
                 lang_key.ongoing.tr,
@@ -38,25 +34,24 @@ class OrderManagementView extends StatelessWidget {
                 lang_key.cancelled.tr,
                 lang_key.disputes.tr
               ]
-            ),
-            SizedBox(
-              height: 1000,
-              child: TabBarView(
+          ),
+          SizedBox(
+            height: 1000,
+            child: TabBarView(
                 physics: NeverScrollableScrollPhysics(),
-                  controller: _viewModel.tabController,
-                  children: [
-                    _AllOrders(),
-                    _PendingOrdersTabView(),
-                    _AcceptedOrdersTabView(),
-                    _OngoingOrdersTabView(),
-                    _CompletedOrdersTabView(),
-                    _CancelledOrdersTabView(),
-                    _DisputedOrdersTabView(),
-                  ]
-              ),
-            )
-          ],
-        )
+                controller: _viewModel.tabController,
+                children: [
+                  _AllOrders(),
+                  _PendingOrdersTabView(),
+                  _AcceptedOrdersTabView(),
+                  _OngoingOrdersTabView(),
+                  _CompletedOrdersTabView(),
+                  _CancelledOrdersTabView(),
+                  _DisputedOrdersTabView(),
+                ]
+            ),
+          )
+        ]
     );
   }
 }

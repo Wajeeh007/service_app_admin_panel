@@ -89,8 +89,20 @@ const ordersList = 'ordersList',
   /// Customer List Screen End ///
 
   /// Suspended Customer's List Screen
+  const adminNote = 'adminNote';
   /// Suspended Customer's List Screen End ///
+/// Customer Management End ///
 
+/// Serviceman Management ///
+  /// New Requests List Screen ///
+  const identificationNo = 'identificationNo',
+      dateOfExpiry = 'dateOfExpiry',
+      timeOfRequest = 'timeOfRequest';
+  /// New Requests List Screen End ///
+
+  /// Active servicemen list screen ///
+  const earning = 'earning';
+  /// Active servicemen list screen end ///
 /// General
 const fieldIsRequired = 'fieldIsRequired',
     invalidEmail = 'invalidEmail',

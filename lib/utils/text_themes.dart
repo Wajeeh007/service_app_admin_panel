@@ -29,7 +29,7 @@ class TextThemes {
     ),
     bodySmall: TextStyle(
         fontWeight: FontWeight.w500,
-        fontSize: 17,
+        fontSize: 15,
         color: color
     ),
     labelLarge: TextStyle(
