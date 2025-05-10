@@ -73,7 +73,6 @@ class English {
     key.disputes: 'Disputes',
     key.pendingRequest: 'Pending Request',
     key.acceptedRequest: 'Accepted Request',
-    key.searchOrder: 'Search Order',
     key.commission: 'Commission',
     key.totalAmount: 'Total Amount',
     key.paymentStatus: 'Payment Status',
@@ -108,6 +107,20 @@ class English {
       /// Active servicemen list screen ///
       key.earning: 'Earning',
       /// Active servicemen list screen end ///
+
+    /// Serviceman Management End ///
+
+    /// Service Management ///
+      /// Services Listing Screen
+      key.image: 'Image',
+      key.services: 'Services',
+      key.serviceInfo: 'Service Information',
+      key.serviceName: 'Service Name',
+      key.subServices: 'Sub-Services',
+      key.searchService: 'Search Service',
+      /// Services Listing Screen End ///
+    /// Service Management End ///
+
     /// General
     key.fieldIsRequired: 'Field is required',
     key.invalidEmail: 'Invalid email',
@@ -124,7 +137,12 @@ class English {
     key.all: 'All',
     key.name: 'Name',
     key.contactInfo: 'Contact Info',
-
+    key.typeHere: 'Type Here',
+    key.saveInfo: 'Save Info',
+    key.uploadFile: 'Upload File',
+    key.fileInstructions: 'File Format - jpg .jpeg .png Image Size - Maximum Size 5 MB.',
+    key.createdDate: 'Creation Date',
+    key.searchOrder: 'Search Order',
   };
 
 }

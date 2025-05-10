@@ -73,7 +73,6 @@ const ordersList = 'ordersList',
     commission = 'commission',
     paymentStatus = 'paymentStatus',
     orderStatus = 'orderStatus',
-    searchOrder = 'searchOrder',
     customerName = 'customerName',
     reason = 'reason',
     serviceman = 'serviceman',
@@ -103,6 +102,17 @@ const ordersList = 'ordersList',
   /// Active servicemen list screen ///
   const earning = 'earning';
   /// Active servicemen list screen end ///
+/// Serviceman Management End ///
+
+/// Service Management ///
+  /// Services Listing Screen
+  const image = 'image',
+      services = 'services',
+      serviceInfo = 'serviceInfo',
+      serviceName = 'serviceName',
+      subServices = 'subServices',
+      searchService = 'searchService';
+/// Service Management End ///
 /// General
 const fieldIsRequired = 'fieldIsRequired',
     invalidEmail = 'invalidEmail',
@@ -118,4 +128,10 @@ const fieldIsRequired = 'fieldIsRequired',
     active = 'active',
     inactive = 'inactive',
     name = 'name',
-    contactInfo = 'contactInfo';
+    contactInfo = 'contactInfo',
+    typeHere = 'typeHere',
+    saveInfo = 'saveInfo',
+    uploadFile = 'uploadFile',
+    fileInstructions = 'fileInstructions',
+    searchOrder = 'searchOrder',
+    createdDate = 'createdDate';

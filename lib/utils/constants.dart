@@ -24,10 +24,17 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
     width: 0.6
   );
 
+  /// Standard Container BoxDecoration
+  BoxDecoration kContainerBoxDecoration = BoxDecoration(
+    color: primaryWhite,
+    borderRadius: kContainerBorderRadius,
+    border: kContainerBorderSide
+  );
 /// Container Decorations End ///
 
 /// Constant Paddings ///
 const EdgeInsets basePaddingForScreens = EdgeInsets.all(20);
+const EdgeInsets basePaddingForContainers = EdgeInsets.all(20);
 /// Constant Paddings End ///
 
 /// Input Decorations ///
