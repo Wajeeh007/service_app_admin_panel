@@ -112,6 +112,16 @@ const ordersList = 'ordersList',
       serviceName = 'serviceName',
       subServices = 'subServices',
       searchService = 'searchService';
+  /// Services Listing Screen End ///
+
+  /// Sub Services Listing Screen ///
+  const searchSubService = 'searchSubService',
+      subServiceInfo = 'subServiceInfo',
+      subServiceName = 'subServiceName',
+      serviceType = 'serviceType',
+      chooseService = 'chooseService';
+  /// Sub Services Listing Screen End ///
+
 /// Service Management End ///
 /// General
 const fieldIsRequired = 'fieldIsRequired',
@@ -134,4 +144,11 @@ const fieldIsRequired = 'fieldIsRequired',
     uploadFile = 'uploadFile',
     fileInstructions = 'fileInstructions',
     searchOrder = 'searchOrder',
-    createdDate = 'createdDate';
+    createdDate = 'createdDate',
+    error = 'error',
+    success = 'success';
+
+/// Errors
+const addServiceError = 'addServiceError',
+    addSubServiceImage = 'addSubServiceImage';
+/// Errors End ///

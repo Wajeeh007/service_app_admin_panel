@@ -13,12 +13,12 @@ class ScreensBaseWidget extends StatelessWidget {
     super.key,
     required this.selectedSidePanelItem,
     required this.children,
-    this.overlayPortalControllersAndIcons,
+    this.overlayPortalControllersAndShowDropDown,
   });
 
   final String selectedSidePanelItem;
   final List<Widget> children;
-  final List<Map<OverlayPortalController, Rx<IconData>>>? overlayPortalControllersAndIcons;
+  final List<Map<OverlayPortalController, RxBool>>? overlayPortalControllersAndShowDropDown;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ScreensBaseWidget extends StatelessWidget {
       appBar: CustomAppBar(),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => hideAllOverlayPortalControllers(overlayPortalControllersAndIcons: overlayPortalControllersAndIcons),
+        onTap: () => hideAllOverlayPortalControllers(overlayPortalControllersAndIcons: overlayPortalControllersAndShowDropDown),
         child: Stack(
           children: [
             Row(

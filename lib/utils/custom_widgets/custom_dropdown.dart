@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 
+import '../../models/drop_down_entry.dart';
+
 class CustomDropdown extends StatelessWidget {
   CustomDropdown({
     super.key,
     required this.dropDownList,
     required this.overlayPortalController,
     required this.link,
-    required this.selectedItemIndex,
     required this.overlayToggleFunc,
-    required this.suffixIcon,
+    required this.showDropDown,
+    this.selectedItemIndex,
     this.width = 130,
     this.value,
     this.height = 30,
     this.suffixIconColor = const Color(0xff212121),
+    this.hintText = '',
+    this.padding,
+    this.dropDownFieldColor,
+    this.title,
+    this.dropDownWidth,
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -31,9 +38,14 @@ class CustomDropdown extends StatelessWidget {
   final List<DropDownEntry> dropDownList;
   final OverlayPortalController overlayPortalController;
   final LayerLink link;
-  final RxInt selectedItemIndex;
-  final Rx<IconData> suffixIcon;
+  final RxInt? selectedItemIndex;
+  final RxBool showDropDown;
   final VoidCallback overlayToggleFunc;
+  final String hintText;
+  final EdgeInsets? padding;
+  final Color? dropDownFieldColor;
+  final String? title;
+  final double? dropDownWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -54,43 +66,58 @@ class CustomDropdown extends StatelessWidget {
                     overlayToggleFunc: overlayToggleFunc,
                     selectedItemIndex: selectedItemIndex,
                     dropDownList: dropDownList,
-                    width: width,
+                    width: dropDownWidth ?? width,
                   )
               ),
             ),
           );
         },
-        child: Obx(() => Container(
-          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-          constraints: BoxConstraints(
-              maxWidth: width,
-              minWidth: 120,
-              maxHeight: height,
-              minHeight: height - 10
-          ),
-          decoration: BoxDecoration(
-            color: primaryGrey20,
-            borderRadius: kContainerBorderRadius,
-            border: kContainerBorderSide
-          ),
-          child: InkWell(
-            onTap: overlayToggleFunc,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  dropDownList[selectedItemIndex.value].label,
-                  style: Theme.of(context).textTheme.labelMedium,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if(title != null && title != '') Padding(
+              padding: EdgeInsets.only(left: 8, bottom: 5),
+              child: Text(
+                title!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: primaryGrey
                 ),
-                Icon(
-                  suffixIcon.value,
-                  size: 22,
-                  color: suffixIconColor,
-                )
-              ],
+              ),
             ),
-          ),
-        )
+            Obx(() => Container(
+              padding: padding ?? EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+              constraints: BoxConstraints(
+                  maxWidth: width,
+                  minWidth: 120,
+                  maxHeight: height,
+                  minHeight: height - 10
+              ),
+              decoration: BoxDecoration(
+                color: dropDownFieldColor ?? primaryGrey20,
+                borderRadius: kContainerBorderRadius,
+                border: kContainerBorderSide
+              ),
+              child: InkWell(
+                onTap: overlayToggleFunc,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      selectedItemIndex != null ? dropDownList[selectedItemIndex!.value].label : hintText,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: selectedItemIndex != null ? null : primaryGrey
+                      ),
+                    ),
+                    Icon(
+                      showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                      size: 22,
+                      color: suffixIconColor,
+                    )
+                  ],
+                ),
+              ),
+            )),
+          ],
         ),
       ),
     );
@@ -102,14 +129,14 @@ class Menu extends StatelessWidget {
 
   final double? width;
   final List<DropDownEntry> dropDownList;
-  final RxInt selectedItemIndex;
+  final RxInt? selectedItemIndex;
   final VoidCallback overlayToggleFunc;
 
   const Menu({
     super.key,
     required this.dropDownList,
-    required this.selectedItemIndex,
     required this.overlayToggleFunc,
+    this.selectedItemIndex,
     this.width,
   });
 
@@ -140,7 +167,7 @@ class Menu extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4.0),
               child: InkWell(
                 onTap: () {
-                  selectedItemIndex.value = index;
+                  selectedItemIndex?.value = index;
                   overlayToggleFunc();
                 },
                 child: Column(
@@ -164,20 +191,4 @@ class Menu extends StatelessWidget {
       ),
     );
   }
-}
-
-void tap(OverlayPortalController overlayPortalController, Rx<IconData> suffixIcon) {
-  overlayPortalController.toggle();
-  if(overlayPortalController.isShowing) {
-    suffixIcon.value = Icons.keyboard_arrow_up_rounded;
-  } else {
-    suffixIcon.value = Icons.keyboard_arrow_down_rounded;
-  }
-}
-
-class DropDownEntry {
-  final dynamic value;
-  final String label;
-
-  DropDownEntry({required this.value, required this.label});
 }

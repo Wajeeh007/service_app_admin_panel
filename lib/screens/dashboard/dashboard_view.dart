@@ -18,7 +18,7 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.dashboard.tr,
-        overlayPortalControllersAndIcons: _viewModel.overlayPortalControllersAndIcons,
+        overlayPortalControllersAndShowDropDown: _viewModel.overlayPortalControllersAndIcons,
         children: [
           _WelcomeText(),
           LayoutBuilder(builder: (context, constraints) {
@@ -146,10 +146,10 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                 ),
                 Flexible(
                   child: CustomDropdown(
-                    suffixIcon: _viewModel.zoneWiseStatsSuffixIcon,
+                    showDropDown: _viewModel.zoneWiseStatsShowDropDown,
                     overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
                         overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
-                      suffixIcon: _viewModel.zoneWiseStatsSuffixIcon
+                      showDropDown: _viewModel.zoneWiseStatsShowDropDown
                     ),
                     selectedItemIndex: _viewModel.zoneWiseStatSelectedItemIndex,
                     dropDownList: _viewModel.zoneWiseStatsDropDownList,
@@ -346,8 +346,8 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                       selectedItemIndex: _viewModel.adminEarningTimePeriodSelectedItemIndex,
                       overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
                         overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                        suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon
-                      ), suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon,
+                        showDropDown: _viewModel.adminEarningTimePeriodShowDropDown
+                      ), showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
                   ),
                   CustomDropdown(
                       dropDownList: _viewModel.adminEarningZoneSelectionList,
@@ -356,8 +356,9 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                       selectedItemIndex: _viewModel.adminEarningZoneSelectionSelectedItemIndex,
                       overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
                         overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                        suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon
-                      ), suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon,
+                        showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown
+                      ),
+                    showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown,
                   ),
                 ],
               )

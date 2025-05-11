@@ -15,7 +15,7 @@ class SuspendedCustomersListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.suspendedCustomers.tr,
-        overlayPortalControllersAndIcons: [],
+        overlayPortalControllersAndShowDropDown: [],
       children: [
         SectionHeadingText(headingText: lang_key.suspendedCustomers.tr),
         ListBaseContainer(

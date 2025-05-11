@@ -18,7 +18,7 @@ class CustomersListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.customersList.tr,
-        overlayPortalControllersAndIcons: [],
+        overlayPortalControllersAndShowDropDown: [],
         children: [
           _CustomerAnalyticsData(),
           SectionHeadingText(headingText: lang_key.customersList.tr),

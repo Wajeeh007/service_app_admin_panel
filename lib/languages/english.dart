@@ -119,6 +119,13 @@ class English {
       key.subServices: 'Sub-Services',
       key.searchService: 'Search Service',
       /// Services Listing Screen End ///
+
+      /// Sub Services Listing Screen ///
+      key.searchSubService: 'Search Sub-Service',
+      key.subServiceInfo: 'Sub-Service Information',
+      key.subServiceName: 'Sub-Service Name',
+      key.serviceType: 'Service Type',
+      key.chooseService: 'Choose Service',
     /// Service Management End ///
 
     /// General
@@ -143,6 +150,12 @@ class English {
     key.fileInstructions: 'File Format - jpg .jpeg .png Image Size - Maximum Size 5 MB.',
     key.createdDate: 'Creation Date',
     key.searchOrder: 'Search Order',
+    key.error: 'Error',
+    key.success: 'Success',
+    
+    /// Errors
+    key.addServiceError: 'Add service type to save sub-service category',
+    key.addSubServiceImage: 'Add sub-service image to save information',
   };
 
 }

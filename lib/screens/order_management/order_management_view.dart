@@ -20,7 +20,7 @@ class OrderManagementView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.orders.tr,
-        overlayPortalControllersAndIcons: [],
+        overlayPortalControllersAndShowDropDown: [],
         children: [
           SectionHeadingText(headingText: lang_key.ordersList.tr),
           CustomTabBar(

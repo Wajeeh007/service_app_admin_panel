@@ -120,9 +120,8 @@ class CustomTextFormField extends StatelessWidget {
               child: suffixIcon,
             ) : SizedBox(),
             hintText: hint,
-            hintStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+            hintStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: primaryGrey,
-              fontSize: 14
             ),
             fillColor: primaryWhite,
             contentPadding: contentPadding,

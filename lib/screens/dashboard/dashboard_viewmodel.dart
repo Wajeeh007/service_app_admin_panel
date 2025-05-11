@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 
+import '../../models/drop_down_entry.dart';
 import 'models/zone_wise_order_volume.dart';
 
 class DashboardViewModel extends GetxController {
@@ -49,9 +49,9 @@ class DashboardViewModel extends GetxController {
   ];
 
   /// Suffix Icon for custom dropdown(s)
-  Rx<IconData> zoneWiseStatsSuffixIcon = Icons.keyboard_arrow_down_rounded.obs;
-  Rx<IconData> adminEarningTimePeriodSuffixIcon = Icons.keyboard_arrow_down_rounded.obs;
-  Rx<IconData> adminEarningZoneSelectionSuffixIcon = Icons.keyboard_arrow_down_rounded.obs;
+  RxBool zoneWiseStatsShowDropDown = false.obs;
+  RxBool adminEarningTimePeriodShowDropDown = false.obs;
+  RxBool adminEarningZoneSelectionShowDropDown = false.obs;
 
   /// Zones order volume result list
   RxList<ZoneWiseOrderVolume> zoneWiseOrderVolumeList = <ZoneWiseOrderVolume>[
@@ -63,28 +63,28 @@ class DashboardViewModel extends GetxController {
   ].obs;
 
   /// List to perform functions collectively on all dropdowns and suffix icons
-  List<Map<OverlayPortalController, Rx<IconData>>> overlayPortalControllersAndIcons = [];
+  List<Map<OverlayPortalController, RxBool>> overlayPortalControllersAndIcons = [];
 
   @override
   void onReady() {
     overlayPortalControllersAndIcons = [
-      {zoneWiseStatOverlayPortalController: zoneWiseStatsSuffixIcon},
-      {adminEarningTimePeriodOverlayPortalController: adminEarningTimePeriodSuffixIcon},
-      {adminEarningZoneSelectionOverlayPortalController: adminEarningZoneSelectionSuffixIcon}
+      {zoneWiseStatOverlayPortalController: zoneWiseStatsShowDropDown},
+      {adminEarningTimePeriodOverlayPortalController: adminEarningTimePeriodShowDropDown},
+      {adminEarningZoneSelectionOverlayPortalController: adminEarningZoneSelectionShowDropDown}
     ];
     super.onReady();
   }
 
   void toggleOverlayPortalController({
     required OverlayPortalController overlayPortalController,
-    required Rx<IconData> suffixIcon
+    required RxBool showDropDown
   }) {
     hideOtherOverlayPortalControllers(overlayPortalController);
     overlayPortalController.toggle();
     if(overlayPortalController.isShowing) {
-      suffixIcon.value = Icons.keyboard_arrow_up_rounded;
+      showDropDown.value = true;
     } else {
-      suffixIcon.value = Icons.keyboard_arrow_down_rounded;
+      showDropDown.value = false;
     }
   }
 
@@ -94,7 +94,7 @@ class DashboardViewModel extends GetxController {
     for (var controllerAndIcon in overlayPortalControllersAndIcons) {
       if(controllerAndIcon.keys.first == overlayController) continue;
       controllerAndIcon.keys.first.hide();
-      controllerAndIcon.values.first.value = Icons.keyboard_arrow_down_rounded;
+      controllerAndIcon.values.first.value = false;
     }
   }
 }

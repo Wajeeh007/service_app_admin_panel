@@ -40,7 +40,7 @@ class SidePanel extends StatelessWidget {
             SidePanelItem(text: lang_key.suspendedServiceMen.tr, routeName: Routes.suspendedServicemanList, selectedItem: selectedItem, icon: Icons.person_off_outlined),
             SidePanelHeading(text: lang_key.serviceManagement.tr),
             SidePanelItem(text: lang_key.servicesList.tr, routeName: Routes.servicesList, selectedItem: selectedItem, image: ImagesPaths.servicesList,),
-            SidePanelItem(text: lang_key.subServicesList.tr, routeName: '', selectedItem: selectedItem, image: ImagesPaths.subServicesList,),
+            SidePanelItem(text: lang_key.subServicesList.tr, routeName: Routes.subServicesList, selectedItem: selectedItem, image: ImagesPaths.subServicesList,),
             SidePanelItem(text: lang_key.itemsList.tr, routeName: '', selectedItem: selectedItem, image: ImagesPaths.item,),
             SidePanelHeading(text: lang_key.withdraws.tr),
             SidePanelItem(text: lang_key.withdrawRequests.tr, routeName: '', selectedItem: selectedItem, icon: CupertinoIcons.money_dollar,),
