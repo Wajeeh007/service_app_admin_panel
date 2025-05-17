@@ -3,9 +3,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:js/js_util.dart' as js_util;
 import 'package:service_app_admin_panel/screens/zone_setup/zone_model.dart';
+
+import '../../../utils/constants.dart';
+import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 // import 'dart:js_util' as js_util;
 
-class ZoneSetupViewModel extends GetxController {
+class ZoneListAndAdditionViewModel extends GetxController {
 
   /// Controller(s) & Global Key(s)
   TextEditingController zoneNameController = TextEditingController();
@@ -30,13 +33,8 @@ class ZoneSetupViewModel extends GetxController {
   RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
 
   @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-  }
-
-  @override
   void onReady() {
+    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'zoneSetup').values.first);
     determinePosition();
     super.onReady();  
   }
@@ -45,6 +43,7 @@ class ZoneSetupViewModel extends GetxController {
   void onClose() {
     zoneNameController.dispose();
     zoneSearchController.dispose();
+    detachSidePanelScrollController();
     super.onClose();
   }
 

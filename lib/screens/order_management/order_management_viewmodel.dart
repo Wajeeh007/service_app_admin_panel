@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/order.dart';
+import 'package:service_app_admin_panel/utils/helper_functions/scroll_controller_funcs.dart';
+
+import '../../utils/constants.dart';
 
 class OrderManagementViewModel extends GetxController with GetSingleTickerProviderStateMixin{
 
@@ -52,4 +55,15 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
     super.onInit();
   }
 
+  @override
+  void onReady() {
+    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'ordersManagement').values.first);
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    detachSidePanelScrollController();
+    super.onClose();
+  }
 }

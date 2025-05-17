@@ -7,21 +7,23 @@ import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:js/js_util.dart' as js_util;
+import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
-import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_viewmodel.dart';
+import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_viewmodel.dart';
 
 import '../custom_google_map_libraries/drawing_manager.dart';
 import '../custom_google_map_libraries/g_map.dart';
 import '../custom_google_map_libraries/lat_lng.dart' as ltln;
 import '../custom_google_map_libraries/map_options.dart';
-import '../custom_google_map_libraries/marker.dart';
 import '../custom_google_map_libraries/overlay_complete.dart';
 import '../custom_google_map_libraries/web_only.dart';
 
 class GoogleMapWidget extends StatelessWidget {
   final String _viewType = 'google-map-view';
 
-  GoogleMapWidget({super.key}) {
+  final bool isBeingEdited;
+
+  GoogleMapWidget({super.key, required this.isBeingEdited}) {
 
       registerWebView(_viewType, (int viewId) {
         final container = html.DivElement()
@@ -63,23 +65,74 @@ class GoogleMapWidget extends StatelessWidget {
           },
         ));
 
-        AdvancedMarkerElement? userMarker;
-
-        moveCamera(gMap, userMarker, rawMap);
-
         drawingManager.setMap(gMap);
-        ZoneSetupViewModel viewModel = Get.find<ZoneSetupViewModel>();
-        addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
-          if (viewModel.areaPolygons != '') {
+
+        dynamic activePolygon;
+
+        final EditZoneViewModel editZoneViewModel = Get.put(EditZoneViewModel());
+        final ZoneListAndAdditionViewModel zoneListAndAdditionViewModel = Get.find();
+
+        if(isBeingEdited) {
+
+          final cords = editZoneViewModel.areaPolygon
+              .split(',')
+              .map((s) {
+            final parts = s.trim().split(' ');
+            return ltln.LatLng(
+                lat: double.parse(parts[1]), lng: double.parse(parts[0]));
+          }).toList();
+
+          final google = js_util.getProperty(html.window, 'google');
+          final maps = js_util.getProperty(google, 'maps');
+          final polygonConstructor = js_util.getProperty(maps, 'Polygon');
+          final latLngConstructor = js_util.getProperty(maps, 'LatLng');
+          final latLngBoundsConstructor = js_util.getProperty(maps, 'LatLngBounds');
+          final bounds = js_util.callConstructor(latLngBoundsConstructor, []);
+
+          final polygonOptions = js_util.jsify({
+            'paths': cords
+                .map((c) => js_util.jsify({'lat': c.lat, 'lng': c.lng}))
+                .toList(),
+            'map': gMap,
+            'editable': true,
+            'fillColor': '#FF0000',
+            'fillOpacity': 0.5,
+            'strokeWeight': 1.5,
+            'clickable': false,
+            'zIndex': 1,
+          });
+
+          activePolygon = js_util.callConstructor(polygonConstructor, [polygonOptions]);
+
+          for (final c in cords) {
+            final jsLatLng = js_util.callConstructor(latLngConstructor, [c.lat, c.lng]);
+            js_util.callMethod(bounds, 'extend', [jsLatLng]);
+          }
+
+          js_util.callMethod(gMap, 'fitBounds', [bounds]);
+
+          drawingManager.setDrawingMode(null);
+          drawingManager.setMap(null);
+        }
+
+        if(!isBeingEdited){
+        moveCamera(gMap, rawMap);
+      }
+
+      addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
+          if (activePolygon != null) {
             html.window.alert('Only one polygon is allowed.');
             return;
           }
 
-          final event = e as OverlayCompleteEvent;
-          final path = event.overlay.getPath();
+          activePolygon = (e as OverlayCompleteEvent).overlay;
+          makeEditable(activePolygon, true);
+
+          final path = js_util.callMethod(activePolygon, 'getPath', []);
+          final length = js_util.callMethod(path, 'getLength', []);
           final points = <String>[];
 
-          for (var i = 0; i < path.getLength(); i++) {
+          for (var i = 0; i < length; i++) {
             final point = path.getAt(i);
             final lat = point.lat();
             final lng = point.lng();
@@ -89,7 +142,12 @@ class GoogleMapWidget extends StatelessWidget {
           if (points.first != points.last) {
             points.add(points.first);
           }
-          viewModel.areaPolygons = points.join(', ');
+
+          if(isBeingEdited) {
+            Get.find<EditZoneViewModel>().areaPolygon = points.join(', ');
+          } else {
+            zoneListAndAdditionViewModel.areaPolygons = points.join(', ');
+          }
           drawingManager.setDrawingMode(null);
         }));
 
@@ -115,7 +173,7 @@ class GoogleMapWidget extends StatelessWidget {
           ..style.zIndex = '5';
 
         locateButton.onClick.listen((_) {
-          moveCamera(gMap, userMarker, rawMap);
+          moveCamera(gMap, rawMap);
         });
 
         dragButton.onClick.listen((_) {
@@ -124,7 +182,7 @@ class GoogleMapWidget extends StatelessWidget {
         });
 
         drawButton.onClick.listen((_) {
-          if (viewModel.areaPolygons != '') {
+          if (zoneListAndAdditionViewModel.areaPolygons != '') {
             html.window.alert('Only one polygon is allowed.');
             return;
           }
@@ -140,52 +198,21 @@ class GoogleMapWidget extends StatelessWidget {
       });
   }
 
-  void moveCamera(GMap map, AdvancedMarkerElement? userMarker, dynamic rawMap) async {
-    ZoneSetupViewModel viewModel = Get.find();
+  void moveCamera(GMap map, dynamic rawMap) async {
+    ZoneListAndAdditionViewModel viewModel = Get.find();
 
     viewModel.determinePosition().then((value) async {
       map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
-
-      //   if (userMarker != null) {
-      //     userMarker = null;
-      //   }
-      //
-      //   Future.delayed(Duration(milliseconds: 800), () {
-      //     final markerOptions = js_util.newObject();
-      //     js_util.setProperty(markerOptions, 'position', js_util.jsify({'lat': value.latitude, 'lng': value.longitude}));
-      //     js_util.setProperty(markerOptions, 'map', rawMap); // Ensure 'map' is the raw JS map object
-      //     js_util.setProperty(markerOptions, 'title', 'Your Location');
-      //
-      //     // Create a simple HTML element for the marker's content
-      //     final content = html.DivElement()
-      //       ..style.width = '12px'
-      //       ..style.height = '12px'
-      //       ..style.borderRadius = '50%'
-      //       ..style.backgroundColor = '#4285F4'
-      //       ..style.border = '2px solid white'
-      //       ..style.boxShadow = '0 0 6px rgba(66,133,244,0.6)';
-      //
-      //     js_util.setProperty(markerOptions, 'content', content);
-      //     final AdvancedMarkerElement = getAdvancedMarkerElementConstructor();
-      //     js_util.callConstructor(AdvancedMarkerElement, [markerOptions]);
-      //
-      //   });
-      //
-      //   // userMarker = AdvancedMarkerElement(js_util.jsify({
-      //   //   'position': ltln.LatLng(lat: value.latitude, lng: value.longitude),
-      //   //   'map': map,
-      //   //   'content': createBlueDot(),
-      //   //   'title': 'Your Location',
-      //   // }));
-      // });
-
-      // await Future.delayed(Duration(milliseconds: 0));
-      // userMarker?.map = map;
-      // } catch (e) {
-      //   print("Error in moveCamera: $e");
-      //   html.window.alert(e.toString());
-      // }
     });
+  }
+
+  void makeEditable(dynamic polygon, bool editable) {
+    if (polygon == null) return;
+    try {
+      js_util.callMethod(polygon, 'setEditable', [editable]);
+    } catch (_) {
+      js_util.callMethod(polygon, 'setOptions', [js_util.jsify({'editable': editable})]);
+    }
   }
 
   @override

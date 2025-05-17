@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/helper_functions/scroll_controller_funcs.dart';
 
 import '../../models/drop_down_entry.dart';
+import '../../utils/constants.dart';
 import 'models/zone_wise_order_volume.dart';
 
 class DashboardViewModel extends GetxController {
@@ -12,19 +14,19 @@ class DashboardViewModel extends GetxController {
     TextEditingController zoneWiseStatController = TextEditingController();
     OverlayPortalController zoneWiseStatOverlayPortalController = OverlayPortalController();
     LayerLink zoneWiseStatLink = LayerLink();
-    RxInt zoneWiseStatSelectedItemIndex = 0.obs;
+    dynamic zoneWiseStatSelectedValue;
 
     /// Admin earning stats time period dropdown variables
     TextEditingController adminEarningTimePeriodController = TextEditingController();
     OverlayPortalController adminEarningTimePeriodOverlayPortalController = OverlayPortalController();
     LayerLink adminEarningTimePeriodLink = LayerLink();
-    RxInt adminEarningTimePeriodSelectedItemIndex = 0.obs;
+    dynamic adminEarningTimePeriodSelectedValue;
 
     /// Admin earning stats zone selection dropdown variables
     TextEditingController adminEarningZoneSelectionController = TextEditingController();
     OverlayPortalController adminEarningZoneSelectionOverlayPortalController = OverlayPortalController();
     LayerLink adminEarningZoneSelectionLink = LayerLink();
-    RxInt adminEarningZoneSelectionSelectedItemIndex = 0.obs;
+    dynamic adminEarningZoneSelectionSelectedValue;
 
   /// Zone-wise stats time period Dropdown options
   List<DropDownEntry> zoneWiseStatsDropDownList = [
@@ -63,16 +65,45 @@ class DashboardViewModel extends GetxController {
   ].obs;
 
   /// List to perform functions collectively on all dropdowns and suffix icons
-  List<Map<OverlayPortalController, RxBool>> overlayPortalControllersAndIcons = [];
+  List<Map<OverlayPortalController, RxBool>> overlayPortalControllersAndDropDownValues = [];
+
+  @override
+  void onInit() {
+    zoneWiseStatSelectedValue = zoneWiseStatsDropDownList.first.value;
+    adminEarningTimePeriodSelectedValue = adminEarningTimePeriodDropdownList.first.value;
+    adminEarningZoneSelectionSelectedValue = adminEarningZoneSelectionList.first.value;
+    zoneWiseStatController.text = zoneWiseStatsDropDownList.first.label;
+    adminEarningTimePeriodController.text = adminEarningTimePeriodDropdownList.first.label;
+    adminEarningZoneSelectionController.text = adminEarningZoneSelectionList.first.label;
+    super.onInit();
+  }
 
   @override
   void onReady() {
-    overlayPortalControllersAndIcons = [
+    overlayPortalControllersAndDropDownValues = [
       {zoneWiseStatOverlayPortalController: zoneWiseStatsShowDropDown},
       {adminEarningTimePeriodOverlayPortalController: adminEarningTimePeriodShowDropDown},
       {adminEarningZoneSelectionOverlayPortalController: adminEarningZoneSelectionShowDropDown}
     ];
+
+    for (var controllerAndDropDown in overlayPortalControllersAndDropDownValues) {
+      ever(controllerAndDropDown.values.first, (value) {
+        if(value) {
+          hideOtherOverlayPortalControllers(controllerAndDropDown.keys.first);
+        } else {
+          controllerAndDropDown.keys.first.hide();
+        }
+      });
+    }
+
+    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'dashboard').values.first);
     super.onReady();
+  }
+
+  @override
+  void onClose() {
+    detachSidePanelScrollController();
+    super.onClose();
   }
 
   void toggleOverlayPortalController({
@@ -81,20 +112,17 @@ class DashboardViewModel extends GetxController {
   }) {
     hideOtherOverlayPortalControllers(overlayPortalController);
     overlayPortalController.toggle();
-    if(overlayPortalController.isShowing) {
-      showDropDown.value = true;
-    } else {
-      showDropDown.value = false;
-    }
   }
 
   /// Hide other overlay portal controllers except the given one
   void hideOtherOverlayPortalControllers(OverlayPortalController overlayController) {
     GlobalVariables.openProfileDropdown.value = false;
-    for (var controllerAndIcon in overlayPortalControllersAndIcons) {
-      if(controllerAndIcon.keys.first == overlayController) continue;
-      controllerAndIcon.keys.first.hide();
-      controllerAndIcon.values.first.value = false;
+    for (var controllerAndDropDownValues in overlayPortalControllersAndDropDownValues) {
+      if(controllerAndDropDownValues.keys.first == overlayController) {
+        controllerAndDropDownValues.keys.first.show();
+        continue;
+      }
+      controllerAndDropDownValues.values.first.value = false;
     }
   }
 }

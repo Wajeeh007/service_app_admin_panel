@@ -16,7 +16,8 @@ class ListBaseContainer extends StatelessWidget {
     required this.columnsNames,
     this.hintText,
     this.expandFirstColumn = true,
-    this.includeSearchField = true
+    this.includeSearchField = true,
+    this.fieldWidth = 200
   }) : assert((includeSearchField == false && (controller == null && formKey == null)) || (includeSearchField == true && (controller != null && formKey != null)), 'controller and formkey must be null, if search field is not included. And must be provided if search field is included.');
 
   final GlobalKey<FormState>? formKey;
@@ -26,6 +27,7 @@ class ListBaseContainer extends StatelessWidget {
   final String? hintText;
   final bool expandFirstColumn;
   final bool includeSearchField;
+  final double fieldWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class ListBaseContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               includeSearchField ? SearchFieldAndButton(
+                fieldWidth: fieldWidth,
                 formKey: formKey!,
                 controller: controller!,
                 hint: hintText,

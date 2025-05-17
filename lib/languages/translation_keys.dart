@@ -28,10 +28,11 @@ const dashboard = 'dashboard';
 
   /// Withdraws
   const withdraws = 'withdraws',
-      withdrawRequests = 'withdrawRequests';
+      methods = 'methods',
+      requests = 'requests';
 
   /// Settings
-  const settings = 'settings',
+  const settings = 'business_setup',
       businessSetup = 'businessSetup';
 
 /// Side Panel End
@@ -122,7 +123,60 @@ const ordersList = 'ordersList',
       chooseService = 'chooseService';
   /// Sub Services Listing Screen End ///
 
+  /// Items Listing Screen ///
+  const addItemDetails = 'addItemDetails',
+      searchItem = 'searchItem',
+      itemName = 'itemName',
+      price = 'price',
+      subServiceType = 'subServiceType',
+      service = 'service',
+      subService = 'subService';
+  /// Items Listing Screen End ///
+
 /// Service Management End ///
+
+/// Withdraws ///
+
+  /// Withdraw Methods ///
+  const methodsList = 'methodsList',
+    addMethod = 'addNewMethod',
+    searchMethod = 'searchMethod',
+    setupMethodInfo = 'setupMethodInfo',
+    text = 'text',
+    number = 'number',
+    email = 'email',
+    methodName = 'methodName',
+    makeMethodDefault = 'makeMethodDefault',
+    selectFieldType = 'selectFieldType',
+    inputFieldType = 'inputFieldType',
+    fieldName = 'fieldName',
+    placeholderText = 'placeholderText',
+    saveInformation = 'saveInformation',
+    fieldType = 'fieldType',
+    isDefault = 'isDefault';
+  /// Withdraw Methods End ///
+
+  /// Withdraw Requests ///
+
+  const approved = 'approved',
+    settled = 'settled',
+    denied = 'denied',
+    amount = 'amount',
+    method = 'method',
+    searchByServiceman = 'searchByServiceman';
+
+  /// Withdraw Requests End ///
+
+/// Withdraws End ///
+
+/// Business Setup ///
+
+  /// Settings ///
+  const businessInfo = 'businessInfo';
+  /// Settings End ///
+
+/// Business Setup End ///
+
 /// General
 const fieldIsRequired = 'fieldIsRequired',
     invalidEmail = 'invalidEmail',
@@ -150,5 +204,7 @@ const fieldIsRequired = 'fieldIsRequired',
 
 /// Errors
 const addServiceError = 'addServiceError',
-    addSubServiceImage = 'addSubServiceImage';
+    addSubServiceImage = 'addSubServiceImage',
+    addItemSubServiceType = 'addItemSubServiceType',
+    addItemImage = 'addItemImage';
 /// Errors End ///

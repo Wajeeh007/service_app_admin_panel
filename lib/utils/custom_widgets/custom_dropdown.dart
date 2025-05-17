@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
 
 import '../../models/drop_down_entry.dart';
 
 class CustomDropdown extends StatelessWidget {
+
   CustomDropdown({
     super.key,
     required this.dropDownList,
     required this.overlayPortalController,
-    required this.link,
-    required this.overlayToggleFunc,
     required this.showDropDown,
-    this.selectedItemIndex,
-    this.width = 130,
+    required this.textEditingController,
     this.value,
+    this.width = 130,
     this.height = 30,
     this.suffixIconColor = const Color(0xff212121),
     this.hintText = '',
     this.padding,
-    this.dropDownFieldColor,
+    this.dropDownFieldColor = primaryWhite,
     this.title,
     this.dropDownWidth,
+    this.includeAsterisk = false,
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -37,15 +38,16 @@ class CustomDropdown extends StatelessWidget {
   final Color suffixIconColor;
   final List<DropDownEntry> dropDownList;
   final OverlayPortalController overlayPortalController;
-  final LayerLink link;
-  final RxInt? selectedItemIndex;
   final RxBool showDropDown;
-  final VoidCallback overlayToggleFunc;
   final String hintText;
   final EdgeInsets? padding;
-  final Color? dropDownFieldColor;
+  final Color dropDownFieldColor;
   final String? title;
   final double? dropDownWidth;
+  final bool includeAsterisk;
+  final TextEditingController textEditingController;
+
+  final LayerLink link = LayerLink();
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +65,9 @@ class CustomDropdown extends StatelessWidget {
               child: Align(
                   alignment: Alignment.topLeft,
                   child: Menu(
-                    overlayToggleFunc: overlayToggleFunc,
-                    selectedItemIndex: selectedItemIndex,
+                    textEditingController: textEditingController,
+                    showDropDownValue: showDropDown,
+                    value: value,
                     dropDownList: dropDownList,
                     width: dropDownWidth ?? width,
                   )
@@ -77,46 +80,44 @@ class CustomDropdown extends StatelessWidget {
           children: [
             if(title != null && title != '') Padding(
               padding: EdgeInsets.only(left: 8, bottom: 5),
-              child: Text(
-                title!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: primaryGrey
+              child: RichText(
+                text: TextSpan(
+                    text: title!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: primaryGrey
+                    ),
+                    children: includeAsterisk ? [
+                      TextSpan(
+                        text: ' *',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: errorRed,
+                        ),
+                      ),
+                    ] : []
                 ),
               ),
             ),
-            Obx(() => Container(
-              padding: padding ?? EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-              constraints: BoxConstraints(
+            Obx(() => CustomTextFormField(
+
+              controller: textEditingController,
+              hint: hintText,
+              fillColor: dropDownFieldColor,
+              boxConstraints: BoxConstraints(
                   maxWidth: width,
                   minWidth: 120,
                   maxHeight: height,
-                  minHeight: height - 10
+                  minHeight: height
+                ), 
+              readOnly: true, 
+              suffixIcon: Icon(
+                showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                size: 22,
+                color: suffixIconColor,
               ),
-              decoration: BoxDecoration(
-                color: dropDownFieldColor ?? primaryGrey20,
-                borderRadius: kContainerBorderRadius,
-                border: kContainerBorderSide
+              onTap: () => showDropDown.value = !showDropDown.value,
+              contentPadding: padding ?? EdgeInsets.symmetric(vertical: 0, horizontal: 8),
               ),
-              child: InkWell(
-                onTap: overlayToggleFunc,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      selectedItemIndex != null ? dropDownList[selectedItemIndex!.value].label : hintText,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: selectedItemIndex != null ? null : primaryGrey
-                      ),
-                    ),
-                    Icon(
-                      showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                      size: 22,
-                      color: suffixIconColor,
-                    )
-                  ],
-                ),
-              ),
-            )),
+            )
           ],
         ),
       ),
@@ -129,14 +130,16 @@ class Menu extends StatelessWidget {
 
   final double? width;
   final List<DropDownEntry> dropDownList;
-  final RxInt? selectedItemIndex;
-  final VoidCallback overlayToggleFunc;
-
-  const Menu({
+  final RxBool showDropDownValue;
+  final TextEditingController textEditingController;
+  dynamic value;
+  
+  Menu({
     super.key,
     required this.dropDownList,
-    required this.overlayToggleFunc,
-    this.selectedItemIndex,
+    required this.showDropDownValue,
+    required this.textEditingController,
+    this.value,
     this.width,
   });
 
@@ -144,8 +147,10 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      width: width ?? 200 ,
-      height: 150,
+      constraints: BoxConstraints(
+        maxWidth: width ?? 200,
+        maxHeight: 180,
+      ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
@@ -167,8 +172,9 @@ class Menu extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4.0),
               child: InkWell(
                 onTap: () {
-                  selectedItemIndex?.value = index;
-                  overlayToggleFunc();
+                  value = dropDownList[index].value;
+                  textEditingController.text = dropDownList[index].label;
+                  showDropDownValue.value = false;
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

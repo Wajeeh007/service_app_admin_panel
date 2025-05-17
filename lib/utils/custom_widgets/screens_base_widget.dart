@@ -14,11 +14,13 @@ class ScreensBaseWidget extends StatelessWidget {
     required this.selectedSidePanelItem,
     required this.children,
     this.overlayPortalControllersAndShowDropDown,
+    this.args
   });
 
   final String selectedSidePanelItem;
   final List<Widget> children;
   final List<Map<OverlayPortalController, RxBool>>? overlayPortalControllersAndShowDropDown;
+  final Map<String, dynamic>? args;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,10 @@ class ScreensBaseWidget extends StatelessWidget {
         onTap: () => hideAllOverlayPortalControllers(overlayPortalControllersAndIcons: overlayPortalControllersAndShowDropDown),
         child: Stack(
           children: [
+
             Row(
               children: [
-                SidePanel(selectedItem: selectedSidePanelItem),
+                SidePanel(selectedItemIndex: selectedSidePanelItem, args: args,),
                 Expanded(
                     child: Align(
                       alignment: Alignment.topLeft,

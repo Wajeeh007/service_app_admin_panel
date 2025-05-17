@@ -17,13 +17,13 @@ class CustomersListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+      args: {'scrollPosition': 0.0},
         selectedSidePanelItem: lang_key.customersList.tr,
         overlayPortalControllersAndShowDropDown: [],
         children: [
           _CustomerAnalyticsData(),
           SectionHeadingText(headingText: lang_key.customersList.tr),
           CustomTabBar(
-              maxWidth: 230,
               controller: _viewModel.tabController,
               tabsNames: [
                 lang_key.all.tr,

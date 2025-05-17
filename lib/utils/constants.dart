@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
 
 /// Colors
 
@@ -21,7 +22,7 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
   /// Border
   Border kContainerBorderSide = Border.all(
     color: primaryGrey.withValues(alpha: 0.5),
-    width: 0.6
+    width: 0.8
   );
 
   /// Standard Container BoxDecoration
@@ -79,6 +80,10 @@ double mapsZoomLevel = 14.0;
 enum OrderStatus {pending, accepted, ongoing, completed, cancelled, dispute}
 /// Order Status Enum End ///
 
+/// New Method Input Field Type ///
+enum NewMethodFieldType {text, number, email}
+/// New Method Input Field Type End ///
+
 /// Months list
 const List<String> months = [
   'January',
@@ -93,4 +98,15 @@ const List<String> months = [
   'October',
   'November',
   'December'
+];
+
+/// Sidepanel animation variables
+Duration sidePanelAnimationDuration = Duration(milliseconds: 300);
+Curve sidePanelAnimationCurve = Curves.easeIn;
+
+/// Sidepanel scroll positions
+List<Map<String, double>> sidePanelScrollPositions = [
+  {'dashboard': 0.0}, {'zoneSetup': 90}, {'ordersManagement': 170},
+  {'customerManagement': 260}, {'serviceManManagement': 390}, {'serviceManagement': GlobalVariables.scrollController.position.maxScrollExtent},
+  {'withdraws': GlobalVariables.scrollController.position.maxScrollExtent}, {'settings': GlobalVariables.scrollController.position.maxScrollExtent}
 ];

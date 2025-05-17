@@ -7,6 +7,7 @@ import 'package:service_app_admin_panel/screens/service_management/service_list/
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_material_button.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/heading_in_container_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -83,12 +84,7 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
         spacing: 30,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            lang_key.serviceInfo.tr,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold
-            ),
-          ),
+          HeadingInContainerText(text: lang_key.serviceInfo.tr,),
           Form(
             key: _viewModel.serviceAdditionFormKey,
             child: CustomTextFormField(
@@ -130,12 +126,7 @@ class _AddServiceImageSection extends StatelessWidget {
       child: Column(
         spacing: 15,
         children: [
-          Text(
-            lang_key.image.tr,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold
-            ),
-          ),
+          HeadingInContainerText(text: lang_key.image.tr,),
           DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(10),

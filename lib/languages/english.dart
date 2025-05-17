@@ -33,8 +33,9 @@ class English {
       key.itemsList: 'Items List',
 
       /// Withdraws
-      key.withdraws: 'Withdraw',
-      key.withdrawRequests: 'Withdraw Requests',
+      key.withdraws: 'Withdraws',
+      key.requests: 'Requests',
+      key.methods: 'Methods',
 
       /// Settings
       key.businessSetup: 'Business Setup',
@@ -126,7 +127,59 @@ class English {
       key.subServiceName: 'Sub-Service Name',
       key.serviceType: 'Service Type',
       key.chooseService: 'Choose Service',
+      /// Sub Services Listing Screen End ///
+
+      /// Items listing screen ///
+      key.addItemDetails: 'Add Items Details',
+      key.searchItem: 'Search Item',
+      key.itemName: 'Item Name',
+      key.price: 'Price',
+      key.subServiceType: 'Sub-Service Type',
+      key.service: 'Service',
+      key.subService: 'Sub-Service',
+
+      /// Items listing screen end ///
+
     /// Service Management End ///
+
+    /// Withdraws ///
+
+      /// Withdraw Methods ///
+      key.methodsList: 'Methods List',
+      key.searchMethod: 'Search Method',
+      key.addMethod: 'Add Method',
+      key.setupMethodInfo: 'Setup Method Info',
+      key.text: 'Text',
+      key.number: 'Number',
+      key.email: 'Email',
+      key.methodName: 'Method Name',
+      key.makeMethodDefault: 'Make method default',
+      key.selectFieldType: 'Select Field Type',
+      key.placeholderText: 'Placeholder Text',
+      key.inputFieldType: 'Input Field Type',
+      key.fieldName: 'Field Name',
+      key.saveInformation: 'Save Information',
+      key.fieldType: 'Field Type',
+      key.isDefault: 'Is Default',
+      /// Withdraw Methods End ///
+
+      /// Withdraw Requests ///
+      key.approved: 'Approved',
+      key.settled: 'Settled',
+      key.denied: 'Denied',
+      key.amount: 'Amount',
+      key.method: 'Method',
+      key.searchByServiceman: 'Search By Serviceman',
+      /// Withdraw Requests End ///
+    /// Withdraws End ///
+
+    /// Business Setup ///
+
+      /// Settings ///
+      key.businessInfo: 'Business Information',
+      /// Settings End ///
+
+    /// Business Setup End ///
 
     /// General
     key.fieldIsRequired: 'Field is required',
@@ -156,6 +209,8 @@ class English {
     /// Errors
     key.addServiceError: 'Add service type to save sub-service category',
     key.addSubServiceImage: 'Add sub-service image to save information',
+    key.addItemImage: 'Add Item image to save information',
+    key.addItemSubServiceType: 'Add Item sub-service type to save information',
   };
 
 }

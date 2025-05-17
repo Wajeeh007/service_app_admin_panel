@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_app_admin_panel/models/service_category.dart';
 
+import '../../../utils/constants.dart';
+import '../../../utils/helper_functions/scroll_controller_funcs.dart';
+
 class ServiceListViewModel extends GetxController {
 
   /// Controller(s) & Form Keys
@@ -21,4 +24,16 @@ class ServiceListViewModel extends GetxController {
 
   /// Added Service image variable
   Rx<XFile> addedServiceImage = XFile('').obs;
+
+  @override
+  void onReady() {
+    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    detachSidePanelScrollController();
+    super.onClose();
+  }
 }

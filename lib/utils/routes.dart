@@ -3,18 +3,25 @@ import 'package:service_app_admin_panel/screens/customer_management/customer_lis
 import 'package:service_app_admin_panel/screens/customer_management/suspended_customers_list/suspended_customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_view.dart';
 import 'package:service_app_admin_panel/screens/order_management/order_management_view.dart';
+import 'package:service_app_admin_panel/screens/service_management/items_list/items_list_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/service_list/service_list_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/sub_services_list/sub_services_list_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/new_requests/new_requests_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_view.dart';
-import 'package:service_app_admin_panel/screens/zone_setup/zone_setup_view.dart';
+import 'package:service_app_admin_panel/screens/withdraw/withdraw_methods/withdraw_methods_view.dart';
+import 'package:service_app_admin_panel/screens/withdraw/withdraw_requests/withdraw_requests_view.dart';
+import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_view.dart';
+import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_view.dart';
 
 import '../screens/serviceman_management/active_serviceman_list/active_serviceman_list_view.dart';
+import '../screens/settings/business_setup/business_setup_view.dart';
 
 class Routes {
 
+  static const baseScreen = '/baseScreen';
   static const dashboard = '/dashboard';
-  static const zoneSetup = '/zoneSetup';
+  static const zoneListAndAddition = '/zoneListAndAddition';
+  static const editZone = '/editZone';
   static const orders = '/orderManagement';
   static const customersList = '/customersList';
   static const suspendedCustomersList = '/suspendedCustomersList';
@@ -23,11 +30,17 @@ class Routes {
   static const suspendedServicemanList = '/suspendedServicemanList';
   static const servicesList = '/servicesList';
   static const subServicesList = '/subServicesList';
+  static const itemsList = '/itemsList';
+  static const withdrawRequests = '/withdrawRequests';
+  static const withdrawMethods = '/withdrawMethods';
+  static const businessSetup = '/businessSetup';
 
   static final pages = [
 
+    // GetPage(name: baseScreen, page: () => BaseScreenView(),)
     GetPage(name: dashboard, page: () => DashboardView()),
-    GetPage(name: zoneSetup, page: () => ZoneSetupView()),
+    GetPage(name: zoneListAndAddition, page: () => ZoneListAndAdditionView()),
+    GetPage(name: editZone, page: () => EditZoneView()),
     GetPage(name: orders, page: () => OrderManagementView()),
     GetPage(name: customersList, page: () => CustomersListView()),
     GetPage(name: suspendedCustomersList, page: () => SuspendedCustomersListView()),
@@ -36,6 +49,10 @@ class Routes {
     GetPage(name: suspendedServicemanList, page: () => SuspendedServicemanListView()),
     GetPage(name: servicesList, page: () => ServiceListView()),
     GetPage(name: subServicesList, page: () => SubServicesListView()),
+    GetPage(name: itemsList, page: () => ItemsListView()),
+    GetPage(name: withdrawMethods, page: () => WithdrawMethodsView()),
+    GetPage(name: withdrawRequests, page: () => WithdrawRequestsView()),
+    GetPage(name: businessSetup, page: () => BusinessSetupView()),
 
   ];
 }

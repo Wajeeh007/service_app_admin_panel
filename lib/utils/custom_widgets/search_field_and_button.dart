@@ -11,14 +11,16 @@ class SearchFieldAndButton extends StatelessWidget {
     super.key,
     required this.controller,
     required this.formKey,
-    this.hint
+    this.hint,
+    this.fieldWidth,
   });
 
   final GlobalKey<FormState> formKey;
   final TextEditingController controller;
   final String? hint;
+  final double? fieldWidth;
 
-  RxBool changeValidateMode = false.obs;
+  final RxBool changeValidateMode = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,11 @@ class SearchFieldAndButton extends StatelessWidget {
       spacing: 10,
       children: [
         SizedBox(
-          width: 200,
+          width: fieldWidth,
           child: Form(
               key: formKey,
               child: Obx(() => CustomTextFormField(
+                suffixIconSize: 10,
                   onChanged: (value) {
                     if(value == '' || value.isEmpty) {
                       changeValidateMode.value = false;

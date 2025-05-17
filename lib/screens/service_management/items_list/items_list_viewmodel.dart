@@ -1,45 +1,46 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:service_app_admin_panel/models/sub_service_category.dart';
+import 'package:service_app_admin_panel/models/service_item.dart';
 
 import '../../../models/drop_down_entry.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
-class SubServicesListViewModel extends GetxController {
+class ItemsListViewModel extends GetxController {
 
   /// Controller(s), LinkOverlay & Form Keys
-  OverlayPortalController serviceTypeController = OverlayPortalController();
-  LayerLink serviceTypeLink = LayerLink();
+  OverlayPortalController subServiceTypeController = OverlayPortalController();
+  LayerLink subServiceTypeLink = LayerLink();
 
-    /// For Service Type dropdown
-    TextEditingController serviceTypeTextController = TextEditingController();
+    /// For Service Type Dropdown
+    TextEditingController serviceTypeController = TextEditingController();
 
     /// For Search field
     TextEditingController searchController = TextEditingController();
     GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
-
+  
     /// For Service Addition
-    TextEditingController serviceAdditionController = TextEditingController();
-    GlobalKey<FormState> serviceAdditionFormKey = GlobalKey<FormState>();
+    TextEditingController itemNameController = TextEditingController();
+    TextEditingController itemPriceController = TextEditingController();
+    GlobalKey<FormState> itemAdditionFormKey = GlobalKey<FormState>();
 
   /// Controller(s) & Form Keys End ///
 
-  /// Sub-Services list data
-  RxList<ServiceSubCategory> subCategoriesList = <ServiceSubCategory>[].obs;
+  /// Items list data
+  RxList<ServiceItem> itemsList = <ServiceItem>[].obs;
 
-  /// Service types list ///
-  RxList<DropDownEntry> servicesList = <DropDownEntry>[].obs;
+  /// Sub-Services list for dropdown ///
+  RxList<DropDownEntry> subServicesList = <DropDownEntry>[].obs;
 
   /// Added Service image variable
-  Rx<XFile> addedServiceImage = XFile('').obs;
+  Rx<XFile> addedItemImage = XFile('').obs;
 
   /// Show Dropdown bool variables
-  RxBool showServiceTypeDropDown = false.obs;
+  RxBool showSubServiceTypeDropDown = false.obs;
 
   /// Selected Item index variables
-  RxInt? serviceTypeSelectedIndex;
+  RxInt? subServiceTypeSelectedIndex;
 
   @override
   void onReady() {
@@ -54,7 +55,10 @@ class SubServicesListViewModel extends GetxController {
   }
 
   /// Toggle dropdown and it's value
-  void toggleOverlay({required OverlayPortalController overlayPortalController, required RxBool showDropDown}) {
+  void toggleOverlay({
+    required OverlayPortalController overlayPortalController,
+    required RxBool showDropDown
+  }) {
     overlayPortalController.toggle();
     if(overlayPortalController.isShowing) {
       showDropDown.value = true;
@@ -62,4 +66,5 @@ class SubServicesListViewModel extends GetxController {
       showDropDown.value = false;
     }
   }
+
 }

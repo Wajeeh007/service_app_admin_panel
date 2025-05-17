@@ -38,6 +38,8 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixTextStyle,
     this.title,
     this.enabled,
+    this.includeAsterisk = false,
+    this.boxConstraints
   });
 
   final String? hint;
@@ -69,6 +71,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? prefixTextStyle;
   final String? title;
   final bool? enabled;
+  final bool includeAsterisk;
+  final BoxConstraints? boxConstraints;
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +81,20 @@ class CustomTextFormField extends StatelessWidget {
       children: [
         if(title != null && title != '') Padding(
           padding: EdgeInsets.only(left: 8, bottom: 5),
-          child: Text(
-            title!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: primaryGrey
+          child: RichText(
+            text: TextSpan(
+              text: title!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: primaryGrey
+              ),
+              children: includeAsterisk ? [
+                TextSpan(
+                  text: ' *',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: errorRed,
+                  ),
+                ),
+              ] : []
             ),
           ),
         ),
@@ -102,6 +116,7 @@ class CustomTextFormField extends StatelessWidget {
           inputFormatters: inputFormatters,
           style: Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
+            constraints: boxConstraints,
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             prefixStyle: prefixTextStyle,

@@ -1,46 +1,49 @@
-import 'dart:io';
+import 'dart:io' show File;
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/screens/service_management/sub_services_list/sub_services_list_viewmodel.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
+import 'package:service_app_admin_panel/screens/service_management/items_list/items_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/heading_in_container_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/show_snackbar.dart';
+
 import '../../../utils/constants.dart';
+import '../../../utils/custom_widgets/custom_dropdown.dart';
 import '../../../utils/custom_widgets/custom_material_button.dart';
 import '../../../utils/custom_widgets/custom_text_form_field.dart';
 import '../../../utils/custom_widgets/list_base_container.dart';
+import '../../../utils/helper_functions/show_snackbar.dart';
 import '../../../utils/images_paths.dart';
 import '../../../utils/validators.dart';
 
-class SubServicesListView extends StatelessWidget {
-  SubServicesListView({super.key});
+class ItemsListView extends StatelessWidget {
+  ItemsListView({super.key});
 
-  final SubServicesListViewModel _viewModel = Get.put(SubServicesListViewModel());
+  final ItemsListViewModel _viewModel = Get.put(ItemsListViewModel());
 
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
-        selectedSidePanelItem: lang_key.subServicesList.tr,
+        selectedSidePanelItem: lang_key.itemsList.tr,
         children: [
-          SectionHeadingText(headingText: lang_key.subServices.tr),
-          _SubServiceAdditionSection(),
+          SectionHeadingText(headingText: lang_key.addItemDetails.tr),
+          _ItemAdditionSection(),
           ListBaseContainer(
               controller: _viewModel.searchController,
               formKey: _viewModel.searchFormKey,
-              listData: _viewModel.subCategoriesList,
-              hintText: lang_key.searchSubService.tr,
+              listData: _viewModel.itemsList,
+              hintText: lang_key.searchItem.tr,
               expandFirstColumn: false,
               columnsNames: [
                 'SL',
                 lang_key.image.tr,
                 lang_key.name.tr,
+                lang_key.service.tr,
                 lang_key.subServices.tr,
-                lang_key.createdDate.tr,
+                lang_key.price.tr,
                 lang_key.actions.tr
               ]
           )
@@ -49,9 +52,9 @@ class SubServicesListView extends StatelessWidget {
   }
 }
 
-/// Service addition section
-class _SubServiceAdditionSection extends StatelessWidget {
-  const _SubServiceAdditionSection();
+/// Item addition section
+class _ItemAdditionSection extends StatelessWidget {
+  const _ItemAdditionSection();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +65,7 @@ class _SubServiceAdditionSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 15,
         children: [
-          _AddServiceNameAndButtonSection(),
+          _AddItemDetailsAndButtonSection(),
           _AddServiceImageSection(),
         ],
       ),
@@ -70,11 +73,11 @@ class _SubServiceAdditionSection extends StatelessWidget {
   }
 }
 
-/// Add new service name and save info button section
-class _AddServiceNameAndButtonSection extends StatelessWidget {
-  _AddServiceNameAndButtonSection();
+/// Add new item name and save info button section
+class _AddItemDetailsAndButtonSection extends StatelessWidget {
+  _AddItemDetailsAndButtonSection();
 
-  final SubServicesListViewModel _viewModel = Get.find();
+  final ItemsListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -86,56 +89,25 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           HeadingInContainerText(text: lang_key.subServiceInfo.tr,),
-          Form(
-            key: _viewModel.serviceAdditionFormKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 15,
-              children: [
-                CustomTextFormField(
-                  title: lang_key.subServiceName.tr,
-                  controller: _viewModel.serviceAdditionController,
-                  hint: lang_key.typeHere.tr,
-                  validator: (value) => Validators.validateEmptyField(value),
-                ),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    return CustomDropdown(
-                      textEditingController: _viewModel.serviceTypeTextController,
-                      title: lang_key.serviceType.tr,
-                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        height: 50,
-                        width: double.infinity,
-                        dropDownWidth: constraints.maxWidth,
-                        dropDownList: _viewModel.servicesList,
-                        overlayPortalController: _viewModel.serviceTypeController,
-                        value: _viewModel.serviceTypeSelectedIndex,
-                        hintText: lang_key.chooseService.tr,
-                        showDropDown: _viewModel.showServiceTypeDropDown
-                    );
-                  }
-                )
-              ],
-            ),
-          ),
+          _ItemDetailsFields(),
           Align(
             alignment: Alignment.bottomRight,
             child: CustomMaterialButton(
               width: 120,
               onPressed: () {
-                if(_viewModel.serviceAdditionFormKey.currentState!.validate()) {
-                  if(_viewModel.serviceTypeSelectedIndex != null) {
-                    if(_viewModel.addedServiceImage.value.path != '') {
+                if(_viewModel.itemAdditionFormKey.currentState!.validate()) {
+                  if(_viewModel.subServiceTypeSelectedIndex != null) {
+                    if(_viewModel.addedItemImage.value.path != '') {
 
                     } else {
                       showSnackBar(
-                          message: lang_key.addSubServiceImage.tr,
+                          message: lang_key.addItemImage.tr,
                           isError: true
                       );
                     }
                   } else {
                     showSnackBar(
-                        message: lang_key.addServiceError.tr,
+                        message: lang_key.addItemSubServiceType.tr,
                         isError: true
                     );
                   }
@@ -150,11 +122,65 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
   }
 }
 
-/// Add new service image section
+/// Item details fields
+class _ItemDetailsFields extends StatelessWidget {
+  _ItemDetailsFields();
+
+  final ItemsListViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _viewModel.itemAdditionFormKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 15,
+        children: [
+          CustomTextFormField(
+            title: lang_key.subServiceName.tr,
+            controller: _viewModel.itemNameController,
+            hint: lang_key.typeHere.tr,
+            validator: (value) => Validators.validateEmptyField(value),
+          ),
+          CustomTextFormField(
+            title: lang_key.price.tr,
+            controller: _viewModel.itemPriceController,
+            hint: lang_key.typeHere.tr,
+            keyboardType: TextInputType.number,
+            validator: (value) => Validators.validateEmptyField(value),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+            ],
+          ),
+          LayoutBuilder(
+              builder: (context, constraints) {
+                return CustomDropdown(
+                  textEditingController: _viewModel.serviceTypeController,
+                    title: lang_key.serviceType.tr,
+                    dropDownFieldColor: primaryWhite,
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    height: 50,
+                    width: double.infinity,
+                    dropDownWidth: constraints.maxWidth,
+                    dropDownList: _viewModel.subServicesList,
+                    overlayPortalController: _viewModel.subServiceTypeController,
+                    value: _viewModel.subServiceTypeSelectedIndex,
+                    hintText: lang_key.chooseService.tr,
+                    showDropDown: _viewModel.showSubServiceTypeDropDown
+                );
+              }
+          )
+        ],
+      ),
+    );
+  }
+}
+
+/// Add new item image section
 class _AddServiceImageSection extends StatelessWidget {
   _AddServiceImageSection();
 
-  final SubServicesListViewModel _viewModel = Get.find();
+  final ItemsListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +201,7 @@ class _AddServiceImageSection extends StatelessWidget {
                 height: 180,
                 child: Obx(() => ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: _viewModel.addedServiceImage.value.path == '' ? Column(
+                    child: _viewModel.addedItemImage.value.path == '' ? Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
@@ -190,7 +216,7 @@ class _AddServiceImageSection extends StatelessWidget {
                           ),
                         )
                       ],
-                    ) : Image.file(File(_viewModel.addedServiceImage.value.path), fit: BoxFit.fitHeight,)
+                    ) : Image.file(File(_viewModel.addedItemImage.value.path), fit: BoxFit.fitHeight,)
                 ),
                 ),
               )

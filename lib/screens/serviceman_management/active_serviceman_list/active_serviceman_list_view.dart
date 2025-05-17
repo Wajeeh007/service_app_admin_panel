@@ -25,7 +25,6 @@ class ActiveServiceManListView extends StatelessWidget {
           _CustomerAnalyticsData(),
           SectionHeadingText(headingText: lang_key.customersList.tr),
           CustomTabBar(
-              maxWidth: 230,
               controller: _viewModel.tabController,
               tabsNames: [
                 lang_key.all.tr,

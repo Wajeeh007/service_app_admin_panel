@@ -18,7 +18,7 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         selectedSidePanelItem: lang_key.dashboard.tr,
-        overlayPortalControllersAndShowDropDown: _viewModel.overlayPortalControllersAndIcons,
+        overlayPortalControllersAndShowDropDown: _viewModel.overlayPortalControllersAndDropDownValues,
         children: [
           _WelcomeText(),
           LayoutBuilder(builder: (context, constraints) {
@@ -144,18 +144,12 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                     fontWeight: FontWeight.w600
                   )
                 ),
-                Flexible(
-                  child: CustomDropdown(
-                    showDropDown: _viewModel.zoneWiseStatsShowDropDown,
-                    overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
-                      showDropDown: _viewModel.zoneWiseStatsShowDropDown
-                    ),
-                    selectedItemIndex: _viewModel.zoneWiseStatSelectedItemIndex,
-                    dropDownList: _viewModel.zoneWiseStatsDropDownList,
-                    overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
-                    link: _viewModel.zoneWiseStatLink,
-                  ),
+                CustomDropdown(
+                  textEditingController: _viewModel.zoneWiseStatController,
+                  showDropDown: _viewModel.zoneWiseStatsShowDropDown,
+                  // value: _viewModel.zoneWiseStatSelectedValue,
+                  dropDownList: _viewModel.zoneWiseStatsDropDownList,
+                  overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
                 ),
               ],
             ),
@@ -340,24 +334,17 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                 spacing: 10,
                 children: [
                   CustomDropdown(
-                      dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
-                      overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                      link: _viewModel.adminEarningTimePeriodLink,
-                      selectedItemIndex: _viewModel.adminEarningTimePeriodSelectedItemIndex,
-                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                        showDropDown: _viewModel.adminEarningTimePeriodShowDropDown
-                      ), showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
+                    textEditingController: _viewModel.adminEarningTimePeriodController,
+                    dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
+                    overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
+                    value: _viewModel.adminEarningTimePeriodSelectedValue,
+                    showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
                   ),
                   CustomDropdown(
-                      dropDownList: _viewModel.adminEarningZoneSelectionList,
-                      overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                      link: _viewModel.adminEarningZoneSelectionLink,
-                      selectedItemIndex: _viewModel.adminEarningZoneSelectionSelectedItemIndex,
-                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                        showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown
-                      ),
+                    textEditingController: _viewModel.adminEarningZoneSelectionController,
+                    dropDownList: _viewModel.adminEarningZoneSelectionList,
+                    overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
+                    value: _viewModel.adminEarningZoneSelectionSelectedValue,
                     showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown,
                   ),
                 ],
@@ -526,12 +513,12 @@ class _AdminEarningHeadingAndZoneName extends StatelessWidget {
               fontWeight: FontWeight.w600
           ),
         ),
-        Obx(() => Text(
-          _viewModel.adminEarningZoneSelectionList[_viewModel.adminEarningZoneSelectionSelectedItemIndex.value].label,
+        Text(
+          _viewModel.adminEarningZoneSelectionController.text,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: primaryGrey
           ),
-        ))
+        )
       ],
     );
   }
