@@ -25,6 +25,7 @@ class SubServicesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+        scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.subServicesList.tr,
         children: [
           SectionHeadingText(headingText: lang_key.subServices.tr),
@@ -165,11 +166,11 @@ class _AddServiceImageSection extends StatelessWidget {
         children: [
           HeadingInContainerText(text: lang_key.image.tr,),
           DottedBorder(
-              borderType: BorderType.RRect,
-              radius: Radius.circular(10),
-              dashPattern: [14,14],
-              strokeWidth: 1.5,
-              color: primaryGrey,
+              options: RectDottedBorderOptions(
+                dashPattern: [14,14],
+                strokeWidth: 1.5,
+                color: primaryGrey,
+              ),
               child: SizedBox(
                 width: double.infinity,
                 height: 180,

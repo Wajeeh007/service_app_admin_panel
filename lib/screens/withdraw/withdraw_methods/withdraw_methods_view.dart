@@ -21,6 +21,7 @@ class WithdrawMethodsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+        scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.methods.tr,
         children: [
           SectionHeadingText(headingText: lang_key.addMethod.tr),

@@ -8,6 +8,7 @@ class WithdrawRequestsViewModel extends GetxController with GetSingleTickerProvi
 
   /// Controller(s) & Form keys
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
     /// All Withdraws
     TextEditingController allWithdrawsSearchController = TextEditingController();
     GlobalKey<FormState> allWithdrawsFormKey = GlobalKey<FormState>();
@@ -47,13 +48,13 @@ class WithdrawRequestsViewModel extends GetxController with GetSingleTickerProvi
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

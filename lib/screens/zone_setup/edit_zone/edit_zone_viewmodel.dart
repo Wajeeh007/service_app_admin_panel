@@ -1,7 +1,52 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/models/zone_model.dart';
+import 'package:service_app_admin_panel/utils/api_base_helper.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/helper_functions/show_snackbar.dart';
+import 'package:service_app_admin_panel/utils/url_paths.dart';
+import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 class EditZoneViewModel extends GetxController {
 
-  ///
-  String areaPolygon = '72.58326682951433 35.24010844165301, 72.58661422636492 35.235341402425426, 72.5804344167946 35.23288767007922, 72.57073554899675 35.23828578326679, 72.56721649076921 35.24024864444764, 72.56678733732683 35.23583213998802, 72.560693358445 35.241931059078034, 72.57665786650163 35.241440358416185, 72.58326682951433 35.24010844165301';
+  /// Controller(s) & Form Keys
+  ScrollController scrollController = ScrollController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  /// Zone Details of the selected zone
+  ZoneModel zoneDetails = ZoneModel();
+
+  /// Polygon string
+  String areaPolygon = '';
+
+  void editZone() {
+    if (nameController.text == zoneDetails.name! && zoneDetails.polylines == areaPolygon) {
+      showSnackBar(
+          message: lang_key.zoneDetailsNotChanged,
+          isError: true
+      );
+    } else {
+
+      GlobalVariables.showLoader.value = true;
+
+      final body = {
+        'name': nameController.text,
+        'desc': descController.text,
+        'polylines': areaPolygon,
+      };
+
+      ApiBaseHelper.patchMethod(
+          url: Urls.editZone(zoneDetails.id.toString()),
+          body: body
+      ).then((value) {
+        if(value.success!
+        ) {
+
+        }
+      });
+    }
+  }
+  
 }

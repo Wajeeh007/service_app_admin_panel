@@ -1,15 +1,12 @@
 
-import '../constants.dart';
-import '../global_variables.dart';
+import 'package:flutter/material.dart';
 
-void animateSidePanelScrollController(double offset) {
-  GlobalVariables.scrollController.animateTo(
+import '../constants.dart';
+
+void animateSidePanelScrollController(ScrollController scrollController, double offset) {
+  scrollController.animateTo(
       offset,
       duration: sidePanelAnimationDuration,
       curve: sidePanelAnimationCurve
   );
-}
-
-void detachSidePanelScrollController() {
-  GlobalVariables.scrollController.detach(GlobalVariables.scrollController.positions.first);
 }

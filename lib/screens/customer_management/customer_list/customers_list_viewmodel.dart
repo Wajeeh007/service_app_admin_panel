@@ -9,6 +9,7 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
 
   /// Controller(s) and Form Keys
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
     /// All Customers List
     TextEditingController allCustomersSearchController = TextEditingController();
     GlobalKey<FormState> allCustomersFormKey = GlobalKey<FormState>();
@@ -41,13 +42,13 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'customerManagement').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'customerManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

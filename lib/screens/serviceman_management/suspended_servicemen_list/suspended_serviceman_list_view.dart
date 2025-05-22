@@ -15,6 +15,7 @@ class SuspendedServicemanListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+        scrollController: _viewModel.scrollController,
       selectedSidePanelItem: lang_key.suspendedServiceMen.tr,
       children: [
         SectionHeadingText(headingText: lang_key.suspendedServiceMen.tr),

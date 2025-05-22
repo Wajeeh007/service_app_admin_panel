@@ -9,10 +9,16 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 import '../constants.dart';
 
 class SidePanel extends StatelessWidget {
-  const SidePanel({super.key, required this.selectedItemIndex, this.args});
+  const SidePanel({
+    super.key,
+    required this.scrollController,
+    required this.selectedItemIndex,
+    this.args
+  });
 
   final String selectedItemIndex;
   final Map<String, dynamic>? args;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {

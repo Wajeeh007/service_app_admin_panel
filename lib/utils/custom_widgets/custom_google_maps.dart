@@ -69,17 +69,17 @@ class GoogleMapWidget extends StatelessWidget {
 
         dynamic activePolygon;
 
-        final EditZoneViewModel editZoneViewModel = Get.put(EditZoneViewModel());
+
         final ZoneListAndAdditionViewModel zoneListAndAdditionViewModel = Get.find();
 
         if(isBeingEdited) {
-
-          final cords = editZoneViewModel.areaPolygon
-              .split(',')
-              .map((s) {
+          final EditZoneViewModel editZoneViewModel = Get.find();
+          final cords = editZoneViewModel.areaPolygon.split(',').map((s) {
             final parts = s.trim().split(' ');
             return ltln.LatLng(
-                lat: double.parse(parts[1]), lng: double.parse(parts[0]));
+                lat: double.parse(parts[1]),
+                lng: double.parse(parts[0])
+            );
           }).toList();
 
           final google = js_util.getProperty(html.window, 'google');
@@ -143,10 +143,12 @@ class GoogleMapWidget extends StatelessWidget {
             points.add(points.first);
           }
 
+          final pointsString = points.join(', ');
           if(isBeingEdited) {
-            Get.find<EditZoneViewModel>().areaPolygon = points.join(', ');
+
+            Get.find<EditZoneViewModel>().areaPolygon = 'POLYGON(($pointsString))';
           } else {
-            zoneListAndAdditionViewModel.areaPolygons = points.join(', ');
+            zoneListAndAdditionViewModel.areaPolygons = 'POLYGON(($pointsString))';
           }
           drawingManager.setDrawingMode(null);
         }));

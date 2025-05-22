@@ -110,3 +110,6 @@ List<Map<String, double>> sidePanelScrollPositions = [
   {'customerManagement': 260}, {'serviceManManagement': 390}, {'serviceManagement': GlobalVariables.scrollController.position.maxScrollExtent},
   {'withdraws': GlobalVariables.scrollController.position.maxScrollExtent}, {'settings': GlobalVariables.scrollController.position.maxScrollExtent}
 ];
+
+/// Zone Order Volume Enum
+enum ZoneOrderVolume {veryLow, low, medium, high, veryHigh}

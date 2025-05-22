@@ -15,12 +15,14 @@ class ZoneSetupSection extends StatelessWidget {
   const ZoneSetupSection({
     super.key,
     required this.formKey,
-    required this.controller,
+    required this.nameController,
+    required this.descController,
     this.isBeingEdited = false,
   });
 
   final GlobalKey<FormState> formKey;
-  final TextEditingController controller;
+  final TextEditingController nameController;
+  final TextEditingController descController;
   final bool isBeingEdited;
 
   @override
@@ -68,11 +70,25 @@ class ZoneSetupSection extends StatelessWidget {
                       HeadingInContainerText(text: lang_key.zoneName.tr),
                       Form(
                         key: formKey,
-                        child: CustomTextFormField(
-                          autoValidateMode: AutovalidateMode.onUserInteraction,
-                          controller: controller,
-                          validator: (value) => Validators.validateEmptyField(value),
-                          hint: 'Ex: Toronto',
+                        child: Column(
+                          spacing: 10,
+                          children: [
+                            CustomTextFormField(
+                              autoValidateMode: AutovalidateMode.onUserInteraction,
+                              controller: nameController,
+                              validator: (value) => Validators.validateEmptyField(value),
+                              hint: 'Ex: Toronto',
+                            ),
+
+                            CustomTextFormField(
+                              title: lang_key.description.tr,
+                              autoValidateMode: AutovalidateMode.onUserInteraction,
+                              controller: descController,
+                              validator: (value) => Validators.validateEmptyField(value),
+                              hint: lang_key.typeHere.tr,
+                              maxLines: 4,
+                            ),
+                          ],
                         ),
                       ),
                       GoogleMapWidget(isBeingEdited: isBeingEdited,),

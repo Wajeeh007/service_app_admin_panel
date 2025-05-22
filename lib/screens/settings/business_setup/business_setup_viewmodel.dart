@@ -9,6 +9,7 @@ class BusinessSetupViewModel extends GetxController with GetSingleTickerProvider
 
   /// Controller(s) & Form Keys
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
 
   /// Tabs Names list
   List<String> tabsNames = [
@@ -23,13 +24,13 @@ class BusinessSetupViewModel extends GetxController with GetSingleTickerProvider
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'settings').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'settings').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

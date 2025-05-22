@@ -10,6 +10,8 @@ import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 class ItemsListViewModel extends GetxController {
 
   /// Controller(s), LinkOverlay & Form Keys
+  ScrollController scrollController = ScrollController();
+
   OverlayPortalController subServiceTypeController = OverlayPortalController();
   LayerLink subServiceTypeLink = LayerLink();
 
@@ -44,13 +46,13 @@ class ItemsListViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 

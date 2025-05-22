@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_text.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/no_data_found.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/refresh_and_logs_button.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/search_field_and_button.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
-import '../images_paths.dart';
-import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 class ListBaseContainer extends StatelessWidget {
   const ListBaseContainer({
@@ -17,7 +17,8 @@ class ListBaseContainer extends StatelessWidget {
     this.hintText,
     this.expandFirstColumn = true,
     this.includeSearchField = true,
-    this.fieldWidth = 200
+    this.fieldWidth = 200,
+    this.entryChildren
   }) : assert((includeSearchField == false && (controller == null && formKey == null)) || (includeSearchField == true && (controller != null && formKey != null)), 'controller and formkey must be null, if search field is not included. And must be provided if search field is included.');
 
   final GlobalKey<FormState>? formKey;
@@ -28,6 +29,7 @@ class ListBaseContainer extends StatelessWidget {
   final bool expandFirstColumn;
   final bool includeSearchField;
   final double fieldWidth;
+  final List<Widget>? entryChildren;
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +59,8 @@ class ListBaseContainer extends StatelessWidget {
           _ListColumNames(columnNames: columnsNames, expandFirstColumn: expandFirstColumn,),
           Obx(() => Column(
             children: listData.isEmpty ? [
-              Image.asset(ImagesPaths.noData, height: 60,),
-              Text(
-                lang_key.noDataAvailable.tr,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: primaryGrey
-                ),
-              )
-            ] : [],
+              NoDataFound(),
+            ] : entryChildren!
           )
           )
         ],
@@ -119,21 +115,7 @@ class _ListColumnNameText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return shouldExpand ? Expanded(
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: primaryBlue,
-            fontWeight: FontWeight.w600
-        ),
-        textAlign: TextAlign.center,
-      ),
-    ) : Text(
-      text,
-      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: primaryBlue,
-          fontWeight: FontWeight.w600
-      ),
-      textAlign: TextAlign.center,
-    );
+      child: ListText(text: text, textColor: primaryBlue,),
+    ) : ListText(text: text, textColor: primaryBlue,);
   }
 }

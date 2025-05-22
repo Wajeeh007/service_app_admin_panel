@@ -17,6 +17,7 @@ class CustomersListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+      scrollController: _viewModel.scrollController,
       args: {'scrollPosition': 0.0},
         selectedSidePanelItem: lang_key.customersList.tr,
         overlayPortalControllersAndShowDropDown: [],

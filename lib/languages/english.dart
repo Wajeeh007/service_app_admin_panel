@@ -57,10 +57,16 @@ class English {
     /// Zone Setup Screen
     key.instructions: 'Instructions',
     key.zoneName: 'Zone Name',
+    key.description: 'Description',
     key.zoneList: 'Zone List',
     key.zoneSetupInstructions: '\t• Create Zones By Clicking On Map And Connect The Dots Together.\n\n\t• Use The Drag Map To Find Proper Area\n\n\t• Click the Icon to start pin points in the map and connect them to draw a zone. Minimum 3 points required ',
     key.searchZone: 'Search Zone',
     key.orderVolume: 'Order Volume',
+    key.veryLow: 'Very Low',
+    key.low: 'Low',
+    key.medium: 'Medium',
+    key.high: 'High',
+    key.veryHigh: 'Very High',
     /// Zone Setup End ///
 
     /// Orders List Screen
@@ -206,11 +212,30 @@ class English {
     key.error: 'Error',
     key.success: 'Success',
     
+    /// Success Messages ///
+
+      /// Zone Setup ///
+
+      key.zoneCreated: 'Zone Created Successfully',
+      key.zoneEdited: 'Zone Edited Successfully',
+
+      /// Zone Setup End ///
+
+    /// Success Messages End ///
+    
     /// Errors
     key.addServiceError: 'Add service type to save sub-service category',
     key.addSubServiceImage: 'Add sub-service image to save information',
     key.addItemImage: 'Add Item image to save information',
     key.addItemSubServiceType: 'Add Item sub-service type to save information',
+    key.zoneDetailsNotChanged: 'No details changed. Click on Cancel to go back.',
+    key.noInternetError: 'No Internet Connection',
+    key.formatExceptionError: 'Unable to handle the request',
+    key.timeOutException: 'Server took too long to respond',
+    key.generalApiError: 'Something went wrong',
+    key.errorFetchingZones: 'Error fetching zones. Please refresh page.',
+    key.errorChangingStatus: 'Error changing status. Please retry.'
+    /// Errors End ///
   };
 
 }

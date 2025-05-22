@@ -8,6 +8,7 @@ import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 class SuspendedServicemanListViewModel extends GetxController {
 
   /// Controller(s) & Form keys
+  ScrollController scrollController = ScrollController();
   TextEditingController searchController = TextEditingController();
   GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
 
@@ -16,13 +17,13 @@ class SuspendedServicemanListViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 

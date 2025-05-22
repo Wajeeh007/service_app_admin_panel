@@ -10,6 +10,7 @@ import 'models/zone_wise_order_volume.dart';
 class DashboardViewModel extends GetxController {
 
   /// Variables for dropdown(s)
+  ScrollController scrollController = ScrollController();
     /// Zone-wise stat dropdown variables
     TextEditingController zoneWiseStatController = TextEditingController();
     OverlayPortalController zoneWiseStatOverlayPortalController = OverlayPortalController();
@@ -96,13 +97,13 @@ class DashboardViewModel extends GetxController {
       });
     }
 
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'dashboard').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'dashboard').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 

@@ -17,6 +17,7 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+      scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.dashboard.tr,
         overlayPortalControllersAndShowDropDown: _viewModel.overlayPortalControllersAndDropDownValues,
         children: [

@@ -9,6 +9,7 @@ import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 class ServiceListViewModel extends GetxController {
 
   /// Controller(s) & Form Keys
+  ScrollController scrollController = ScrollController();
     /// For Search field
     TextEditingController searchController = TextEditingController();
     GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
@@ -27,13 +28,13 @@ class ServiceListViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

@@ -14,6 +14,7 @@ class SuspendedCustomersListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+      scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.suspendedCustomers.tr,
         overlayPortalControllersAndShowDropDown: [],
       children: [

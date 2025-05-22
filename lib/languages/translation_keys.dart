@@ -53,10 +53,16 @@ const welcomeAdmin = 'welcomeAdmin',
 /// Zone Setup Screen
 const instructions = 'instructions',
     zoneName = 'zoneName',
+    description = 'description',
     zoneList = 'zoneList',
     zoneSetupInstructions = 'zoneSetupInstructions',
     searchZone = 'searchZone',
-    orderVolume = 'orderVolume';
+    orderVolume = 'orderVolume',
+    veryLow = 'veryLow',
+    low = 'low',
+    medium = 'medium',
+    high = 'high',
+    veryHigh = 'veryHigh';
 /// Zone Setup End ///
 
 /// Orders List Screen
@@ -202,9 +208,21 @@ const fieldIsRequired = 'fieldIsRequired',
     error = 'error',
     success = 'success';
 
+/// Success Messages ///
+const zoneCreated = 'zoneAdded',
+    zoneEdited = 'zoneEdited';
+/// Success Messages End ///
+
 /// Errors
 const addServiceError = 'addServiceError',
     addSubServiceImage = 'addSubServiceImage',
     addItemSubServiceType = 'addItemSubServiceType',
-    addItemImage = 'addItemImage';
+    addItemImage = 'addItemImage',
+    zoneDetailsNotChanged = 'zoneDetailsNotChanged',
+    noInternetError = 'noInternetError',
+    formatExceptionError = 'formatExceptionError',
+    timeOutException = 'timeOutException',
+    generalApiError = 'generalApiError',
+    errorFetchingZones = 'errorFetchingZones',
+    errorChangingStatus = 'errorChangingStatus';
 /// Errors End ///

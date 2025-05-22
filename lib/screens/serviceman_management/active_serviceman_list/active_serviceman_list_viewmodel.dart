@@ -9,6 +9,7 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
 
   /// Controller(s) & Form Keys
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
 
     /// All ServiceMen List
     TextEditingController allServiceMansSearchController = TextEditingController();
@@ -39,13 +40,13 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
+    animateSidePanelScrollController(scrollController, sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

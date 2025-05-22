@@ -9,6 +9,7 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
 
   /// Controller(s) & Form keys
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
     /// All Orders Tab
     TextEditingController allOrderSearchController = TextEditingController();
     GlobalKey<FormState> allOrdersFormKey = GlobalKey<FormState>();
@@ -57,13 +58,15 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'ordersManagement').values.first);
+    animateSidePanelScrollController(
+        scrollController,
+        sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'ordersManagement').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 }

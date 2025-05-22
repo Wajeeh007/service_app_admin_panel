@@ -11,6 +11,7 @@ class WithdrawMethodsViewModel extends GetxController with GetSingleTickerProvid
   /// Controller(s), Layer Link & Form Keys
 
   late TabController tabController;
+  ScrollController scrollController = ScrollController();
 
   OverlayPortalController fieldTypeOverlayPortalController = OverlayPortalController();
   LayerLink fieldTypeLink = LayerLink();
@@ -71,13 +72,13 @@ class WithdrawMethodsViewModel extends GetxController with GetSingleTickerProvid
 
   @override
   void onReady() {
-    animateSidePanelScrollController(sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
+    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
     super.onReady();
   }
 
   @override
   void onClose() {
-    detachSidePanelScrollController();
+    scrollController.dispose();
     super.onClose();
   }
 

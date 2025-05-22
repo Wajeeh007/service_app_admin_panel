@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_appbar.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/loader_view.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
 
 import '../constants.dart';
@@ -13,12 +14,14 @@ class ScreensBaseWidget extends StatelessWidget {
     super.key,
     required this.selectedSidePanelItem,
     required this.children,
+    required this.scrollController,
     this.overlayPortalControllersAndShowDropDown,
     this.args
   });
 
   final String selectedSidePanelItem;
   final List<Widget> children;
+  final ScrollController scrollController;
   final List<Map<OverlayPortalController, RxBool>>? overlayPortalControllersAndShowDropDown;
   final Map<String, dynamic>? args;
 
@@ -34,7 +37,11 @@ class ScreensBaseWidget extends StatelessWidget {
 
             Row(
               children: [
-                SidePanel(selectedItemIndex: selectedSidePanelItem, args: args,),
+                SidePanel(
+                  scrollController: scrollController,
+                  selectedItemIndex: selectedSidePanelItem,
+                  args: args,
+                ),
                 Expanded(
                     child: Align(
                       alignment: Alignment.topLeft,
@@ -52,6 +59,7 @@ class ScreensBaseWidget extends StatelessWidget {
             ),
             ProfileDropDown(),
             ProfileDropDownContainer(),
+            LoaderView(),
           ],
         ),
       ),

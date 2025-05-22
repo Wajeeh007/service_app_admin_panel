@@ -14,6 +14,7 @@ class NewRequestsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
+        scrollController: _viewModel.scrollController,
       selectedSidePanelItem: lang_key.newRequests.tr,
       children: [
         SectionHeadingText(headingText: lang_key.newRequests.tr),
