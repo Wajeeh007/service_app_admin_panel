@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/serviceman.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class NewRequestsViewModel extends GetxController {
 

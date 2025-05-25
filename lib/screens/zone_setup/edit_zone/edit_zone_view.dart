@@ -19,8 +19,8 @@ class EditZoneView extends StatelessWidget {
         children: [
           SectionHeadingText(headingText: lang_key.zoneSetup.tr),
           ZoneSetupSection(
-              formKey: _viewModel.formKey,
-              nameController: _viewModel.nameController,
+            formKey: _viewModel.formKey,
+            nameController: _viewModel.nameController,
             descController: _viewModel.descController,
           )
         ]

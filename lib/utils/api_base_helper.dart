@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:service_app_admin_panel/models/api_response.dart';
-import 'package:service_app_admin_panel/utils/erros.dart';
+import 'package:service_app_admin_panel/utils/errors.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
 import 'global_variables.dart';

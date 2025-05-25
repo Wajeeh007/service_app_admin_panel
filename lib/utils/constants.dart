@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:service_app_admin_panel/utils/global_variables.dart';
 
 /// Colors
 
@@ -36,6 +35,7 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
 /// Constant Paddings ///
 const EdgeInsets basePaddingForScreens = EdgeInsets.all(20);
 const EdgeInsets basePaddingForContainers = EdgeInsets.all(20);
+const EdgeInsets listEntryPadding = EdgeInsets.only(left: 18.0);
 /// Constant Paddings End ///
 
 /// Input Decorations ///
@@ -107,8 +107,8 @@ Curve sidePanelAnimationCurve = Curves.easeIn;
 /// Sidepanel scroll positions
 List<Map<String, double>> sidePanelScrollPositions = [
   {'dashboard': 0.0}, {'zoneSetup': 90}, {'ordersManagement': 170},
-  {'customerManagement': 260}, {'serviceManManagement': 390}, {'serviceManagement': GlobalVariables.scrollController.position.maxScrollExtent},
-  {'withdraws': GlobalVariables.scrollController.position.maxScrollExtent}, {'settings': GlobalVariables.scrollController.position.maxScrollExtent}
+  {'customerManagement': 260}, {'serviceManManagement': 390}, {'serviceManagement': 600},
+  {'withdraws': 600}, {'settings': 600}
 ];
 
 /// Zone Order Volume Enum

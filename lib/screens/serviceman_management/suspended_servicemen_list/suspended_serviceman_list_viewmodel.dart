@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/serviceman.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class SuspendedServicemanListViewModel extends GetxController {
 

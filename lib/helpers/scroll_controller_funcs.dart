@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
+import '../utils/constants.dart';
 
 void animateSidePanelScrollController(ScrollController scrollController, double offset) {
-  scrollController.animateTo(
+  Future.delayed(Duration(seconds: 1), () => scrollController.animateTo(
       offset,
       duration: sidePanelAnimationDuration,
       curve: sidePanelAnimationCurve
-  );
+  ));
 }

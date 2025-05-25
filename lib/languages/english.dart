@@ -229,6 +229,7 @@ class English {
     key.addItemImage: 'Add Item image to save information',
     key.addItemSubServiceType: 'Add Item sub-service type to save information',
     key.zoneDetailsNotChanged: 'No details changed. Click on Cancel to go back.',
+    key.unableToReachClient: 'Unable to reach server.',
     key.noInternetError: 'No Internet Connection',
     key.formatExceptionError: 'Unable to handle the request',
     key.timeOutException: 'Server took too long to respond',

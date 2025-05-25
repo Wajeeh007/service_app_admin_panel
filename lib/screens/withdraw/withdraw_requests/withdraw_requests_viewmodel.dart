@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class WithdrawRequestsViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/scroll_controller_funcs.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/customer.dart';
 
 class CustomerListViewModel extends GetxController with GetSingleTickerProviderStateMixin {

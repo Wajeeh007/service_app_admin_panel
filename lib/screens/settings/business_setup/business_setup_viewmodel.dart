@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
-import 'package:service_app_admin_panel/utils/helper_functions/scroll_controller_funcs.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../utils/constants.dart';
 
 class BusinessSetupViewModel extends GetxController with GetSingleTickerProviderStateMixin {

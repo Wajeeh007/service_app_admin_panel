@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_app_admin_panel/models/service_category.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class ServiceListViewModel extends GetxController {
 

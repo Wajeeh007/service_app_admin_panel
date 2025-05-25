@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/zone_model.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/show_snackbar.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
+
+import '../../../helpers/show_snackbar.dart';
 
 class EditZoneViewModel extends GetxController {
 
@@ -20,6 +21,8 @@ class EditZoneViewModel extends GetxController {
 
   /// Polygon string
   String areaPolygon = '';
+
+  RxBool loadMaps = false.obs;
 
   void editZone() {
     if (nameController.text == zoneDetails.name! && zoneDetails.polylines == areaPolygon) {

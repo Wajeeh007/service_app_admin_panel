@@ -1,8 +1,10 @@
 @JS()
 library;
 
+import 'dart:js_interop';
+
 import 'package:get/get.dart';
-import 'package:js/js.dart';
+import 'dart:js' as js;
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
@@ -56,7 +58,7 @@ class GoogleMapWidget extends StatelessWidget {
           drawingMode: null,
           drawingControl: false,
           polygonOptions: {
-            'fillColor': '#FF0000',
+            'fillColor': '#c6c2c2',
             'fillOpacity': 0.5,
             'strokeWeight': 1.5,
             'clickable': false,
@@ -69,8 +71,13 @@ class GoogleMapWidget extends StatelessWidget {
 
         dynamic activePolygon;
 
-
         final ZoneListAndAdditionViewModel zoneListAndAdditionViewModel = Get.find();
+
+        ever(zoneListAndAdditionViewModel.zoneList, (_) {
+          if(zoneListAndAdditionViewModel.zoneList.isNotEmpty) {
+            drawPolygons(gMap);
+          }
+        });
 
         if(isBeingEdited) {
           final EditZoneViewModel editZoneViewModel = Get.find();
@@ -95,7 +102,7 @@ class GoogleMapWidget extends StatelessWidget {
                 .toList(),
             'map': gMap,
             'editable': true,
-            'fillColor': '#FF0000',
+            'fillColor': '#c6c2c2',
             'fillOpacity': 0.5,
             'strokeWeight': 1.5,
             'clickable': false,
@@ -119,7 +126,7 @@ class GoogleMapWidget extends StatelessWidget {
         moveCamera(gMap, rawMap);
       }
 
-      addListener(drawingManager, 'overlaycomplete', allowInterop((e) {
+      addListener(drawingManager, 'overlaycomplete', js.allowInterop((e) {
           if (activePolygon != null) {
             html.window.alert('Only one polygon is allowed.');
             return;
@@ -152,6 +159,7 @@ class GoogleMapWidget extends StatelessWidget {
           }
           drawingManager.setDrawingMode(null);
         }));
+
 
         final dragButton = html.ButtonElement()
           ..text = '🧭'
@@ -217,6 +225,36 @@ class GoogleMapWidget extends StatelessWidget {
     }
   }
 
+  void drawPolygons(GMap gMap) {
+    final zones = Get
+        .find<ZoneListAndAdditionViewModel>()
+        .zoneList;
+
+    if (zones.isEmpty) return;
+
+    for (var zone in zones) {
+      final coords = zone.polylines!.split(',').map((s) {
+        final parts = s.trim().split(' ');
+        return js_util.jsify({
+          'lat': double.parse(parts[1]),
+          'lng': double.parse(parts[0])
+        });
+      }).toList();
+
+      final polygonOptions = js_util.jsify({
+        'paths': coords,
+        'map': gMap,
+        'fillColor': '#c6c2c2',
+        'fillOpacity': 0.4,
+        'strokeWeight': 1.5,
+        'clickable': false,
+        'zIndex': 1,
+      });
+
+      Polygon(polygonOptions);
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return const SizedBox(

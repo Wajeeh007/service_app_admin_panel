@@ -4,9 +4,9 @@ import 'package:service_app_admin_panel/utils/custom_widgets/custom_appbar.dart'
 import 'package:service_app_admin_panel/utils/custom_widgets/loader_view.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
 
+import '../../helpers/hide_overlays.dart';
 import '../constants.dart';
 import '../global_variables.dart';
-import '../helper_functions/hide_overlays.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 class ScreensBaseWidget extends StatelessWidget {

@@ -9,7 +9,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/heading_in_containe
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/show_snackbar.dart';
+import '../../../helpers/show_snackbar.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/custom_widgets/custom_material_button.dart';
 import '../../../utils/custom_widgets/custom_text_form_field.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/scroll_controller_funcs.dart';
 
+import '../../helpers/scroll_controller_funcs.dart';
 import '../../models/drop_down_entry.dart';
 import '../../utils/constants.dart';
 import 'models/zone_wise_order_volume.dart';

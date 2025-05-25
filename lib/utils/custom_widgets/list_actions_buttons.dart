@@ -26,39 +26,55 @@ class ListActionsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       spacing: 5,
       children: [
         if(includeDelete) CustomMaterialButton(
-          width: 25,
+          width: 20,
+            height: 20,
             borderRadius: BorderRadius.circular(8),
             onPressed: onDeletePressed!,
           buttonColor: primaryWhite,
           borderColor: errorRed,
-          child: Icon(
-            CupertinoIcons.delete,
-            color: errorRed,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Icon(
+              CupertinoIcons.delete,
+              color: errorRed,
+              size: 20,
+            ),
           ),
         ),
         if(includeEdit) CustomMaterialButton(
-          width: 25,
+          width: 20,
+          height: 20,
             borderRadius: BorderRadius.circular(8),
             onPressed: onEditPressed!,
           buttonColor: primaryWhite,
           borderColor: primaryBlue,
-          child: Icon(
-            Icons.edit,
-            color: primaryBlue,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Icon(
+              Icons.edit,
+              color: primaryBlue,
+              size: 20,
+            ),
           ),
         ),
         if(includeView) CustomMaterialButton(
-          width: 25,
+          width: 20,
+          height: 20,
             borderRadius: BorderRadius.circular(8),
             onPressed: onViewPressed!,
           buttonColor: primaryWhite,
           borderColor: primaryBlue,
-          child: Icon(
-            CupertinoIcons.eye,
-            color: primaryBlue,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Icon(
+              CupertinoIcons.eye,
+              color: primaryBlue,
+              size: 20,
+            ),
           ),
         ),
       ],

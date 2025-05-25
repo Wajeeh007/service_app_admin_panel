@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_app_admin_panel/models/service_item.dart';
 
+import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/drop_down_entry.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class ItemsListViewModel extends GetxController {
 

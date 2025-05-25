@@ -25,54 +25,59 @@ class ZoneListAndAdditionView extends StatelessWidget {
         children: [
           SectionHeadingText(headingText: lang_key.zoneSetup.tr),
           ZoneSetupSection(
-              formKey: _viewModel.zoneNameFormKey,
-              nameController: _viewModel.zoneNameController,
+            formKey: _viewModel.zoneNameFormKey,
+            nameController: _viewModel.zoneNameController,
             descController: _viewModel.zoneDescController,
           ),
           SectionHeadingText(headingText: lang_key.zoneList.tr),
-          ListBaseContainer(
-            hintText: lang_key.searchZone.tr,
-            formKey: _viewModel.zoneSearchFormKey,
-            controller: _viewModel.zoneNameController,
-            listData: _viewModel.zoneList,
-            expandFirstColumn: false,
-            columnsNames: [
-              'SL',
-              lang_key.zoneName.tr,
-              lang_key.orderVolume.tr,
-              lang_key.status.tr,
-              lang_key.actions.tr
-            ],
-            entryChildren: List.generate(_viewModel.zoneList.length, (index) {
-              return Row(
-                  children: [
-                    ListEntryItem(text: (index + 1).toString(),),
-                    ListEntryItem(text: _viewModel.zoneList[index].name,),
-                    ListEntryItem(text: switch (_viewModel.zoneList[index].orderVolume) {
-                      null => lang_key.veryLow.tr,
-                      ZoneOrderVolume.veryLow => lang_key.veryLow.tr,
-                      ZoneOrderVolume.low => lang_key.low.tr,
-                      ZoneOrderVolume.medium => lang_key.medium.tr,
-                      ZoneOrderVolume.high => lang_key.high.tr,
-                      ZoneOrderVolume.veryHigh => lang_key.veryHigh.tr,
-                    },),
-                    ListEntryItem(
-                      child: CustomSwitch(
-                        switchValue: _viewModel.zoneList[index].status!,
-                        onChanged: (value) => _viewModel.changeZoneStatus(index),
-                    ),),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: true,
-                        includeView: false,
-                        onDeletePressed: () {},
-                        onEditPressed: () {},
-                      ),
-                    )
-                  ]
-              );
-            }),
+          Obx(() => ListBaseContainer(
+              hintText: lang_key.searchZone.tr,
+              formKey: _viewModel.zoneSearchFormKey,
+              controller: _viewModel.zoneNameController,
+              listData: _viewModel.zoneList,
+              expandFirstColumn: false,
+              columnsNames: [
+                'SL',
+                lang_key.zoneName.tr,
+                lang_key.orderVolume.tr,
+                lang_key.status.tr,
+                lang_key.actions.tr
+              ],
+              entryChildren: List.generate(_viewModel.zoneList.length, (index) {
+                return Padding(
+                  padding: listEntryPadding,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                        ListEntryItem(text: _viewModel.zoneList[index].name,),
+                        ListEntryItem(text: switch (_viewModel.zoneList[index].orderVolume) {
+                          null => lang_key.veryLow.tr,
+                          ZoneOrderVolume.veryLow => lang_key.veryLow.tr,
+                          ZoneOrderVolume.low => lang_key.low.tr,
+                          ZoneOrderVolume.medium => lang_key.medium.tr,
+                          ZoneOrderVolume.high => lang_key.high.tr,
+                          ZoneOrderVolume.veryHigh => lang_key.veryHigh.tr,
+                        },),
+                        ListEntryItem(
+                          child: CustomSwitch(
+                            switchValue: _viewModel.zoneList[index].status!,
+                            onChanged: (value) => _viewModel.changeZoneStatus(index),
+                        ),),
+                        ListEntryItem(
+                          child: ListActionsButtons(
+                            includeDelete: true,
+                            includeEdit: true,
+                            includeView: false,
+                            onDeletePressed: () {},
+                            onEditPressed: () {},
+                          ),
+                        )
+                      ]
+                  ),
+                );
+              }),
+            ),
           )
         ],
     );

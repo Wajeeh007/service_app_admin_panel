@@ -4,7 +4,7 @@ import 'package:service_app_admin_panel/models/drop_down_entry.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
+import '../../../helpers/scroll_controller_funcs.dart';
 
 class WithdrawMethodsViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 

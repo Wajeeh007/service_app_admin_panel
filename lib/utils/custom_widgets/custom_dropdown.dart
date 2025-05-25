@@ -67,7 +67,6 @@ class CustomDropdown extends StatelessWidget {
                   child: Menu(
                     textEditingController: textEditingController,
                     showDropDownValue: showDropDown,
-                    value: value,
                     dropDownList: dropDownList,
                     width: dropDownWidth ?? width,
                   )
@@ -132,14 +131,12 @@ class Menu extends StatelessWidget {
   final List<DropDownEntry> dropDownList;
   final RxBool showDropDownValue;
   final TextEditingController textEditingController;
-  dynamic value;
-  
-  Menu({
+
+  const Menu({
     super.key,
     required this.dropDownList,
     required this.showDropDownValue,
     required this.textEditingController,
-    this.value,
     this.width,
   });
 
@@ -172,7 +169,6 @@ class Menu extends StatelessWidget {
               padding: const EdgeInsets.only(top: 4.0),
               child: InkWell(
                 onTap: () {
-                  value = dropDownList[index].value;
                   textEditingController.text = dropDownList[index].label;
                   showDropDownValue.value = false;
                 },

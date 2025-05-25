@@ -57,11 +57,10 @@ class ListBaseContainer extends StatelessWidget {
             ],
           ),
           _ListColumNames(columnNames: columnsNames, expandFirstColumn: expandFirstColumn,),
-          Obx(() => Column(
+          Column(
             children: listData.isEmpty ? [
               NoDataFound(),
             ] : entryChildren!
-          )
           )
         ],
       ),

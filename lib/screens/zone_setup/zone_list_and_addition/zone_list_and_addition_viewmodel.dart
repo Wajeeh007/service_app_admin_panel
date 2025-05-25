@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:service_app_admin_panel/models/zone_model.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
-import 'package:service_app_admin_panel/utils/helper_functions/stop_loader_and_show_snackbar.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
+import '../../../helpers/scroll_controller_funcs.dart';
+import '../../../helpers/stop_loader_and_show_snackbar.dart';
 import '../../../utils/constants.dart';
-import '../../../utils/helper_functions/scroll_controller_funcs.dart';
 
 class ZoneListAndAdditionViewModel extends GetxController {
 
@@ -41,6 +40,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
   /// Limit variables
   int limit = 10;
 
+  RxBool loadMaps = false.obs;
   // @override
   // void onInit() {
   //   super.onInit();
@@ -63,19 +63,6 @@ class ZoneListAndAdditionViewModel extends GetxController {
     zoneSearchController.dispose();
     scrollController.dispose();
     super.onClose();
-  }
-
-  Future<void> loadGoogleMapsLibraries() async {
-    final google = js_util.getProperty(js_util.globalThis, 'google');
-    final maps = js_util.getProperty(google, 'maps');
-
-    await js_util.promiseToFuture(
-      js_util.callMethod(maps, 'importLibrary', ['maps']),
-    );
-
-    await js_util.promiseToFuture(
-      js_util.callMethod(maps, 'importLibrary', ['marker']),
-    );
   }
 
   /// Fetch the current position of the device
@@ -146,7 +133,10 @@ class ZoneListAndAdditionViewModel extends GetxController {
         final data = value.data as List;
         zoneList.addAll(data.map((e) => ZoneModel.fromJson(e)));
         zoneList.refresh();
+        loadMaps.value = true;
       } else {
+        print(value.message);
+        loadMaps.value = true;
         stopLoaderAndShowSnackBar(value.message!, true);
       }
     });

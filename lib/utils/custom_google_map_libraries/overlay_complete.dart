@@ -13,6 +13,8 @@ external void addListener(dynamic instance, String eventName, Function callback)
 
 @JS('google.maps.Polygon')
 class Polygon {
+  external factory Polygon(dynamic options);
+
   external MVCArray<LatLng> getPath();
 }
 

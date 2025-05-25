@@ -92,7 +92,6 @@ class ZoneSetupSection extends StatelessWidget {
                         ),
                       ),
                       GoogleMapWidget(isBeingEdited: isBeingEdited,),
-
                     ],
                   ),
                 ),

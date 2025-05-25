@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/images_paths.dart';
 import 'package:service_app_admin_panel/utils/routes.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -30,7 +29,7 @@ class SidePanel extends StatelessWidget {
           color: primaryWhite
       ),
       child: SingleChildScrollView(
-        controller: GlobalVariables.scrollController,
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
