@@ -4,7 +4,6 @@ import 'package:service_app_admin_panel/utils/global_variables.dart';
 
 import '../../helpers/scroll_controller_funcs.dart';
 import '../../models/drop_down_entry.dart';
-import '../../utils/constants.dart';
 import 'models/zone_wise_order_volume.dart';
 
 class DashboardViewModel extends GetxController {
@@ -97,7 +96,7 @@ class DashboardViewModel extends GetxController {
       });
     }
 
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'dashboard').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

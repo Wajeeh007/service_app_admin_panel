@@ -72,7 +72,7 @@ class WithdrawMethodsViewModel extends GetxController with GetSingleTickerProvid
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

@@ -17,6 +17,7 @@ class ZoneSetupSection extends StatelessWidget {
     required this.formKey,
     required this.nameController,
     required this.descController,
+    required this.onBtnPressed,
     this.isBeingEdited = false,
   });
 
@@ -24,6 +25,7 @@ class ZoneSetupSection extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController descController;
   final bool isBeingEdited;
+  final VoidCallback onBtnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,7 @@ class ZoneSetupSection extends StatelessWidget {
                               validator: (value) => Validators.validateEmptyField(value),
                               hint: lang_key.typeHere.tr,
                               maxLines: 4,
+                              includeAsterisk: true,
                             ),
                           ],
                         ),
@@ -99,11 +102,7 @@ class ZoneSetupSection extends StatelessWidget {
           ),
           CustomMaterialButton(
             width: 100,
-            onPressed: () {
-              if(formKey.currentState!.validate()) {
-
-              }
-            },
+            onPressed: onBtnPressed,
             text: lang_key.save.tr,
           )
         ],

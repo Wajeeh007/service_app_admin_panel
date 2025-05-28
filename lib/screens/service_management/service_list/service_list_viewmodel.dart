@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:service_app_admin_panel/models/service_category.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
-import '../../../utils/constants.dart';
 
 class ServiceListViewModel extends GetxController {
 
@@ -28,7 +27,7 @@ class ServiceListViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

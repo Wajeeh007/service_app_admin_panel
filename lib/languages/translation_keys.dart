@@ -225,5 +225,6 @@ const addServiceError = 'addServiceError',
     timeOutException = 'timeOutException',
     generalApiError = 'generalApiError',
     errorFetchingZones = 'errorFetchingZones',
-    errorChangingStatus = 'errorChangingStatus';
+    errorChangingStatus = 'errorChangingStatus',
+    addAreaPolygon = 'addAreaPolygon';
 /// Errors End ///

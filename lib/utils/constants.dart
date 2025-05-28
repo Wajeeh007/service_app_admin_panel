@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 /// Colors
 
@@ -106,9 +107,21 @@ Curve sidePanelAnimationCurve = Curves.easeIn;
 
 /// Sidepanel scroll positions
 List<Map<String, double>> sidePanelScrollPositions = [
-  {'dashboard': 0.0}, {'zoneSetup': 90}, {'ordersManagement': 170},
-  {'customerManagement': 260}, {'serviceManManagement': 390}, {'serviceManagement': 600},
-  {'withdraws': 600}, {'settings': 600}
+  {Routes.dashboard: 0.0},
+  {Routes.zoneListAndAddition: 90},
+  {Routes.editZone: 90},
+  {Routes.orders: 170},
+  {Routes.customersList: 260},
+  {Routes.suspendedCustomersList: 260},
+  {Routes.newServicemanRequests: 390},
+  {Routes.activeServicemanList: 390},
+  {Routes.suspendedServicemanList: 390},
+  {Routes.servicesList: 600},
+  {Routes.subServicesList: 600},
+  {Routes.itemsList: 600},
+  {Routes.withdrawMethods: 600},
+  {Routes.withdrawRequests: 600},
+  {Routes.businessSetup: 600}
 ];
 
 /// Zone Order Volume Enum

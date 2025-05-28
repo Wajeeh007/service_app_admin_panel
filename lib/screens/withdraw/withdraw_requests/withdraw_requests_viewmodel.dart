@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
-import '../../../utils/constants.dart';
 
 class WithdrawRequestsViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 
@@ -48,7 +47,7 @@ class WithdrawRequestsViewModel extends GetxController with GetSingleTickerProvi
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'withdraws').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

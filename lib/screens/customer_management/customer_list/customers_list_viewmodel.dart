@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/utils/constants.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/customer.dart';
@@ -42,7 +41,7 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'customerManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

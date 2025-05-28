@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 import '../../../helpers/scroll_controller_funcs.dart';
-import '../../../utils/constants.dart';
 
 class BusinessSetupViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 
@@ -24,7 +23,7 @@ class BusinessSetupViewModel extends GetxController with GetSingleTickerProvider
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'settings').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

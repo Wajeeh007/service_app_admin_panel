@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/serviceman.dart';
-import '../../../utils/constants.dart';
 
 class ActiveServiceManListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 
@@ -40,7 +39,7 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController, sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

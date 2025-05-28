@@ -20,72 +20,83 @@ import '../custom_google_map_libraries/map_options.dart';
 import '../custom_google_map_libraries/overlay_complete.dart';
 import '../custom_google_map_libraries/web_only.dart';
 
-class GoogleMapWidget extends StatelessWidget {
-  final String _viewType = 'google-map-view';
-
+class GoogleMapWidget extends StatefulWidget {
   final bool isBeingEdited;
 
-  GoogleMapWidget({super.key, required this.isBeingEdited}) {
+  GoogleMapWidget({super.key, required this.isBeingEdited});
 
-      registerWebView(_viewType, (int viewId) {
-        final container = html.DivElement()
-          ..style.width = '100%'
-          ..style.height = '100%'
-          ..style.position = 'relative';
+  final zoneListViewModel = Get.find<ZoneListAndAdditionViewModel>();
 
-        final mapDiv = html.DivElement()
-          ..id = 'map'
-          ..style.width = '100%'
-          ..style.height = '100%';
+  @override
+  State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
+}
 
-        container.append(mapDiv);
+class _GoogleMapWidgetState extends State<GoogleMapWidget> {
+  late final String _mapDivId;
+  late final String _viewType;
 
-        const mapId = String.fromEnvironment('MAPS_ID');
+  dynamic activePolygon;
 
-        final gMap = GMap(
-            mapDiv,
-            MapOptions(
-              center: ltln.LatLng(
-                  lat: initialCameraPosition.target.latitude,
-                  lng: initialCameraPosition.target.longitude),
-              zoom: mapsZoomLevel,
-              mapId: mapId,
-            ));
+  @override
+  void initState() {
+    super.initState();
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    _mapDivId = 'map-container-$timestamp';
+    _viewType = 'google-map-view-$timestamp';
 
-        final rawMap = js_util.jsify(js_util.getProperty(gMap, '__proto__') != null ? gMap : js_util.getProperty(gMap, 'map'));
+    registerWebView(_viewType, (int viewId) {
+      final container = html.DivElement()
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.position = 'relative';
 
-        final drawingManager = DrawingManager(DrawingManagerOptions(
-          drawingMode: null,
-          drawingControl: false,
-          polygonOptions: {
-            'fillColor': '#c6c2c2',
-            'fillOpacity': 0.5,
-            'strokeWeight': 1.5,
-            'clickable': false,
-            'editable': true,
-            'zIndex': 1
-          },
-        ));
+      final mapDiv = html.DivElement()
+        ..id = _mapDivId
+        ..style.width = '100%'
+        ..style.height = '100%';
 
-        drawingManager.setMap(gMap);
+      container.append(mapDiv);
 
-        dynamic activePolygon;
+      const mapId = String.fromEnvironment('MAPS_ID');
 
-        final ZoneListAndAdditionViewModel zoneListAndAdditionViewModel = Get.find();
+      final gMap = GMap(
+        mapDiv,
+        MapOptions(
+          center: ltln.LatLng(
+            lat: initialCameraPosition.target.latitude,
+            lng: initialCameraPosition.target.longitude,
+          ),
+          zoom: mapsZoomLevel,
+          mapId: mapId,
+        ),
+      );
 
-        ever(zoneListAndAdditionViewModel.zoneList, (_) {
-          if(zoneListAndAdditionViewModel.zoneList.isNotEmpty) {
-            drawPolygons(gMap);
-          }
-        });
+      final rawMap = js_util.jsify(js_util.getProperty(gMap, '__proto__') != null ? gMap : js_util.getProperty(gMap, 'map'));
 
-        if(isBeingEdited) {
-          final EditZoneViewModel editZoneViewModel = Get.find();
-          final cords = editZoneViewModel.areaPolygon.split(',').map((s) {
+      final drawingManager = DrawingManager(
+          DrawingManagerOptions(
+            drawingMode: null,
+            drawingControl: false,
+            polygonOptions: {
+              'fillColor': '#FF0000',
+              'fillOpacity': 0.5,
+              'strokeWeight': 1.5,
+              'clickable': false,
+              'editable': true,
+              'zIndex': 1,
+            },
+          )
+      );
+
+      drawingManager.setMap(gMap);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.isBeingEdited) {
+          final cords = Get.find<EditZoneViewModel>().areaPolygon.split(',').map((s) {
             final parts = s.trim().split(' ');
             return ltln.LatLng(
-                lat: double.parse(parts[1]),
-                lng: double.parse(parts[0])
+              lat: double.parse(parts[1]),
+              lng: double.parse(parts[0]),
             );
           }).toList();
 
@@ -97,12 +108,10 @@ class GoogleMapWidget extends StatelessWidget {
           final bounds = js_util.callConstructor(latLngBoundsConstructor, []);
 
           final polygonOptions = js_util.jsify({
-            'paths': cords
-                .map((c) => js_util.jsify({'lat': c.lat, 'lng': c.lng}))
-                .toList(),
+            'paths': cords.map((c) => js_util.jsify({'lat': c.lat, 'lng': c.lng})).toList(),
             'map': gMap,
             'editable': true,
-            'fillColor': '#c6c2c2',
+            'fillColor': '#FF0000',
             'fillOpacity': 0.5,
             'strokeWeight': 1.5,
             'clickable': false,
@@ -117,16 +126,13 @@ class GoogleMapWidget extends StatelessWidget {
           }
 
           js_util.callMethod(gMap, 'fitBounds', [bounds]);
-
           drawingManager.setDrawingMode(null);
           drawingManager.setMap(null);
+        } else {
+          moveCamera(gMap, rawMap);
         }
 
-        if(!isBeingEdited){
-        moveCamera(gMap, rawMap);
-      }
-
-      addListener(drawingManager, 'overlaycomplete', js.allowInterop((e) {
+        addListener(drawingManager, 'overlaycomplete', js.allowInterop((e) {
           if (activePolygon != null) {
             html.window.alert('Only one polygon is allowed.');
             return;
@@ -151,69 +157,87 @@ class GoogleMapWidget extends StatelessWidget {
           }
 
           final pointsString = points.join(', ');
-          if(isBeingEdited) {
 
+          if (widget.isBeingEdited) {
             Get.find<EditZoneViewModel>().areaPolygon = 'POLYGON(($pointsString))';
           } else {
-            zoneListAndAdditionViewModel.areaPolygons = 'POLYGON(($pointsString))';
+            widget.zoneListViewModel.areaPolygons = 'POLYGON(($pointsString))';
           }
+
           drawingManager.setDrawingMode(null);
         }));
-
-
-        final dragButton = html.ButtonElement()
-          ..text = '🧭'
-          ..style.position = 'absolute'
-          ..style.top = '10px'
-          ..style.right = '140px'
-          ..style.zIndex = '5';
-
-        final drawButton = html.ButtonElement()
-          ..text = '✏️'
-          ..style.position = 'absolute'
-          ..style.top = '10px'
-          ..style.right = '100px'
-          ..style.zIndex = '5';
-
-        final locateButton = html.ButtonElement()
-          ..text = '📍'
-          ..style.position = 'absolute'
-          ..style.top = '10px'
-          ..style.right = '60px'
-          ..style.zIndex = '5';
-
-        locateButton.onClick.listen((_) {
-          moveCamera(gMap, rawMap);
-        });
-
-        dragButton.onClick.listen((_) {
-          drawingManager.setDrawingMode(null);
-          mapDiv.style.pointerEvents = 'auto';
-        });
-
-        drawButton.onClick.listen((_) {
-          if (zoneListAndAdditionViewModel.areaPolygons != '') {
-            html.window.alert('Only one polygon is allowed.');
-            return;
-          }
-          drawingManager.setDrawingMode('polygon');
-          mapDiv.style.pointerEvents = 'auto';
-        });
-
-        container.append(dragButton);
-        container.append(drawButton);
-        container.append(locateButton);
-
-        return container;
       });
+
+      // UI Buttons
+      final dragButton = html.ButtonElement()
+        ..text = '🧭'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '140px'
+        ..style.zIndex = '5';
+
+      final drawButton = html.ButtonElement()
+        ..text = '✏️'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '100px'
+        ..style.zIndex = '5';
+
+      final locateButton = html.ButtonElement()
+        ..text = '📍'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '60px'
+        ..style.zIndex = '5';
+
+      final cancelButton = html.ButtonElement()
+        ..text = '❌'
+        ..style.position = 'absolute'
+        ..style.top = '10px'
+        ..style.right = '180px'
+        ..style.zIndex = '5';
+
+      cancelButton.onClick.listen((_) {
+        cancelOperation();
+      });
+
+      locateButton.onClick.listen((_) {
+        moveCamera(gMap, rawMap);
+      });
+
+      dragButton.onClick.listen((_) {
+        drawingManager.setDrawingMode(null);
+        mapDiv.style.pointerEvents = 'auto';
+      });
+
+      drawButton.onClick.listen((_) {
+        if (widget.zoneListViewModel.areaPolygons != '') {
+          html.window.alert('Only one polygon is allowed.');
+          return;
+        }
+        drawingManager.setDrawingMode('polygon');
+        mapDiv.style.pointerEvents = 'auto';
+      });
+
+      container.append(dragButton);
+      container.append(drawButton);
+      container.append(locateButton);
+      if(!widget.isBeingEdited) container.append(cancelButton);
+
+      ever(widget.zoneListViewModel.zoneList, (_) {
+        if(widget.zoneListViewModel.zoneList.isNotEmpty) {
+          drawPolygons(gMap);
+          cancelOperation();
+        }
+      });
+
+      return container;
+    });
   }
 
   void moveCamera(GMap map, dynamic rawMap) async {
-    ZoneListAndAdditionViewModel viewModel = Get.find();
-
-    viewModel.determinePosition().then((value) async {
-      map.panTo(ltln.LatLng(lat: value.latitude, lng: value.longitude));
-    });
+    final position = await widget.zoneListViewModel.determinePosition();
+    map.panTo(ltln.LatLng(lat: position.latitude, lng: position.longitude));
   }
 
   void makeEditable(dynamic polygon, bool editable) {
@@ -226,9 +250,7 @@ class GoogleMapWidget extends StatelessWidget {
   }
 
   void drawPolygons(GMap gMap) {
-    final zones = Get
-        .find<ZoneListAndAdditionViewModel>()
-        .zoneList;
+    final zones = widget.zoneListViewModel.zoneList;
 
     if (zones.isEmpty) return;
 
@@ -254,13 +276,29 @@ class GoogleMapWidget extends StatelessWidget {
       Polygon(polygonOptions);
     }
   }
-  
+
+  void cancelOperation() {
+    if (activePolygon != null) {
+      js_util.callMethod(
+          activePolygon, 'setMap', [null]);
+      activePolygon = null;
+      widget.zoneListViewModel.areaPolygons = '';
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity,
       height: 280,
-      child: HtmlElementView(viewType: 'google-map-view'),
+      child: HtmlElementView(viewType: _viewType),
     );
+  }
+
+  @override
+  void dispose() {
+    html.document.getElementById(_mapDivId)?.remove();
+    super.dispose();
   }
 }

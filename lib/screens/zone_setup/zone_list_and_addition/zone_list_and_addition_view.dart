@@ -8,6 +8,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_viewmodel.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 import '../../../utils/custom_widgets/list_entry_item.dart';
 import '../../../utils/custom_widgets/zone_setup_section.dart';
@@ -28,6 +29,7 @@ class ZoneListAndAdditionView extends StatelessWidget {
             formKey: _viewModel.zoneNameFormKey,
             nameController: _viewModel.zoneNameController,
             descController: _viewModel.zoneDescController,
+            onBtnPressed: () => _viewModel.addNewZone(),
           ),
           SectionHeadingText(headingText: lang_key.zoneList.tr),
           Obx(() => ListBaseContainer(
@@ -70,7 +72,7 @@ class ZoneListAndAdditionView extends StatelessWidget {
                             includeEdit: true,
                             includeView: false,
                             onDeletePressed: () {},
-                            onEditPressed: () {},
+                            onEditPressed: () => Get.toNamed(Routes.editZone, arguments: {'zoneDetails': _viewModel.zoneList[index]}),
                           ),
                         )
                       ]

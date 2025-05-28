@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/zone_model.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
@@ -9,7 +10,6 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../helpers/stop_loader_and_show_snackbar.dart';
-import '../../../utils/constants.dart';
 
 class ZoneListAndAdditionViewModel extends GetxController {
 
@@ -38,20 +38,14 @@ class ZoneListAndAdditionViewModel extends GetxController {
   RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
 
   /// Limit variables
-  int limit = 10;
+  int limit = 30;
 
-  RxBool loadMaps = false.obs;
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
+  RxBool enableAutoValidation = true.obs;
 
   @override
   void onReady() {
     getAllZones();
-    animateSidePanelScrollController(
-      scrollController,
-        sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'zoneSetup').values.first);
+    animateSidePanelScrollController(scrollController);
     determinePosition();
     super.onReady();  
   }
@@ -94,49 +88,56 @@ class ZoneListAndAdditionViewModel extends GetxController {
       locationSettings: WebSettings(timeLimit: Duration(seconds: 20), accuracy: LocationAccuracy.best)
     );
   }
-  
+
+  /// Add new zone API call.
   void addNewZone() {
+    enableAutoValidation.value = true;
     if(zoneNameFormKey.currentState!.validate()) {
       if(areaPolygons != '') {
-        
+
+        GlobalVariables.showLoader.value = true;
+
         Map<String, dynamic> body = {
           'name': zoneNameController.text,
           'desc': zoneDescController.text,
-          'polygon': areaPolygons
+          'polylines': areaPolygons
         };
         
         ApiBaseHelper.postMethod(
             url: Urls.addNewZone,
             body: body
         ).then((value) {
+
+          stopLoaderAndShowSnackBar(value.success! ? lang_key.zoneCreated.tr : value.message!, !value.success!);
+
           if(value.success!) {
-            stopLoaderAndShowSnackBar(lang_key.zoneCreated.tr, true);
+
             zoneList.add(ZoneModel.fromJson(value.data));
-            zoneNameController.clear();
-            areaPolygons = '';
-          } else {
-            stopLoaderAndShowSnackBar(value.message!, false);
+            zoneList.refresh();
+            clearControllersAndVariables();
           }
         });
+      } else {
+        showSnackBar(message: lang_key.addAreaPolygon.tr, isError: true);
       }
+    } else {
+      enableAutoValidation.value = true;
     }
   }
 
-  /// Get zones list
+  /// Get zones list API call.
   void getAllZones() {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(
         url: "${Urls.getAllZones}?limit=$limit&page=${currentPage.value}",
     ).then((value) {
       if(value.success!) {
+        zoneList.clear();
         GlobalVariables.showLoader.value = false;
         final data = value.data as List;
         zoneList.addAll(data.map((e) => ZoneModel.fromJson(e)));
         zoneList.refresh();
-        loadMaps.value = true;
       } else {
-        print(value.message);
-        loadMaps.value = true;
         stopLoaderAndShowSnackBar(value.message!, true);
       }
     });
@@ -156,5 +157,12 @@ class ZoneListAndAdditionViewModel extends GetxController {
         stopLoaderAndShowSnackBar(value.message!, true);
       }
     });
+  }
+
+  void clearControllersAndVariables() {
+    enableAutoValidation.value = false;
+    zoneNameController.clear();
+    zoneDescController.clear();
+    areaPolygons = '';
   }
 }

@@ -5,7 +5,6 @@ import 'package:service_app_admin_panel/models/service_item.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/drop_down_entry.dart';
-import '../../../utils/constants.dart';
 
 class ItemsListViewModel extends GetxController {
 
@@ -46,7 +45,7 @@ class ItemsListViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

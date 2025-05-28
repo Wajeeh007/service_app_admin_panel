@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/serviceman.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
-import '../../../utils/constants.dart';
 
 class NewRequestsViewModel extends GetxController {
 
@@ -14,8 +13,7 @@ class NewRequestsViewModel extends GetxController {
 
   @override
   void onReady() {
-    animateSidePanelScrollController(scrollController,
-        sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'serviceManManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

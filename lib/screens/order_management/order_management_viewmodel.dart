@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/order.dart';
 
 import '../../helpers/scroll_controller_funcs.dart';
-import '../../utils/constants.dart';
 
 class OrderManagementViewModel extends GetxController with GetSingleTickerProviderStateMixin{
 
@@ -58,9 +57,7 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
 
   @override
   void onReady() {
-    animateSidePanelScrollController(
-        scrollController,
-        sidePanelScrollPositions.firstWhere((element) => element.keys.first == 'ordersManagement').values.first);
+    animateSidePanelScrollController(scrollController);
     super.onReady();
   }
 

@@ -22,8 +22,15 @@ class EditZoneViewModel extends GetxController {
   /// Polygon string
   String areaPolygon = '';
 
-  RxBool loadMaps = false.obs;
+  RxBool disableAutoValidation = false.obs;
 
+  @override
+  void onReady() {
+    zoneDetails = Get.arguments['zoneDetails'];
+    _initializeValues();
+    super.onReady();
+  }
+  
   void editZone() {
     if (nameController.text == zoneDetails.name! && zoneDetails.polylines == areaPolygon) {
       showSnackBar(
@@ -50,6 +57,12 @@ class EditZoneViewModel extends GetxController {
         }
       });
     }
+  }
+  
+  void _initializeValues() {
+    nameController.text = zoneDetails.name!;
+    descController.text = zoneDetails.desc!;
+    areaPolygon = zoneDetails.polylines!;
   }
   
 }

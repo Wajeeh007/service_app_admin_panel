@@ -235,7 +235,8 @@ class English {
     key.timeOutException: 'Server took too long to respond',
     key.generalApiError: 'Something went wrong',
     key.errorFetchingZones: 'Error fetching zones. Please refresh page.',
-    key.errorChangingStatus: 'Error changing status. Please retry.'
+    key.errorChangingStatus: 'Error changing status. Please retry.',
+    key.addAreaPolygon: 'Add area polygon to proceed',
     /// Errors End ///
   };
 
