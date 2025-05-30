@@ -201,8 +201,8 @@ class _AllMethodsList extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
           controller: _viewModel.allMethodsSearchController,
-            formKey: _viewModel.allMethodsFormKey,
             hintText: lang_key.searchMethod.tr,
             listData: [].obs,
             columnsNames: [
@@ -230,9 +230,9 @@ class _ActiveMethodsList extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
           expandFirstColumn: false,
           controller: _viewModel.activeMethodsSearchController,
-            formKey: _viewModel.activeMethodsFormKey,
             hintText: lang_key.searchMethod.tr,
             listData: [].obs,
             columnsNames: [
@@ -260,9 +260,9 @@ class _InActiveMethodsList extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
           expandFirstColumn: false,
           controller: _viewModel.inActiveMethodsSearchController,
-            formKey: _viewModel.inActiveMethodsFormKey,
             hintText: lang_key.searchMethod.tr,
             listData: [].obs,
             columnsNames: [

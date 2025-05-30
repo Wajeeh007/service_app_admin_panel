@@ -206,7 +206,8 @@ const fieldIsRequired = 'fieldIsRequired',
     searchOrder = 'searchOrder',
     createdDate = 'createdDate',
     error = 'error',
-    success = 'success';
+    success = 'success',
+    cancel = 'cancel';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',
@@ -226,5 +227,7 @@ const addServiceError = 'addServiceError',
     generalApiError = 'generalApiError',
     errorFetchingZones = 'errorFetchingZones',
     errorChangingStatus = 'errorChangingStatus',
-    addAreaPolygon = 'addAreaPolygon';
+    addAreaPolygon = 'addAreaPolygon',
+    noInfoChanged = 'noDataChanged',
+    clientExceptionError = 'clientExceptionError';
 /// Errors End ///

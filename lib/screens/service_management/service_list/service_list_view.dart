@@ -30,8 +30,8 @@ class ServiceListView extends StatelessWidget {
           SectionHeadingText(headingText: lang_key.services.tr),
           _ServiceAdditionSection(),
           ListBaseContainer(
+              onRefresh: () {},
               controller: _viewModel.searchController,
-              formKey: _viewModel.searchFormKey,
               listData: _viewModel.servicesList,
               hintText: lang_key.searchService.tr,
               expandFirstColumn: false,

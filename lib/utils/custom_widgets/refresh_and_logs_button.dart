@@ -6,7 +6,12 @@ import 'custom_material_button.dart';
 
 /// Refresh and Logs button
 class RefreshAndLogsButton extends StatelessWidget {
-  const RefreshAndLogsButton({super.key});
+  const RefreshAndLogsButton({
+    super.key,
+    required this.onRefresh
+  });
+
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class RefreshAndLogsButton extends StatelessWidget {
           waitDuration: Duration(milliseconds: 800),
           message: 'Refresh List',
           child: CustomMaterialButton(
-            onPressed: () {},
+            onPressed: onRefresh,
             width: 50,
             borderColor: primaryBlue,
             buttonColor: primaryWhite,

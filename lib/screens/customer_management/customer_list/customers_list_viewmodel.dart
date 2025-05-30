@@ -11,15 +11,12 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
   ScrollController scrollController = ScrollController();
     /// All Customers List
     TextEditingController allCustomersSearchController = TextEditingController();
-    GlobalKey<FormState> allCustomersFormKey = GlobalKey<FormState>();
     
     /// Active Customers List
     TextEditingController activeCustomersSearchController = TextEditingController();
-    GlobalKey<FormState> activeCustomersFormKey = GlobalKey<FormState>();
 
     /// InActive Customers List
     TextEditingController inActiveCustomersSearchController = TextEditingController();
-    GlobalKey<FormState> inActiveCustomersFormKey = GlobalKey<FormState>();
     
   /// All Customers data list
   RxList<Customer> allCustomers = <Customer>[].obs;

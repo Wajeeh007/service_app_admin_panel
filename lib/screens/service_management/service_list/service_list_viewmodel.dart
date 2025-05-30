@@ -11,7 +11,6 @@ class ServiceListViewModel extends GetxController {
   ScrollController scrollController = ScrollController();
     /// For Search field
     TextEditingController searchController = TextEditingController();
-    GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
 
     /// For Service Addition
     TextEditingController serviceAdditionController = TextEditingController();

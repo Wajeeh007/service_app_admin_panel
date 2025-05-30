@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/zone_model.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
+import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libraries/map_controller.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -20,11 +21,9 @@ class ZoneListAndAdditionViewModel extends GetxController {
   GlobalKey<FormState> zoneNameFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> zoneSearchFormKey = GlobalKey<FormState>();
   ScrollController scrollController = ScrollController();
+  CustomGoogleMapController mapController = CustomGoogleMapController();
 
   /// Variables for Google Maps ///
-    /// Maps loader
-    RxBool showMapsLoader = false.obs;
-
     /// Polygons of an area
     String areaPolygons = '';
 
@@ -34,12 +33,14 @@ class ZoneListAndAdditionViewModel extends GetxController {
   RxInt currentPage = 0.obs;
   RxInt totalPages = 3.obs;
 
-  /// Zone list page data
-  RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
-
   /// Limit variables
   int limit = 30;
 
+  /// Zones list data
+  RxList<ZoneModel> allZonesList = <ZoneModel>[].obs;
+  RxList<ZoneModel> visibleZoneList = <ZoneModel>[].obs;
+
+  /// Variable to toggle auto-validation of form fields.
   RxBool enableAutoValidation = true.obs;
 
   @override
@@ -66,7 +67,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      
+      showSnackBar(message: 'Location Services disbaled', success: false);
       return Future.error('Location services are disabled.');
     }
 
@@ -74,16 +75,16 @@ class ZoneListAndAdditionViewModel extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        showSnackBar(message: 'Location permissions denied', success: false);
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      showSnackBar(message: 'Location permissions are permanently denied, we cannot request permissions.', success: false);
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    showMapsLoader.value = true;
     return await Geolocator.getCurrentPosition(
       locationSettings: WebSettings(timeLimit: Duration(seconds: 20), accuracy: LocationAccuracy.best)
     );
@@ -108,20 +109,19 @@ class ZoneListAndAdditionViewModel extends GetxController {
             body: body
         ).then((value) {
 
-          stopLoaderAndShowSnackBar(value.success! ? lang_key.zoneCreated.tr : value.message!, !value.success!);
+          stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
           if(value.success!) {
-
-            zoneList.add(ZoneModel.fromJson(value.data));
-            zoneList.refresh();
+            enableAutoValidation.value = false;
+            allZonesList.add(ZoneModel.fromJson(value.data));
+            mapController.addToPolygonRefs?.call({'id': value.data['id'], 'polylines': value.data['polylines']});
+            addDataToVisibleZoneList();
             clearControllersAndVariables();
           }
         });
       } else {
-        showSnackBar(message: lang_key.addAreaPolygon.tr, isError: true);
+        showSnackBar(message: lang_key.addAreaPolygon.tr, success: true);
       }
-    } else {
-      enableAutoValidation.value = true;
     }
   }
 
@@ -132,13 +132,13 @@ class ZoneListAndAdditionViewModel extends GetxController {
         url: "${Urls.getAllZones}?limit=$limit&page=${currentPage.value}",
     ).then((value) {
       if(value.success!) {
-        zoneList.clear();
         GlobalVariables.showLoader.value = false;
         final data = value.data as List;
-        zoneList.addAll(data.map((e) => ZoneModel.fromJson(e)));
-        zoneList.refresh();
+        allZonesList.clear();
+        allZonesList.addAll(data.map((e) => ZoneModel.fromJson(e)));
+        addDataToVisibleZoneList();
       } else {
-        stopLoaderAndShowSnackBar(value.message!, true);
+        stopLoaderAndShowSnackBar(message: value.message!, success: false);
       }
     });
   }
@@ -147,22 +147,62 @@ class ZoneListAndAdditionViewModel extends GetxController {
   void changeZoneStatus(int index) {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.patchMethod(
-        url: Urls.changeZoneStatus(zoneList[index].id.toString())
+        url: Urls.changeZoneStatus(visibleZoneList[index].id.toString())
     ).then((value) {
+      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
       if(value.success!) {
         GlobalVariables.showLoader.value = false;
-        zoneList[index].status = !zoneList[index].status!;
-        zoneList.refresh();
-      } else {
-        stopLoaderAndShowSnackBar(value.message!, true);
+        final allZoneListIndex = allZonesList.indexWhere((element) => element.id! == visibleZoneList[index].id);
+        allZonesList[allZoneListIndex].status = !allZonesList[allZoneListIndex].status!;
+        visibleZoneList[index].status = !visibleZoneList[index].status!;
+        visibleZoneList.refresh();
       }
     });
   }
 
+  /// Delete an existing zone
+  void deleteZone(int index) {
+    GlobalVariables.showLoader.value = true;
+    
+    ApiBaseHelper.deleteMethod(
+        url: Urls.deleteZone(visibleZoneList[index].id.toString())
+    ).then((value) {
+      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
+
+      allZonesList.removeWhere((element) => element.id == visibleZoneList[index].id);
+      allZonesList.refresh();
+      addDataToVisibleZoneList();
+
+    });
+  }
+  
+  /// Clear controllers and variables associated with adding a new zone
   void clearControllersAndVariables() {
     enableAutoValidation.value = false;
     zoneNameController.clear();
     zoneDescController.clear();
     areaPolygons = '';
+  }
+
+  /// Add data to RxList
+  void addDataToVisibleZoneList() {
+    visibleZoneList.clear();
+    visibleZoneList.addAll(allZonesList);
+    visibleZoneList.refresh();
+  }
+
+  /// Search zone and update visible list.
+  void searchInList(String? value) {
+    if(value == '' || value == null || value.isEmpty) {
+      addDataToVisibleZoneList();
+    } else {
+      visibleZoneList.clear();
+      for (var element in allZonesList) {
+        if(element.name!.toLowerCase().trim().contains(value.toLowerCase().trim())) {
+          visibleZoneList.add(element);
+          visibleZoneList.refresh();
+        }
+      }
+    }
   }
 }

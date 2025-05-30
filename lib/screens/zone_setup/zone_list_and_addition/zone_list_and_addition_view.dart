@@ -25,19 +25,23 @@ class ZoneListAndAdditionView extends StatelessWidget {
         selectedSidePanelItem: lang_key.zoneSetup.tr,
         children: [
           SectionHeadingText(headingText: lang_key.zoneSetup.tr),
-          ZoneSetupSection(
-            formKey: _viewModel.zoneNameFormKey,
-            nameController: _viewModel.zoneNameController,
-            descController: _viewModel.zoneDescController,
-            onBtnPressed: () => _viewModel.addNewZone(),
+          Obx(() => ZoneSetupSection(
+            mapController: _viewModel.mapController,
+              formKey: _viewModel.zoneNameFormKey,
+              nameController: _viewModel.zoneNameController,
+              descController: _viewModel.zoneDescController,
+              onBtnPressed: () => _viewModel.addNewZone(),
+            enableAutoValidation: _viewModel.enableAutoValidation.value,
+            ),
           ),
           SectionHeadingText(headingText: lang_key.zoneList.tr),
           Obx(() => ListBaseContainer(
+            onRefresh: () => _viewModel.getAllZones(),
               hintText: lang_key.searchZone.tr,
-              formKey: _viewModel.zoneSearchFormKey,
-              controller: _viewModel.zoneNameController,
-              listData: _viewModel.zoneList,
+              controller: _viewModel.zoneSearchController,
+              listData: _viewModel.visibleZoneList,
               expandFirstColumn: false,
+              onSearch: (value) => _viewModel.searchInList(_viewModel.zoneSearchController.text),
               columnsNames: [
                 'SL',
                 lang_key.zoneName.tr,
@@ -45,15 +49,15 @@ class ZoneListAndAdditionView extends StatelessWidget {
                 lang_key.status.tr,
                 lang_key.actions.tr
               ],
-              entryChildren: List.generate(_viewModel.zoneList.length, (index) {
+              entryChildren: List.generate(_viewModel.visibleZoneList.length, (index) {
                 return Padding(
                   padding: listEntryPadding,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                        ListEntryItem(text: _viewModel.zoneList[index].name,),
-                        ListEntryItem(text: switch (_viewModel.zoneList[index].orderVolume) {
+                        ListEntryItem(text: _viewModel.visibleZoneList[index].name,),
+                        ListEntryItem(text: switch (_viewModel.visibleZoneList[index].orderVolume) {
                           null => lang_key.veryLow.tr,
                           ZoneOrderVolume.veryLow => lang_key.veryLow.tr,
                           ZoneOrderVolume.low => lang_key.low.tr,
@@ -63,7 +67,7 @@ class ZoneListAndAdditionView extends StatelessWidget {
                         },),
                         ListEntryItem(
                           child: CustomSwitch(
-                            switchValue: _viewModel.zoneList[index].status!,
+                            switchValue: _viewModel.visibleZoneList[index].status!,
                             onChanged: (value) => _viewModel.changeZoneStatus(index),
                         ),),
                         ListEntryItem(
@@ -71,8 +75,8 @@ class ZoneListAndAdditionView extends StatelessWidget {
                             includeDelete: true,
                             includeEdit: true,
                             includeView: false,
-                            onDeletePressed: () {},
-                            onEditPressed: () => Get.toNamed(Routes.editZone, arguments: {'zoneDetails': _viewModel.zoneList[index]}),
+                            onDeletePressed: () => _viewModel.deleteZone(index),
+                            onEditPressed: () => Get.toNamed(Routes.editZone, arguments: {'zoneDetails': _viewModel.visibleZoneList[index]}),
                           ),
                         )
                       ]

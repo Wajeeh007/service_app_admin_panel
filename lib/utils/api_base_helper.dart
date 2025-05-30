@@ -45,7 +45,12 @@ class ApiBaseHelper {
       return Errors().showSocketExceptionError();
     } on TimeoutException {
       return Errors().showTimeOutExceptionError();
+    } on http.ClientException {
+      return Errors().showClientExceptionError();
+    } on FormatException {
+      return Errors().showFormatExceptionError();
     } catch (e) {
+      print('Error: $e');
       return Errors().showGeneralApiError();
     }
   }

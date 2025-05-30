@@ -19,6 +19,7 @@ class NewRequestsView extends StatelessWidget {
       children: [
         SectionHeadingText(headingText: lang_key.newRequests.tr),
         ListBaseContainer(
+            onRefresh: () {},
             includeSearchField: false,
             expandFirstColumn: false,
             listData: _viewModel.serviceManNewRequests,

@@ -11,31 +11,24 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
   ScrollController scrollController = ScrollController();
     /// All Orders Tab
     TextEditingController allOrderSearchController = TextEditingController();
-    GlobalKey<FormState> allOrdersFormKey = GlobalKey<FormState>();
 
     /// Pending Orders Tab
     TextEditingController pendingOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> pendingOrdersFormKey = GlobalKey<FormState>();
 
     /// Accepted Orders Tab
     TextEditingController acceptedOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> acceptedOrdersFormKey = GlobalKey<FormState>();
 
     /// Ongoing Orders Tab
     TextEditingController ongoingOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> ongoingOrdersFormKey = GlobalKey<FormState>();
 
     /// Completed Orders Tab
     TextEditingController completedOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> completedOrdersFormKey = GlobalKey<FormState>();
 
     /// Cancelled Orders Tab
     TextEditingController cancelledOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> cancelledOrdersFormKey = GlobalKey<FormState>();
 
     /// Disputed Orders Tab
     TextEditingController disputedOrdersSearchController = TextEditingController();
-    GlobalKey<FormState> disputedOrdersFormKey = GlobalKey<FormState>();
 
   /// Controller(s) and Form keys End ///
 

@@ -211,6 +211,7 @@ class English {
     key.searchOrder: 'Search Order',
     key.error: 'Error',
     key.success: 'Success',
+    key.cancel: 'Cancel',
     
     /// Success Messages ///
 
@@ -237,6 +238,8 @@ class English {
     key.errorFetchingZones: 'Error fetching zones. Please refresh page.',
     key.errorChangingStatus: 'Error changing status. Please retry.',
     key.addAreaPolygon: 'Add area polygon to proceed',
+    key.noInfoChanged: 'No information changed to update.',
+    key.clientExceptionError: 'Server unreachable.',
     /// Errors End ///
   };
 

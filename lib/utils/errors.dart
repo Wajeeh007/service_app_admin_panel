@@ -37,4 +37,12 @@ class Errors {
       success: false,
     );
   }
+
+  ApiResponse showClientExceptionError() {
+    return ApiResponse(
+      message: lang_key.clientExceptionError.tr,
+      statusCode: 500,
+      success: false,
+    );
+  }
 }

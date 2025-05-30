@@ -20,6 +20,7 @@ class SuspendedServicemanListView extends StatelessWidget {
       children: [
         SectionHeadingText(headingText: lang_key.suspendedServiceMen.tr),
         ListBaseContainer(
+            onRefresh: () {},
             includeSearchField: false,
             expandFirstColumn: false,
             listData: _viewModel.suspendedServicemen,

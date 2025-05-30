@@ -12,18 +12,24 @@ import 'package:js/js_util.dart' as js_util;
 import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_viewmodel.dart';
+import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libraries/map_controller.dart';
 
-import '../custom_google_map_libraries/drawing_manager.dart';
-import '../custom_google_map_libraries/g_map.dart';
-import '../custom_google_map_libraries/lat_lng.dart' as ltln;
-import '../custom_google_map_libraries/map_options.dart';
-import '../custom_google_map_libraries/overlay_complete.dart';
-import '../custom_google_map_libraries/web_only.dart';
+import 'models_and_libraries/drawing_manager.dart';
+import 'models_and_libraries/g_map.dart';
+import 'models_and_libraries/lat_lng.dart' as ltln;
+import 'models_and_libraries/map_options.dart';
+import 'models_and_libraries/overlay_complete.dart';
+import 'models_and_libraries/web_only.dart';
 
 class GoogleMapWidget extends StatefulWidget {
   final bool isBeingEdited;
+  final CustomGoogleMapController mapController;
 
-  GoogleMapWidget({super.key, required this.isBeingEdited});
+  GoogleMapWidget({
+    super.key,
+    required this.isBeingEdited,
+    required this.mapController
+  });
 
   final zoneListViewModel = Get.find<ZoneListAndAdditionViewModel>();
 
@@ -34,12 +40,16 @@ class GoogleMapWidget extends StatefulWidget {
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late final String _mapDivId;
   late final String _viewType;
+  late DrawingManager drawingManager;
+
+  Map<String, dynamic> polygonRefs = {};
 
   dynamic activePolygon;
 
   @override
   void initState() {
     super.initState();
+
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     _mapDivId = 'map-container-$timestamp';
     _viewType = 'google-map-view-$timestamp';
@@ -71,9 +81,47 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         ),
       );
 
+      widget.mapController.addToPolygonRefs = (Map<String, dynamic> zoneData) {
+        if(zoneData['id'] != null && (zoneData['polylines'] != null || zoneData['polylines'] != '')) {
+          drawPolygons(gMap);
+        }
+      };
+
+      widget.mapController.updateZonePolygon = (Map<String, dynamic> zoneData) {
+        final zoneId = zoneData['id'];
+
+        final oldPolygon = polygonRefs[zoneId];
+        if (oldPolygon != null) {
+          js_util.callMethod(oldPolygon, 'setMap', [null]);
+          polygonRefs.remove(zoneId);
+        }
+
+        final coords = zoneData['polylines'].split(',').map((s) {
+          final parts = s.trim().split(' ');
+          return js_util.jsify({
+            'lat': double.parse(parts[1]),
+            'lng': double.parse(parts[0])
+          });
+        }).toList();
+
+        final polygonOptions = js_util.jsify({
+          'paths': coords,
+          'map': gMap,
+          'fillColor': '#c6c2c2',
+          'fillOpacity': 0.4,
+          'strokeWeight': 1.5,
+          'clickable': false,
+          'zIndex': 1,
+        });
+
+        final polygon = Polygon(polygonOptions);
+        polygon.setMap(gMap);
+        polygonRefs[zoneId] = polygon;
+      };
+
       final rawMap = js_util.jsify(js_util.getProperty(gMap, '__proto__') != null ? gMap : js_util.getProperty(gMap, 'map'));
 
-      final drawingManager = DrawingManager(
+      drawingManager = DrawingManager(
           DrawingManagerOptions(
             drawingMode: null,
             drawingControl: false,
@@ -119,6 +167,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           });
 
           activePolygon = js_util.callConstructor(polygonConstructor, [polygonOptions]);
+          final path = js_util.callMethod(activePolygon, 'getPath', []);
+          addPathChangeListeners(path);
 
           for (final c in cords) {
             final jsLatLng = js_util.callConstructor(latLngConstructor, [c.lat, c.lng]);
@@ -142,13 +192,14 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           makeEditable(activePolygon, true);
 
           final path = js_util.callMethod(activePolygon, 'getPath', []);
+          addPathChangeListeners(path);
           final length = js_util.callMethod(path, 'getLength', []);
           final points = <String>[];
 
           for (var i = 0; i < length; i++) {
             final point = path.getAt(i);
-            final lat = point.lat();
-            final lng = point.lng();
+            final lat = point.lat().toStringAsFixed(6);
+            final lng = point.lng().toStringAsFixed(6);
             points.add('$lng $lat');
           }
 
@@ -224,8 +275,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       container.append(locateButton);
       if(!widget.isBeingEdited) container.append(cancelButton);
 
-      ever(widget.zoneListViewModel.zoneList, (_) {
-        if(widget.zoneListViewModel.zoneList.isNotEmpty) {
+      ever(widget.zoneListViewModel.allZonesList, (_) {
+        if(widget.zoneListViewModel.allZonesList.isNotEmpty) {
           drawPolygons(gMap);
           cancelOperation();
         }
@@ -236,8 +287,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   void moveCamera(GMap map, dynamic rawMap) async {
-    final position = await widget.zoneListViewModel.determinePosition();
-    map.panTo(ltln.LatLng(lat: position.latitude, lng: position.longitude));
+    try{
+      final position = await widget.zoneListViewModel.determinePosition();
+      map.panTo(ltln.LatLng(lat: position.latitude, lng: position.longitude));
+    } catch (e) {
+      return;
+    }
   }
 
   void makeEditable(dynamic polygon, bool editable) {
@@ -250,16 +305,30 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   void drawPolygons(GMap gMap) {
-    final zones = widget.zoneListViewModel.zoneList;
+    final zones = widget.zoneListViewModel.allZonesList;
 
-    if (zones.isEmpty) return;
+    final currentZoneIds = zones.map((z) => z.id.toString()).toSet();
+    final existingZoneIds = polygonRefs.keys.toSet();
 
-    for (var zone in zones) {
+    final removedIds = existingZoneIds.difference(currentZoneIds);
+
+    for (final id in removedIds) {
+      final polygon = polygonRefs[id];
+      if (polygon != null) {
+        js_util.callMethod(polygon, 'setMap', [null]);
+        polygonRefs.remove(id);
+      }
+    }
+
+    for (final zone in zones) {
+      final id = zone.id.toString();
+      if (polygonRefs.containsKey(id)) continue;
+
       final coords = zone.polylines!.split(',').map((s) {
         final parts = s.trim().split(' ');
         return js_util.jsify({
           'lat': double.parse(parts[1]),
-          'lng': double.parse(parts[0])
+          'lng': double.parse(parts[0]),
         });
       }).toList();
 
@@ -273,11 +342,42 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         'zIndex': 1,
       });
 
-      Polygon(polygonOptions);
+      final polygon = Polygon(polygonOptions);
+      polygon.setMap(gMap);
+      polygonRefs[id] = polygon;
     }
   }
 
+  void addPathChangeListeners(dynamic path) {
+    void updatePolygonString([dynamic a, dynamic b]) {
+      final length = js_util.callMethod(path, 'getLength', []);
+      final points = <String>[];
+
+      for (var i = 0; i < length; i++) {
+        final point = path.getAt(i);
+        final lat = js_util.callMethod(point, 'lat', []);
+        final lng = js_util.callMethod(point, 'lng', []);
+        points.add('${lng.toStringAsFixed(6)} ${lat.toStringAsFixed(6)}');
+      }
+
+      if (points.isNotEmpty && points.first != points.last) {
+        points.add(points.first);
+      }
+
+      final pointsString = points.join(', ');
+      Get.find<EditZoneViewModel>().areaPolygon = 'POLYGON(($pointsString))';
+    }
+
+    addListener(path, 'set_at', js.allowInterop(updatePolygonString));
+    addListener(path, 'insert_at', js.allowInterop(updatePolygonString));
+    addListener(path, 'remove_at', js.allowInterop(updatePolygonString));
+  }
+
+
   void cancelOperation() {
+
+    drawingManager.setDrawingMode(null);
+
     if (activePolygon != null) {
       js_util.callMethod(
           activePolygon, 'setMap', [null]);
@@ -289,6 +389,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return SizedBox(
       width: double.infinity,
       height: 280,

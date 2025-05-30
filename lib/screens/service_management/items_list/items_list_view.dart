@@ -33,8 +33,8 @@ class ItemsListView extends StatelessWidget {
           SectionHeadingText(headingText: lang_key.addItemDetails.tr),
           _ItemAdditionSection(),
           ListBaseContainer(
+              onRefresh: () {},
               controller: _viewModel.searchController,
-              formKey: _viewModel.searchFormKey,
               listData: _viewModel.itemsList,
               hintText: lang_key.searchItem.tr,
               expandFirstColumn: false,
@@ -103,13 +103,13 @@ class _AddItemDetailsAndButtonSection extends StatelessWidget {
                     } else {
                       showSnackBar(
                           message: lang_key.addItemImage.tr,
-                          isError: true
+                          success: true
                       );
                     }
                   } else {
                     showSnackBar(
                         message: lang_key.addItemSubServiceType.tr,
-                        isError: true
+                        success: true
                     );
                   }
                 }

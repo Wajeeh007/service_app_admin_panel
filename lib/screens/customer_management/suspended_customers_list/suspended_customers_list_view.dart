@@ -20,6 +20,7 @@ class SuspendedCustomersListView extends StatelessWidget {
       children: [
         SectionHeadingText(headingText: lang_key.suspendedCustomers.tr),
         ListBaseContainer(
+            onRefresh: () {},
             includeSearchField: false,
             expandFirstColumn: false,
             listData: _viewModel.suspendedCustomersList,

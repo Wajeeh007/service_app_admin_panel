@@ -103,7 +103,7 @@ class _AllCustomersListTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.allServiceMansFormKey,
+            onRefresh: () {},
             controller: _viewModel.allServiceMansSearchController,
             listData: _viewModel.allServiceMen,
             expandFirstColumn: false,
@@ -134,7 +134,7 @@ class _ActiveCustomersListTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.activeServiceMansFormKey,
+            onRefresh: () {},
             controller: _viewModel.activeServiceMansSearchController,
             listData: _viewModel.activeServicemen,
             expandFirstColumn: false,
@@ -165,7 +165,7 @@ class _InActiveCustomersListTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
-            formKey: _viewModel.inActiveServiceMansFormKey,
+            onRefresh: () {},
             controller: _viewModel.inActiveServiceMansSearchController,
             listData: _viewModel.inActiveServicemen,
             expandFirstColumn: false,

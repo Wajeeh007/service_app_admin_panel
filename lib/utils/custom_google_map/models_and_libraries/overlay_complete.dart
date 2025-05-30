@@ -16,6 +16,8 @@ class Polygon {
   external factory Polygon(dynamic options);
 
   external MVCArray<LatLng> getPath();
+
+  external void setMap(dynamic map);
 }
 
 @JS()

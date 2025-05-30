@@ -8,7 +8,7 @@ class Urls {
   /// Zone Setup
 
   static String editZone(String id) {
-    return '/zones/edit_zone/$id';
+    return '/zones/$id';
   }
 
   static String changeZoneStatus(String id) {

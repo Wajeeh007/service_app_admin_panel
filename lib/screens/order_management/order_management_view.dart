@@ -71,9 +71,9 @@ class _AllOrders extends StatelessWidget {
       children: [
         _AllOrdersStatsSection(),
         ListBaseContainer(
+          onRefresh: () {},
           expandFirstColumn: false,
           hintText: lang_key.searchOrder.tr,
-            formKey: _viewModel.allOrdersFormKey,
             controller: _viewModel.allOrderSearchController,
             listData: _viewModel.allOrdersList,
           columnsNames: [
@@ -144,8 +144,8 @@ class _PendingOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
           expandFirstColumn: false,
-            formKey: _viewModel.pendingOrdersFormKey,
             controller: _viewModel.pendingOrdersSearchController,
             listData: _viewModel.pendingOrdersList,
             hintText: lang_key.searchOrder.tr,
@@ -175,8 +175,8 @@ class _AcceptedOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
             expandFirstColumn: false,
-            formKey: _viewModel.acceptedOrdersFormKey,
             controller: _viewModel.acceptedOrdersSearchController,
             listData: _viewModel.acceptedOrdersList,
             hintText: lang_key.searchOrder.tr,
@@ -206,8 +206,8 @@ class _OngoingOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
             expandFirstColumn: false,
-            formKey: _viewModel.ongoingOrdersFormKey,
             controller: _viewModel.ongoingOrdersSearchController,
             listData: _viewModel.ongoingOrdersList,
             hintText: lang_key.searchOrder.tr,
@@ -237,8 +237,8 @@ class _CompletedOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
             expandFirstColumn: false,
-            formKey: _viewModel.completedOrdersFormKey,
             controller: _viewModel.completedOrdersSearchController,
             listData: _viewModel.completedOrdersList,
             hintText: lang_key.searchOrder.tr,
@@ -268,8 +268,8 @@ class _CancelledOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
             expandFirstColumn: false,
-            formKey: _viewModel.cancelledOrdersFormKey,
             controller: _viewModel.cancelledOrdersSearchController,
             listData: _viewModel.cancelledOrdersList,
             hintText: lang_key.searchOrder.tr,
@@ -299,8 +299,8 @@ class _DisputedOrdersTabView extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+            onRefresh: () {},
             expandFirstColumn: false,
-            formKey: _viewModel.disputedOrdersFormKey,
             controller: _viewModel.disputedOrdersSearchController,
             listData: _viewModel.disputedOrdersList,
             hintText: lang_key.searchOrder.tr,

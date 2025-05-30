@@ -10,18 +10,19 @@ import '../constants.dart';
 class ListBaseContainer extends StatelessWidget {
   const ListBaseContainer({
     super.key,
-    this.formKey,
     this.controller,
     required this.listData,
     required this.columnsNames,
+    required this.onRefresh,
     this.hintText,
     this.expandFirstColumn = true,
     this.includeSearchField = true,
     this.fieldWidth = 200,
-    this.entryChildren
-  }) : assert((includeSearchField == false && (controller == null && formKey == null)) || (includeSearchField == true && (controller != null && formKey != null)), 'controller and formkey must be null, if search field is not included. And must be provided if search field is included.');
+    this.entryChildren,
+    this.onSearch,
+  }) : assert((
+      includeSearchField == false && (controller == null && onSearch == null)) || (includeSearchField == true && (controller != null && onSearch != null)), 'controller and onSearch must be null, if search field is not included. And must be provided if search field is included.');
 
-  final GlobalKey<FormState>? formKey;
   final TextEditingController? controller;
   final RxList<dynamic> listData;
   final List<String> columnsNames;
@@ -30,6 +31,8 @@ class ListBaseContainer extends StatelessWidget {
   final bool includeSearchField;
   final double fieldWidth;
   final List<Widget>? entryChildren;
+  final void Function(String?)? onSearch;
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +52,11 @@ class ListBaseContainer extends StatelessWidget {
             children: [
               includeSearchField ? SearchFieldAndButton(
                 fieldWidth: fieldWidth,
-                formKey: formKey!,
                 controller: controller!,
                 hint: hintText,
+                onChanged: onSearch,
               ) : SizedBox(),
-              RefreshAndLogsButton(),
+              RefreshAndLogsButton(onRefresh: onRefresh,),
             ],
           ),
           _ListColumNames(columnNames: columnsNames, expandFirstColumn: expandFirstColumn,),

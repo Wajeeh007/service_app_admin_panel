@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libraries/map_controller.dart';
 
 import '../constants.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 import '../images_paths.dart';
 import '../validators.dart';
-import 'custom_google_maps.dart';
+import '../custom_google_map/custom_google_maps.dart';
 import 'custom_material_button.dart';
 import 'custom_text_form_field.dart';
 import 'heading_in_container_text.dart';
@@ -18,7 +19,11 @@ class ZoneSetupSection extends StatelessWidget {
     required this.nameController,
     required this.descController,
     required this.onBtnPressed,
+    required this.mapController,
     this.isBeingEdited = false,
+    this.enableAutoValidation = true,
+    this.includeCancelBtn = false,
+    this.onCancelBtnPressed,
   });
 
   final GlobalKey<FormState> formKey;
@@ -26,6 +31,10 @@ class ZoneSetupSection extends StatelessWidget {
   final TextEditingController descController;
   final bool isBeingEdited;
   final VoidCallback onBtnPressed;
+  final VoidCallback? onCancelBtnPressed;
+  final bool enableAutoValidation;
+  final bool includeCancelBtn;
+  final CustomGoogleMapController mapController;
 
   @override
   Widget build(BuildContext context) {
@@ -76,15 +85,15 @@ class ZoneSetupSection extends StatelessWidget {
                           spacing: 10,
                           children: [
                             CustomTextFormField(
-                              autoValidateMode: AutovalidateMode.onUserInteraction,
+                              autoValidateMode: enableAutoValidation ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                               controller: nameController,
                               validator: (value) => Validators.validateEmptyField(value),
                               hint: 'Ex: Toronto',
                             ),
 
                             CustomTextFormField(
+                              autoValidateMode: enableAutoValidation ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                               title: lang_key.description.tr,
-                              autoValidateMode: AutovalidateMode.onUserInteraction,
                               controller: descController,
                               validator: (value) => Validators.validateEmptyField(value),
                               hint: lang_key.typeHere.tr,
@@ -94,16 +103,29 @@ class ZoneSetupSection extends StatelessWidget {
                           ],
                         ),
                       ),
-                      GoogleMapWidget(isBeingEdited: isBeingEdited,),
+                      GoogleMapWidget(isBeingEdited: isBeingEdited, mapController: mapController,),
                     ],
                   ),
                 ),
               ]
           ),
-          CustomMaterialButton(
-            width: 100,
-            onPressed: onBtnPressed,
-            text: lang_key.save.tr,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 10,
+            children: [
+              CustomMaterialButton(
+                width: 100,
+                onPressed: onBtnPressed,
+                text: lang_key.save.tr,
+              ),
+              if(includeCancelBtn) CustomMaterialButton(
+                width: 100,
+                onPressed: onCancelBtnPressed!,
+                text: lang_key.cancel.tr,
+                buttonColor: errorRed,
+                borderColor: errorRed,
+              ),
+            ],
           )
         ],
       ),

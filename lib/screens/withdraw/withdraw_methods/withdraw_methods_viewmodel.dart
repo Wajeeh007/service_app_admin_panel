@@ -30,10 +30,6 @@ class WithdrawMethodsViewModel extends GetxController with GetSingleTickerProvid
     TextEditingController activeMethodsSearchController = TextEditingController();
     TextEditingController inActiveMethodsSearchController = TextEditingController();
 
-    GlobalKey<FormState> allMethodsFormKey = GlobalKey<FormState>();
-    GlobalKey<FormState> activeMethodsFormKey = GlobalKey<FormState>();
-    GlobalKey<FormState> inActiveMethodsFormKey = GlobalKey<FormState>();
-
   /// New Method field type dropdown entries
   List<DropDownEntry> newMethodFieldTypeDropdownEntries = [
     DropDownEntry(value: NewMethodFieldType.text, label: lang_key.text.tr),

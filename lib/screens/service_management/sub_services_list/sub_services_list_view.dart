@@ -31,8 +31,8 @@ class SubServicesListView extends StatelessWidget {
           SectionHeadingText(headingText: lang_key.subServices.tr),
           _SubServiceAdditionSection(),
           ListBaseContainer(
+              onRefresh: () {},
               controller: _viewModel.searchController,
-              formKey: _viewModel.searchFormKey,
               listData: _viewModel.subCategoriesList,
               hintText: lang_key.searchSubService.tr,
               expandFirstColumn: false,
@@ -131,13 +131,13 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
                     } else {
                       showSnackBar(
                           message: lang_key.addSubServiceImage.tr,
-                          isError: true
+                          success: true
                       );
                     }
                   } else {
                     showSnackBar(
                         message: lang_key.addServiceError.tr,
-                        isError: true
+                        success: true
                     );
                   }
                 }

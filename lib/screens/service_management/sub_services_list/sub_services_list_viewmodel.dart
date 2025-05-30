@@ -18,7 +18,6 @@ class SubServicesListViewModel extends GetxController {
 
     /// For Search field
     TextEditingController searchController = TextEditingController();
-    GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
 
     /// For Service Addition
     TextEditingController serviceAdditionController = TextEditingController();
