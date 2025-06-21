@@ -163,7 +163,8 @@ class _NameTypeAndPlaceholderFormFields extends StatelessWidget {
                   hintText: lang_key.selectFieldType.tr,
                     dropDownList: _viewModel.newMethodFieldTypeDropdownEntries,
                     overlayPortalController: _viewModel.fieldTypeOverlayPortalController,
-                    showDropDown: _viewModel.showDropDown
+                    showDropDown: _viewModel.showDropDown,
+                  selectedValueId: _viewModel.dropDownSelectedValue,
                 );
               }
             )

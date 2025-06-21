@@ -13,7 +13,7 @@ import 'package:service_app_admin_panel/utils/routes.dart';
 import '../../../../utils/custom_widgets/custom_switch.dart';
 import '../../../../utils/custom_widgets/list_actions_buttons.dart';
 import '../../../../utils/custom_widgets/list_entry_item.dart';
-import '../../../../utils/custom_widgets/service_addition_section.dart';
+import '../../../../utils/custom_widgets/service_form_section.dart';
 
 class ServiceListView extends StatelessWidget {
   ServiceListView({super.key});

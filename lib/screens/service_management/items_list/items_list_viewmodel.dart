@@ -40,7 +40,7 @@ class ItemsListViewModel extends GetxController {
   RxBool showSubServiceTypeDropDown = false.obs;
 
   /// Selected Item index variables
-  RxInt? subServiceTypeSelectedIndex;
+  RxString subServiceTypeSelectedId = ''.obs;
 
   @override
   void onReady() {

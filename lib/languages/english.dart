@@ -215,6 +215,7 @@ class English {
     key.error: 'Error',
     key.success: 'Success',
     key.cancel: 'Cancel',
+    key.retry: 'Retry',
     
     /// Success Messages ///
 

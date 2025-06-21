@@ -4,7 +4,7 @@ import 'package:service_app_admin_panel/screens/service_management/services/edit
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../../utils/custom_widgets/screens_base_widget.dart';
 import '../../../../utils/custom_widgets/section_heading_text.dart';
-import '../../../../utils/custom_widgets/service_addition_section.dart';
+import '../../../../utils/custom_widgets/service_form_section.dart';
 
 class EditServiceView extends StatelessWidget {
   EditServiceView({super.key});

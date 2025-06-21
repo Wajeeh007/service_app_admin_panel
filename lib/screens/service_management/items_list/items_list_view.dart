@@ -97,7 +97,7 @@ class _AddItemDetailsAndButtonSection extends StatelessWidget {
               width: 120,
               onPressed: () {
                 if(_viewModel.itemAdditionFormKey.currentState!.validate()) {
-                  if(_viewModel.subServiceTypeSelectedIndex != null) {
+                  if(_viewModel.subServiceTypeSelectedId != null) {
                     if(_viewModel.addedItemImage.value.path != '') {
 
                     } else {
@@ -165,9 +165,10 @@ class _ItemDetailsFields extends StatelessWidget {
                     dropDownWidth: constraints.maxWidth,
                     dropDownList: _viewModel.subServicesList,
                     overlayPortalController: _viewModel.subServiceTypeController,
-                    value: _viewModel.subServiceTypeSelectedIndex,
+                    selectedValueId: _viewModel.subServiceTypeSelectedId,
                     hintText: lang_key.chooseService.tr,
-                    showDropDown: _viewModel.showSubServiceTypeDropDown
+                    showDropDown: _viewModel.showSubServiceTypeDropDown,
+                  // selectedValueIndex: _viewModel.subServiceTypeSelectedIndex,
                 );
               }
           )

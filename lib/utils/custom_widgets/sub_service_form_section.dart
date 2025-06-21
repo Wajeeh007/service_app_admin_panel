@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:get/get.dart';
@@ -28,7 +29,9 @@ class SubServiceFormSection extends StatelessWidget {
     required this.showServiceDropDown,
     this.isBeingEdited = false,
     required this.newImageToUpload,
-    this.imageUrl
+    this.imageUrl,
+    required this.autoValidator,
+    required this.selectedValue,
   });
 
   final VoidCallback onBtnPressed;
@@ -41,6 +44,8 @@ class SubServiceFormSection extends StatelessWidget {
   final bool isBeingEdited;
   final Rx<Uint8List> newImageToUpload;
   final RxString? imageUrl;
+  final RxBool autoValidator;
+  final RxString selectedValue;
   
   @override
   Widget build(BuildContext context) {
@@ -59,6 +64,8 @@ class SubServiceFormSection extends StatelessWidget {
             serviceTypeList: serviceTypeList,
             serviceTypeOverlayController: serviceTypeOverlayController,
             showServiceDropDown: showServiceDropDown,
+            autoValidator: autoValidator,
+            selectedValue: selectedValue,
           ),
           _AddServiceImageSection(
             isBeingEdited: isBeingEdited,
@@ -79,7 +86,10 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
     required this.nameController,
     required this.serviceTypeController,
     required this.serviceTypeList,
-    required this.serviceTypeOverlayController, required this.showServiceDropDown,
+    required this.serviceTypeOverlayController,
+    required this.showServiceDropDown,
+    required this.autoValidator,
+    required this.selectedValue,
   });
 
   final GlobalKey<FormState> formKey;
@@ -89,6 +99,8 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
   final OverlayPortalController serviceTypeOverlayController;
   final RxBool showServiceDropDown;
   final VoidCallback onPressed;
+  final RxBool autoValidator;
+  final RxString selectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -102,34 +114,36 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
           HeadingInContainerText(text: lang_key.subServiceInfo.tr,),
           Form(
             key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 15,
-              children: [
-                CustomTextFormField(
-                  title: lang_key.subServiceName.tr,
-                  controller: nameController,
-                  hint: lang_key.typeHere.tr,
-                  validator: (value) => Validators.validateEmptyField(value),
-                ),
-                LayoutBuilder(
-                    builder: (context, constraints) {
-                      return CustomDropdown(
-                          textEditingController: serviceTypeController,
-                          title: lang_key.serviceType.tr,
-                          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                          height: 50,
-                          width: double.infinity,
-                          dropDownWidth: constraints.maxWidth,
-                          dropDownList: serviceTypeList,
-                          overlayPortalController: serviceTypeOverlayController,
-                          // value: _viewModel.serviceTypeSelectedIndex,
-                          hintText: lang_key.chooseService.tr,
-                          showDropDown: showServiceDropDown
-                      );
-                    }
-                )
-              ],
+            child: Obx(() => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 15,
+                children: [
+                  CustomTextFormField(
+                    autoValidateMode: autoValidator.value ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    title: lang_key.subServiceName.tr,
+                    controller: nameController,
+                    hint: lang_key.typeHere.tr,
+                    validator: (value) => Validators.validateEmptyField(value),
+                  ),
+                  LayoutBuilder(
+                      builder: (context, constraints) {
+                        return CustomDropdown(
+                            textEditingController: serviceTypeController,
+                            title: lang_key.serviceType.tr,
+                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            height: 80,
+                            width: constraints.maxWidth,
+                            dropDownWidth: constraints.maxWidth,
+                            dropDownList: serviceTypeList,
+                            overlayPortalController: serviceTypeOverlayController,
+                            hintText: lang_key.chooseService.tr,
+                            showDropDown: showServiceDropDown,
+                          selectedValueId: selectedValue,
+                        );
+                      }
+                  )
+                ],
+              ),
             ),
           ),
           Align(
@@ -177,31 +191,34 @@ class _AddServiceImageSection extends StatelessWidget {
                 height: 180,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Obx(() => newImageToUpload.value.isNotEmpty && newImageToUpload.value != Uint8List(0) ?
-                    Stack(
-                      children: [
-                        Image.memory(newImageToUpload.value, fit: BoxFit.fitHeight,),
-                        OverlayIcon(iconData: Icons.close, top: 5, right: 5, onPressed: () => newImageToUpload.value = Uint8List(0),),
-                      ],
-                    ) : isBeingEdited ? CustomNetworkImage(
-                      imageUrl: imageUrl!.value,
-                      boxFit: BoxFit.fitHeight,
-                    ) : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    child: InkWell(
+                      onTap: () => _pickImage(),
+                      child: Obx(() => newImageToUpload.value.isNotEmpty && newImageToUpload.value != Uint8List(0) ?
+                      Stack(
                         children: [
-                          Image.asset(
-                            ImagesPaths.uploadFile,
-                            width: 50,
-                            height: 50,
-                          ),
-                          Text(
-                            '${lang_key.uploadFile.tr}...',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: primaryGrey
-                            ),
-                          )
+                          Image.memory(newImageToUpload.value, fit: BoxFit.fitHeight,),
+                          OverlayIcon(iconData: Icons.close, top: 5, right: 5, onPressed: () => newImageToUpload.value = Uint8List(0),),
                         ],
-                      ))
+                      ) : isBeingEdited ? CustomNetworkImage(
+                        imageUrl: imageUrl!.value,
+                        boxFit: BoxFit.fitHeight,
+                      ) : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              ImagesPaths.uploadFile,
+                              width: 50,
+                              height: 50,
+                            ),
+                            Text(
+                              '${lang_key.uploadFile.tr}...',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: primaryGrey
+                              ),
+                            )
+                          ],
+                        )),
+                    )
                 ),
               ),
           ),
@@ -217,5 +234,16 @@ class _AddServiceImageSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _pickImage() async {
+    final image = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        compressionQuality: 1,
+        allowedExtensions: ['png', 'jpg', 'jpeg']);
+
+    if(image != null) {
+      newImageToUpload.value = image.files.first.bytes!;
+    }
   }
 }

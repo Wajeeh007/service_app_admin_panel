@@ -46,4 +46,17 @@ class Urls {
 
     /// Sub-Services ///
     static const String getSubServices = '$subServiceBaseUrl/get';
+    static const String addNewSubService = '$subServiceBaseUrl/add';
+
+    static String changeSubServiceStatus(String id) {
+      return '$subServiceBaseUrl/change_status/$id';
+    }
+
+    static String deleteSubService(String id) {
+      return '$subServiceBaseUrl/$id';
+    }
+
+    static String editSubService(String id) {
+      return '$subServiceBaseUrl/$id';
+    }
 }

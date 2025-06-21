@@ -146,9 +146,10 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                   )
                 ),
                 CustomDropdown(
+                  selectedValueId: _viewModel.zoneWiseStatSelectedId,
                   textEditingController: _viewModel.zoneWiseStatController,
                   showDropDown: _viewModel.zoneWiseStatsShowDropDown,
-                  // value: _viewModel.zoneWiseStatSelectedValue,
+                  value: _viewModel.zoneWiseStatSelectedId,
                   dropDownList: _viewModel.zoneWiseStatsDropDownList,
                   overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
                 ),
@@ -338,14 +339,14 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                     textEditingController: _viewModel.adminEarningTimePeriodController,
                     dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
                     overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                    value: _viewModel.adminEarningTimePeriodSelectedValue,
+                    selectedValueId: _viewModel.adminEarningTimePeriodSelectedId,
                     showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
                   ),
                   CustomDropdown(
                     textEditingController: _viewModel.adminEarningZoneSelectionController,
                     dropDownList: _viewModel.adminEarningZoneSelectionList,
                     overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                    value: _viewModel.adminEarningZoneSelectionSelectedValue,
+                    selectedValueId: _viewModel.adminEarningZoneSelectionSelectedId,
                     showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown,
                   ),
                 ],

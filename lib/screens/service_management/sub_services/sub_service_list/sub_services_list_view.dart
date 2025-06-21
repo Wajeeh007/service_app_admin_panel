@@ -27,6 +27,7 @@ class SubServicesListView extends StatelessWidget {
         children: [
           SectionHeadingText(headingText: lang_key.subServices.tr),
           SubServiceFormSection(
+            autoValidator: _viewModel.autoValidate,
               onBtnPressed: () => _viewModel.addNewSubService(),
               formKey: _viewModel.subServiceAdditionFormKey,
               nameController: _viewModel.subServiceNameController,
@@ -34,67 +35,64 @@ class SubServicesListView extends StatelessWidget {
               serviceTypeList: _viewModel.servicesList,
               serviceTypeOverlayController: _viewModel.serviceTypeController,
               showServiceDropDown: _viewModel.showServiceTypeDropDown,
-              newImageToUpload: _viewModel.addedServiceImage
+              newImageToUpload: _viewModel.addedServiceImage,
+            selectedValue: _viewModel.serviceTypeSelectedId,
           ),
-          ListBaseContainer(
-            onSearch: (value) => _viewModel.searchTableForSubService(value),
-              onRefresh: () {
-                GlobalVariables.showLoader.value = true;
-                _viewModel.fetchSubServices();
-              },
-              controller: _viewModel.searchController,
-              listData: _viewModel.visibleSubServicesList,
-              hintText: lang_key.searchSubService.tr,
-              expandFirstColumn: false,
-              columnsNames: [
-                'SL',
-                lang_key.image.tr,
-                lang_key.name.tr,
-                lang_key.serviceType.tr,
-                lang_key.associatedItems.tr,
-                lang_key.status.tr,
-                lang_key.actions.tr
-              ],
+          Obx(() => ListBaseContainer(
+              onSearch: (value) => _viewModel.searchTableForSubService(value),
+                onRefresh: () => _viewModel.fetchSubServices(),
+                controller: _viewModel.searchController,
+                listData: _viewModel.visibleSubServicesList,
+                hintText: lang_key.searchSubService.tr,
+                expandFirstColumn: false,
+                columnsNames: [
+                  'SL',
+                  lang_key.image.tr,
+                  lang_key.name.tr,
+                  lang_key.serviceType.tr,
+                  lang_key.associatedItems.tr,
+                  lang_key.status.tr,
+                  lang_key.actions.tr
+                ],
             entryChildren: List.generate(_viewModel.visibleSubServicesList.length, (index) {
-              
-              final item = _viewModel.visibleSubServicesList[index];
-              
-              return Padding(
-                padding: listEntryPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                    ListEntryItem(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 8),
-                          width: 50,
-                          height: 40,
-                          child: CustomNetworkImage(imageUrl: item.image!, boxFit: BoxFit.fitHeight,),
-                        )
-                    ),
-                    ListEntryItem(text: item.name,),
-                    ListEntryItem(text: item.serviceName,),
-                    ListEntryItem(text: item.associatedItems.toString(),),
-                    ListEntryItem(
-                      child: CustomSwitch(
-                        switchValue: item.status!,
-                        onChanged: (value) => _viewModel.changeServiceStatus(item.id!),
+
+                return Padding(
+                  padding: listEntryPadding,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                      ListEntryItem(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 8),
+                            width: 50,
+                            height: 40,
+                            child: CustomNetworkImage(imageUrl: _viewModel.visibleSubServicesList[index].image!, boxFit: BoxFit.fitHeight,),
+                          )
                       ),
-                    ),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: true,
-                        includeView: false,
-                        onDeletePressed: () => _viewModel.deleteService(item.id!),
-                        onEditPressed: () => Get.toNamed(Routes.editSubService, arguments: {'subServiceDetails': _viewModel.visibleSubServicesList[index]}),
+                      ListEntryItem(text: _viewModel.visibleSubServicesList[index].name,),
+                      ListEntryItem(text: _viewModel.visibleSubServicesList[index].serviceName,),
+                      ListEntryItem(text: _viewModel.visibleSubServicesList[index].associatedItems.toString(),),
+                      ListEntryItem(
+                        child: CustomSwitch(
+                          switchValue: _viewModel.visibleSubServicesList[index].status!,
+                          onChanged: (value) => _viewModel.changeServiceStatus(_viewModel.visibleSubServicesList[index].id!),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              );
-            }),
+                      ListEntryItem(
+                        child: ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: true,
+                          includeView: false,
+                          onDeletePressed: () => _viewModel.deleteService(_viewModel.visibleSubServicesList[index].id!),
+                          onEditPressed: () => Get.toNamed(Routes.editSubService, arguments: {'subServiceDetails': _viewModel.visibleSubServicesList[index], 'servicesList': _viewModel.servicesList}),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }),
+            ),
           )
         ]
     );

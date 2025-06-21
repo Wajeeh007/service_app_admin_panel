@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
-
+import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
+import 'package:service_app_admin_panel/utils/validators.dart';
 import '../../models/drop_down_entry.dart';
 
 class CustomDropdown extends StatelessWidget {
@@ -23,6 +24,8 @@ class CustomDropdown extends StatelessWidget {
     this.title,
     this.dropDownWidth,
     this.includeAsterisk = false,
+    this.autoValidate,
+    required this.selectedValueId,
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -46,6 +49,8 @@ class CustomDropdown extends StatelessWidget {
   final double? dropDownWidth;
   final bool includeAsterisk;
   final TextEditingController textEditingController;
+  final RxBool? autoValidate;
+  final RxString selectedValueId;
 
   final LayerLink link = LayerLink();
 
@@ -53,76 +58,79 @@ class CustomDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return CompositedTransformTarget(
-      link: link,
-      child: OverlayPortal(
-        controller: overlayPortalController,
-        overlayChildBuilder: (BuildContext context) {
-          return CompositedTransformFollower(
-            link: link,
-            targetAnchor: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0.0),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Menu(
-                    textEditingController: textEditingController,
-                    showDropDownValue: showDropDown,
-                    dropDownList: dropDownList,
-                    width: dropDownWidth ?? width,
-                  )
-              ),
-            ),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if(title != null && title != '') Padding(
-              padding: EdgeInsets.only(left: 8, bottom: 5),
-              child: RichText(
-                text: TextSpan(
-                    text: title!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: primaryGrey
-                    ),
-                    children: includeAsterisk ? [
-                      TextSpan(
-                        text: ' *',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: errorRed,
-                        ),
-                      ),
-                    ] : []
+          link: link,
+          child: OverlayPortal(
+            controller: overlayPortalController,
+            overlayChildBuilder: (BuildContext context) {
+              return CompositedTransformFollower(
+                link: link,
+                targetAnchor: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Menu(
+                        overlayPortalController: overlayPortalController,
+                        textEditingController: textEditingController,
+                        showDropDownValue: showDropDown,
+                        dropDownList: dropDownList,
+                        width: dropDownWidth ?? width,
+                        value: selectedValueId,
+                      )
+                  ),
                 ),
-              ),
-            ),
-            Obx(() => CustomTextFormField(
+              );
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if(title != null && title != '') Padding(
+                  padding: EdgeInsets.only(left: 8, bottom: 5),
+                  child: RichText(
+                    text: TextSpan(
+                        text: title!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: primaryGrey
+                        ),
+                        children: includeAsterisk ? [
+                          TextSpan(
+                            text: ' *',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: errorRed,
+                            ),
+                          ),
+                        ] : []
+                    ),
+                  ),
+                ),
+                Obx(() => CustomTextFormField(
 
-              controller: textEditingController,
-              hint: hintText,
-              fillColor: dropDownFieldColor,
-              boxConstraints: BoxConstraints(
-                  maxWidth: width,
-                  minWidth: 120,
-                  maxHeight: height,
-                  minHeight: height
-                ), 
-              readOnly: true, 
-              suffixIcon: Icon(
-                showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
-                size: 22,
-                color: suffixIconColor,
-              ),
-              onTap: () {
-                showDropDown.value = !showDropDown.value;
-                overlayPortalController.toggle();
-              },
-              contentPadding: padding ?? EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-              ),
-            )
-          ],
-        ),
-      ),
+                  validator: (value) => Validators.validateEmptyField(value),
+                  controller: textEditingController,
+                  hint: hintText,
+                  fillColor: dropDownFieldColor,
+                  boxConstraints: BoxConstraints(
+                      maxWidth: width,
+                      minWidth: 120,
+                      maxHeight: height,
+                      minHeight: height - 30
+                  ),
+                  readOnly: true,
+                  suffixIcon: Icon(
+                    showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                    size: 22,
+                    color: suffixIconColor,
+                  ),
+                  onTap: () {
+                    showDropDown.value = !showDropDown.value;
+                    overlayPortalController.toggle();
+                    },
+                  contentPadding: padding ?? EdgeInsets.symmetric(horizontal: 8),
+                  autoValidateMode: autoValidate != null && autoValidate!.value ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                ))
+              ],
+            ),
+          ),
     );
   }
 }
@@ -134,13 +142,17 @@ class Menu extends StatelessWidget {
   final List<DropDownEntry> dropDownList;
   final RxBool showDropDownValue;
   final TextEditingController textEditingController;
+  final OverlayPortalController overlayPortalController;
+  final RxString value;
 
   const Menu({
     super.key,
     required this.dropDownList,
     required this.showDropDownValue,
     required this.textEditingController,
+    required this.overlayPortalController,
     this.width,
+    required this.value,
   });
 
   @override
@@ -167,29 +179,40 @@ class Menu extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(dropDownList.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: InkWell(
-                onTap: () {
-                  textEditingController.text = dropDownList[index].label;
-                  showDropDownValue.value = false;
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dropDownList[index].label,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                    if(index != dropDownList.length - 1) Divider(thickness: 0.7, color: primaryGrey,)
-                  ],
+          children: dropDownList.isEmpty ? [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Center(
+                child: Text(
+                  lang_key.noDataAvailable.tr,
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
+            )] : List.generate(dropDownList.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: InkWell(
+                  onTap: () {
+                    textEditingController.text = dropDownList[index].label!;
+                    value.value = dropDownList[index].value!;
+                    showDropDownValue.value = false;
+                    overlayPortalController.hide();
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        dropDownList[index].label!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      if(index != dropDownList.length - 1) Divider(thickness: 0.7, color: primaryGrey,)
+                    ],
+                  ),
+                ),
             );
           }),
         ),

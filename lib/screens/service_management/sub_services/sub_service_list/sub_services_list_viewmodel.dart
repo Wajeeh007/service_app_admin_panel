@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:service_app_admin_panel/models/sub_service_category.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../../helpers/scroll_controller_funcs.dart';
@@ -45,8 +44,11 @@ class SubServicesListViewModel extends GetxController {
   /// Show Dropdown bool variables
   RxBool showServiceTypeDropDown = false.obs;
 
+  /// Variable to control auto validation mode.
+  RxBool autoValidate = false.obs;
+
   /// Selected Item index variables
-  RxInt? serviceTypeSelectedIndex;
+  RxString serviceTypeSelectedId = ''.obs;
 
   /// Variables for pagination
   int page = 0;
@@ -54,7 +56,7 @@ class SubServicesListViewModel extends GetxController {
 
   @override
   void onInit() {
-    fetchSubServices();
+    fetchServicesAndSubServices();
     super.onInit();
   }
   
@@ -68,53 +70,85 @@ class SubServicesListViewModel extends GetxController {
   @override
   void onClose() {
     scrollController.dispose();
+    subServiceNameController.dispose();
+    serviceTypeTextController.dispose();
+    searchController.dispose();
+    addedServiceImage.value = Uint8List(0);
     super.onClose();
   }
 
-  /// Toggle dropdown and it's value
-  void toggleOverlay({required OverlayPortalController overlayPortalController, required RxBool showDropDown}) {
-    overlayPortalController.toggle();
-    if(overlayPortalController.isShowing) {
-      showDropDown.value = true;
-    } else {
-      showDropDown.value = false;
+  /// API calls to fetch Sub-services list and services type for selection
+  void fetchServicesAndSubServices() async {
+    final fetchServices = ApiBaseHelper.getMethod(url: Urls.getServices);
+    final fetchSubServices = ApiBaseHelper.getMethod(url: "${Urls.getSubServices}?limit=$limit&page=$page");
+
+    final responses = await Future.wait([fetchServices, fetchSubServices]);
+
+    if (responses[0].success!) populateServiceTypeList(responses[0].data as List);
+    if (responses[1].success!) populateSubServiceLists(responses[1].data as List);
+
+    if(responses[0].success == false && responses[1].success == false) {
+      stopLoaderAndShowSnackBar(
+          message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}",
+          success: false
+      );
     }
+
+    GlobalVariables.showLoader.value = false;
+  }
+
+  /// API call to only fetch sub-services
+  void fetchSubServices() {
+    GlobalVariables.showLoader.value = true;
+    ApiBaseHelper.getMethod(url: "${Urls.getSubServices}?limit=$limit&page=$page").then((value) {
+      GlobalVariables.showLoader.value = false;
+      populateSubServiceLists(value.data as List);
+    });
+
   }
 
   /// API Call to fetch sub-services
-  void fetchSubServices() {
+  void populateSubServiceLists(List<dynamic> data) {
 
-    ApiBaseHelper.getMethod(url: "${Urls.getSubServices}?limit=$limit&page=$page").then((value) {
-      GlobalVariables.showLoader.value = false;
-
-      if(value.success!) {
-        allSubServicesList.clear();
-        final data = value.data! as List;
-        allSubServicesList.addAll(data.map((e) => SubServiceCategory.fromJson(e)));
-        addSubServicesToVisibleList();
-      } else {
-        showSnackBar(message: value.message!, success: false);
-      }
-    });
+    allSubServicesList.clear();
+    allSubServicesList.addAll(data.map((e) => SubServiceCategory.fromJson(e)));
+    addSubServicesToVisibleList();
   }
 
-  void addNewSubService() {
-    if (subServiceAdditionFormKey.currentState!.validate()) {
-      if (serviceTypeSelectedIndex != null) {
-        if (addedServiceImage.value.isNotEmpty && addedServiceImage.value != Uint8List(0)) {
+  /// API call to fetch service types
+  void populateServiceTypeList(List<dynamic> data) {
+    servicesList.clear();
+    servicesList.addAll(data.map((e) => DropDownEntry.fromJson(e)));
+    servicesList.refresh();
+  }
 
+  /// API call to add a new sub-service
+  void addNewSubService() {
+    autoValidate.value = true;
+    if (subServiceAdditionFormKey.currentState!.validate()) {
+      autoValidate.value = false;
+      if (addedServiceImage.value.isNotEmpty && addedServiceImage.value != Uint8List(0)) {
+
+          GlobalVariables.showLoader.value = true;
+
+          ApiBaseHelper.postMethod(url: Urls.addNewSubService, body: {
+            'name': subServiceNameController.text,
+            'service_id': serviceTypeSelectedId.value,
+          }).then((value) {
+            stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
+            if(value.success!) {
+              final subService = SubServiceCategory.fromJson(value.data);
+              allSubServicesList.add(subService);
+              addSubServicesToVisibleList();
+              clearControllersAndVariables();
+            }
+          });
         } else {
           showSnackBar(
               message: lang_key.addSubServiceImage.tr,
-              success: true
+              success: false
           );
         }
-      } else {
-        showSnackBar(
-            message: lang_key.addServiceError.tr,
-            success: true
-        );
-      }
     }
   }
 
@@ -122,7 +156,7 @@ class SubServicesListViewModel extends GetxController {
   void deleteService(String serviceId) {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.deleteMethod(url: Urls.deleteService(serviceId)).then((value) {
+    ApiBaseHelper.deleteMethod(url: Urls.deleteSubService(serviceId)).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
       if(value.success!) {
@@ -140,14 +174,12 @@ class SubServicesListViewModel extends GetxController {
   void changeServiceStatus(String subServiceId) {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.patchMethod(url: Urls.changeServiceStatus(subServiceId)).then((value) {
+    ApiBaseHelper.patchMethod(url: Urls.changeSubServiceStatus(subServiceId)).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
       if(value.success!) {
         final index = allSubServicesList.indexWhere((element) => element.id == subServiceId);
         allSubServicesList[index].status = !allSubServicesList[index].status!;
-        final index2 = visibleSubServicesList.indexWhere((element) => element.id == subServiceId);
-        visibleSubServicesList[index2].status = !visibleSubServicesList[index2].status!;
-        visibleSubServicesList.refresh();
+        addSubServicesToVisibleList();
       }
     });
   }
@@ -166,12 +198,22 @@ class SubServicesListViewModel extends GetxController {
       }
     }
   }
-  
-  addSubServicesToVisibleList() {
+
+  /// Function to clear and add items to the visible list
+  void addSubServicesToVisibleList() {
     visibleSubServicesList.clear();
     visibleSubServicesList.addAll(allSubServicesList);
     visibleSubServicesList.refresh();
   }
-  
+
+  /// Clear controllers and variables after adding service.
+  void clearControllersAndVariables() {
+    subServiceNameController.clear();
+    serviceTypeTextController.clear();
+    serviceTypeSelectedId.value = '';
+    addedServiceImage.value = Uint8List(0);
+    showServiceTypeDropDown.value = false;
+    serviceTypeController.hide();
+  }
   
 }

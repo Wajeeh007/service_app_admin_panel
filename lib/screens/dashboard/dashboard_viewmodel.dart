@@ -13,20 +13,17 @@ class DashboardViewModel extends GetxController {
     /// Zone-wise stat dropdown variables
     TextEditingController zoneWiseStatController = TextEditingController();
     OverlayPortalController zoneWiseStatOverlayPortalController = OverlayPortalController();
-    LayerLink zoneWiseStatLink = LayerLink();
-    dynamic zoneWiseStatSelectedValue;
+    RxString zoneWiseStatSelectedId = ''.obs;
 
     /// Admin earning stats time period dropdown variables
     TextEditingController adminEarningTimePeriodController = TextEditingController();
     OverlayPortalController adminEarningTimePeriodOverlayPortalController = OverlayPortalController();
-    LayerLink adminEarningTimePeriodLink = LayerLink();
-    dynamic adminEarningTimePeriodSelectedValue;
+    RxString adminEarningTimePeriodSelectedId = ''.obs;
 
     /// Admin earning stats zone selection dropdown variables
     TextEditingController adminEarningZoneSelectionController = TextEditingController();
     OverlayPortalController adminEarningZoneSelectionOverlayPortalController = OverlayPortalController();
-    LayerLink adminEarningZoneSelectionLink = LayerLink();
-    dynamic adminEarningZoneSelectionSelectedValue;
+    RxString adminEarningZoneSelectionSelectedId = ''.obs;
 
   /// Zone-wise stats time period Dropdown options
   List<DropDownEntry> zoneWiseStatsDropDownList = [
@@ -69,12 +66,12 @@ class DashboardViewModel extends GetxController {
 
   @override
   void onInit() {
-    zoneWiseStatSelectedValue = zoneWiseStatsDropDownList.first.value;
-    adminEarningTimePeriodSelectedValue = adminEarningTimePeriodDropdownList.first.value;
-    adminEarningZoneSelectionSelectedValue = adminEarningZoneSelectionList.first.value;
-    zoneWiseStatController.text = zoneWiseStatsDropDownList.first.label;
-    adminEarningTimePeriodController.text = adminEarningTimePeriodDropdownList.first.label;
-    adminEarningZoneSelectionController.text = adminEarningZoneSelectionList.first.label;
+    zoneWiseStatSelectedId = zoneWiseStatsDropDownList.first.value;
+    adminEarningTimePeriodSelectedId = adminEarningTimePeriodDropdownList.first.value;
+    adminEarningZoneSelectionSelectedId = adminEarningZoneSelectionList.first.value;
+    zoneWiseStatController.text = zoneWiseStatsDropDownList.first.label!;
+    adminEarningTimePeriodController.text = adminEarningTimePeriodDropdownList.first.label!;
+    adminEarningZoneSelectionController.text = adminEarningZoneSelectionList.first.label!;
     super.onInit();
   }
 

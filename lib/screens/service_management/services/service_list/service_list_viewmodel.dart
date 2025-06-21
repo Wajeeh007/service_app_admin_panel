@@ -87,14 +87,12 @@ class ServiceListViewModel extends GetxController {
 
       ApiBaseHelper.postMethod(url: Urls.addNewService, body: body).then((value) {
 
-        GlobalVariables.showLoader.value = false;
+        stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
         if(value.success!) {
           allServicesList.add(ServiceCategory.fromJson(value.data));
           addServicesToVisibleList();
           clearControllersAndVariables();
-        } else {
-          showSnackBar(message: value.message!, success: value.success!);
         }
       });
     }

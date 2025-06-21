@@ -210,7 +210,8 @@ const fieldIsRequired = 'fieldIsRequired',
     createdDate = 'createdDate',
     error = 'error',
     success = 'success',
-    cancel = 'cancel';
+    cancel = 'cancel',
+    retry = 'retry';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',
