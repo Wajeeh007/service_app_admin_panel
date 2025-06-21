@@ -5,22 +5,45 @@ class Urls {
 
   static const baseURL = testEnvironment;
 
+  static const zoneBaseUrl = '/zones';
+  static const serviceBaseUrl = '/services';
+  static const subServiceBaseUrl = '/sub_services';
+
   /// Zone Setup
 
   static String editZone(String id) {
-    return '/zones/$id';
+    return '$zoneBaseUrl/$id';
   }
 
   static String changeZoneStatus(String id) {
-    return '/zones/change_status/$id';
+    return '$zoneBaseUrl/change_status/$id';
   }
 
   static String deleteZone(String id) {
-    return '/zones/$id';
+    return '$zoneBaseUrl/$id';
   }
 
-  static const String addNewZone = '/zones/add_zone';
-  static const String getAllZones = '/zones/get_zones';
+  static const String addNewZone = '$zoneBaseUrl/add';
+  static const String getAllZones = '$zoneBaseUrl/get';
 
+  /// Service Management
+    /// Services
+    static const String addNewService = '$serviceBaseUrl/add';
+    static const String getServices = '$serviceBaseUrl/get';
 
+    static String changeServiceStatus(String id) {
+      return '$serviceBaseUrl/change_status/$id';
+    }
+
+    static String deleteService(String id) {
+      return '$serviceBaseUrl/$id';
+    }
+
+    static String editService(String id) {
+      return '$serviceBaseUrl/$id';
+    }
+    /// Services End ///
+
+    /// Sub-Services ///
+    static const String getSubServices = '$subServiceBaseUrl/get';
 }

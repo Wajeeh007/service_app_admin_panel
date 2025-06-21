@@ -7,6 +7,7 @@ class ImagesPaths {
   /// Images
   static final String zoneSetupExample = '${_imagesPath}zone_setup_instructions.gif';
   static final String noData = '${_imagesPath}no_data.png';
+  static final String imagePlaceholder = '${_imagesPath}image_placeholder.png';
 
   /// Logos
   static String adawatLogo = '${_logosPath}adawat.jpg';

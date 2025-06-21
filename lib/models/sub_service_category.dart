@@ -1,21 +1,38 @@
 import 'service_item.dart';
 
-class ServiceSubCategory {
+class SubServiceCategory {
 
   String? id;
+  String? serviceId;
+  String? serviceName;
   String? name;
   bool? status;
   int? associatedItems;
   List<ServiceItem>? items;
   String? image;
+  DateTime? createdAt;
 
-  ServiceSubCategory({
+  SubServiceCategory({
     this.id,
+    this.serviceId,
+    this.serviceName,
     this.name,
     this.status,
     this.associatedItems,
     this.items,
-    this.image
+    this.image,
+    this.createdAt
   });
+
+  SubServiceCategory.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    serviceId = json['service_id'].toString();
+    serviceName = json['service_type'];
+    name = json['name'];
+    status = json['status'] == 1 ? true : false;
+    associatedItems = json['total_associated_items'];
+    image = json['image'];
+    createdAt = json['createdAt'];
+  }
 
 }

@@ -2,7 +2,7 @@ import 'package:service_app_admin_panel/utils/constants.dart';
 
 class ZoneModel {
 
-  int? id;
+  String? id;
   String? name;
   String? desc;
   bool? status;
@@ -23,7 +23,7 @@ class ZoneModel {
   });
 
   ZoneModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'].toString();
     status = json['status'] == 0 ? false : true;
     name = json['name'];
     desc = json['desc'];

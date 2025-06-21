@@ -4,8 +4,8 @@ import 'package:service_app_admin_panel/screens/customer_management/suspended_cu
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_view.dart';
 import 'package:service_app_admin_panel/screens/order_management/order_management_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/items_list/items_list_view.dart';
-import 'package:service_app_admin_panel/screens/service_management/service_list/service_list_view.dart';
-import 'package:service_app_admin_panel/screens/service_management/sub_services_list/sub_services_list_view.dart';
+import 'package:service_app_admin_panel/screens/service_management/services/edit_service/edit_service_view.dart';
+import 'package:service_app_admin_panel/screens/service_management/sub_services/edit_sub_service/edit_sub_service_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/new_requests/new_requests_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/withdraw_methods/withdraw_methods_view.dart';
@@ -13,6 +13,8 @@ import 'package:service_app_admin_panel/screens/withdraw/withdraw_requests/withd
 import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_view.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_view.dart';
 
+import '../screens/service_management/services/service_list/service_list_view.dart';
+import '../screens/service_management/sub_services/sub_service_list/sub_services_list_view.dart';
 import '../screens/serviceman_management/active_serviceman_list/active_serviceman_list_view.dart';
 import '../screens/settings/business_setup/business_setup_view.dart';
 
@@ -29,7 +31,9 @@ class Routes {
   static const activeServicemanList = '/activeServicemanList';
   static const suspendedServicemanList = '/suspendedServicemanList';
   static const servicesList = '/servicesList';
+  static const editService = '/editService';
   static const subServicesList = '/subServicesList';
+  static const editSubService = '/editSubService';
   static const itemsList = '/itemsList';
   static const withdrawRequests = '/withdrawRequests';
   static const withdrawMethods = '/withdrawMethods';
@@ -48,7 +52,9 @@ class Routes {
     GetPage(name: activeServicemanList, page: () => ActiveServiceManListView()),
     GetPage(name: suspendedServicemanList, page: () => SuspendedServicemanListView()),
     GetPage(name: servicesList, page: () => ServiceListView()),
+    GetPage(name: editService, page: () => EditServiceView()),
     GetPage(name: subServicesList, page: () => SubServicesListView()),
+    GetPage(name: editSubService, page: () => EditSubServiceView()),
     GetPage(name: itemsList, page: () => ItemsListView()),
     GetPage(name: withdrawMethods, page: () => WithdrawMethodsView()),
     GetPage(name: withdrawRequests, page: () => WithdrawRequestsView()),

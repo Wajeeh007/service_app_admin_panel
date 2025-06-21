@@ -19,12 +19,11 @@ class ZoneListAndAdditionViewModel extends GetxController {
   TextEditingController zoneDescController = TextEditingController();
   TextEditingController zoneSearchController = TextEditingController();
   GlobalKey<FormState> zoneNameFormKey = GlobalKey<FormState>();
-  GlobalKey<FormState> zoneSearchFormKey = GlobalKey<FormState>();
   ScrollController scrollController = ScrollController();
   CustomGoogleMapController mapController = CustomGoogleMapController();
 
   /// Variables for Google Maps ///
-    /// Polygons of an area
+    /// Polygon of an area
     String areaPolygons = '';
 
   /// Variables for Google Maps End ///
@@ -144,17 +143,18 @@ class ZoneListAndAdditionViewModel extends GetxController {
   }
 
   /// Change zone status to active or in-active.
-  void changeZoneStatus(int index) {
+  void changeZoneStatus(String id) {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.patchMethod(
-        url: Urls.changeZoneStatus(visibleZoneList[index].id.toString())
+        url: Urls.changeZoneStatus(id)
     ).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
       if(value.success!) {
         GlobalVariables.showLoader.value = false;
-        final allZoneListIndex = allZonesList.indexWhere((element) => element.id! == visibleZoneList[index].id);
+        final allZoneListIndex = allZonesList.indexWhere((element) => element.id! == id);
         allZonesList[allZoneListIndex].status = !allZonesList[allZoneListIndex].status!;
-        visibleZoneList[index].status = !visibleZoneList[index].status!;
+        final visibleZoneListIndex = visibleZoneList.indexWhere((element) => element.id == id);
+        visibleZoneList[visibleZoneListIndex].status = !visibleZoneList[visibleZoneListIndex].status!;
         visibleZoneList.refresh();
       }
     });

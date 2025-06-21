@@ -117,6 +117,8 @@ const ordersList = 'ordersList',
       services = 'services',
       serviceInfo = 'serviceInfo',
       serviceName = 'serviceName',
+      serviceDesc = 'serviceDesc',
+      typeBriefServiceDesc = 'typeBriefServiceDesc',
       subServices = 'subServices',
       searchService = 'searchService';
   /// Services Listing Screen End ///
@@ -126,7 +128,8 @@ const ordersList = 'ordersList',
       subServiceInfo = 'subServiceInfo',
       subServiceName = 'subServiceName',
       serviceType = 'serviceType',
-      chooseService = 'chooseService';
+      chooseService = 'chooseService',
+      associatedItems = 'associatedItems';
   /// Sub Services Listing Screen End ///
 
   /// Items Listing Screen ///

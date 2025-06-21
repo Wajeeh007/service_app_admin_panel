@@ -18,7 +18,7 @@ void showSnackBar({required String message, required bool success}) {
       message,
     colorText: primaryWhite,
     snackPosition: SnackPosition.TOP,
-    backgroundColor: success ? Colors.lightGreen : errorRed,
+    backgroundColor: success == true ? Colors.lightGreen : errorRed,
     isDismissible: false,
     animationDuration: Duration(milliseconds: 800),
   );

@@ -68,7 +68,7 @@ class ZoneListAndAdditionView extends StatelessWidget {
                         ListEntryItem(
                           child: CustomSwitch(
                             switchValue: _viewModel.visibleZoneList[index].status!,
-                            onChanged: (value) => _viewModel.changeZoneStatus(index),
+                            onChanged: (value) => _viewModel.changeZoneStatus(_viewModel.visibleZoneList[index].id!),
                         ),),
                         ListEntryItem(
                           child: ListActionsButtons(

@@ -123,8 +123,11 @@ class English {
       key.services: 'Services',
       key.serviceInfo: 'Service Information',
       key.serviceName: 'Service Name',
+      key.serviceDesc: 'Service Description',
+      key.typeBriefServiceDesc: 'Type a brief description of the service...',
       key.subServices: 'Sub-Services',
       key.searchService: 'Search Service',
+      key.associatedItems: 'Associated Items',
       /// Services Listing Screen End ///
 
       /// Sub Services Listing Screen ///

@@ -113,7 +113,10 @@ class CustomDropdown extends StatelessWidget {
                 size: 22,
                 color: suffixIconColor,
               ),
-              onTap: () => showDropDown.value = !showDropDown.value,
+              onTap: () {
+                showDropDown.value = !showDropDown.value;
+                overlayPortalController.toggle();
+              },
               contentPadding: padding ?? EdgeInsets.symmetric(vertical: 0, horizontal: 8),
               ),
             )

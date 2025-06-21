@@ -22,6 +22,8 @@ dependencies:
   dotted_border: ^3.0.1
   image_picker: ^1.1.2
   http: ^1.4.0
+  cached_network_image: ^3.4.1
+  file_picker: ^10.2.0
 
 dev_dependencies:
   flutter_test:
