@@ -17,7 +17,7 @@ class EditServiceView extends StatelessWidget {
         scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.servicesList.tr,
         children: [
-          SectionHeadingText(headingText: lang_key.services.tr),
+          SectionHeadingText(headingText: lang_key.editService.tr),
           ServiceAdditionSection(
             isBeingEdited: true,
               imageUrl: _viewModel.imageUrl,

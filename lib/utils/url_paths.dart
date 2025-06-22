@@ -8,6 +8,7 @@ class Urls {
   static const zoneBaseUrl = '/zones';
   static const serviceBaseUrl = '/services';
   static const subServiceBaseUrl = '/sub_services';
+  static const itemsBaseUrl = '/service_items';
 
   /// Zone Setup
 
@@ -58,5 +59,23 @@ class Urls {
 
     static String editSubService(String id) {
       return '$subServiceBaseUrl/$id';
+    }
+
+    /// Sub-Services End ///
+
+    /// Items ///
+    static const String getItems = '$itemsBaseUrl/get';
+    static const String addItem = '$itemsBaseUrl/add';
+
+    static String changeItemStatus(String id) {
+      return '$itemsBaseUrl/change_status/$id';
+    }
+
+    static String deleteItem(String id) {
+      return '$itemsBaseUrl/$id';
+    }
+
+    static String editItem(String id) {
+      return '$itemsBaseUrl/$id';
     }
 }

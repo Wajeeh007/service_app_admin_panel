@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
-import 'package:service_app_admin_panel/models/zone_model.dart';
+import 'package:service_app_admin_panel/models/zone.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libraries/map_controller.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';

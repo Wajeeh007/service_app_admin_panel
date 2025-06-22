@@ -42,9 +42,9 @@ class DashboardViewModel extends GetxController {
   
   /// Admin earning stats zone selection options
   List<DropDownEntry> adminEarningZoneSelectionList = [
-    DropDownEntry(value: 0, label: 'USA'),
-    DropDownEntry(value: 1, label: 'Canada'),
-    DropDownEntry(value: 2, label: 'Pakistan'),
+    DropDownEntry(value: '0', label: 'USA'),
+    DropDownEntry(value: '1', label: 'Canada'),
+    DropDownEntry(value: '2', label: 'Pakistan'),
   ];
 
   /// Suffix Icon for custom dropdown(s)
@@ -66,9 +66,9 @@ class DashboardViewModel extends GetxController {
 
   @override
   void onInit() {
-    zoneWiseStatSelectedId = zoneWiseStatsDropDownList.first.value;
-    adminEarningTimePeriodSelectedId = adminEarningTimePeriodDropdownList.first.value;
-    adminEarningZoneSelectionSelectedId = adminEarningZoneSelectionList.first.value;
+    zoneWiseStatSelectedId.value = zoneWiseStatsDropDownList.first.value;
+    adminEarningTimePeriodSelectedId.value = adminEarningTimePeriodDropdownList.first.value;
+    adminEarningZoneSelectionSelectedId.value = adminEarningZoneSelectionList.first.value;
     zoneWiseStatController.text = zoneWiseStatsDropDownList.first.label!;
     adminEarningTimePeriodController.text = adminEarningTimePeriodDropdownList.first.label!;
     adminEarningZoneSelectionController.text = adminEarningZoneSelectionList.first.label!;
@@ -103,7 +103,7 @@ class DashboardViewModel extends GetxController {
     super.onClose();
   }
 
-  void toggleOverlayPortalController({
+  toggleOverlayPortalController({
     required OverlayPortalController overlayPortalController,
     required RxBool showDropDown
   }) {

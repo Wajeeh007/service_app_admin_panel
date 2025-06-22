@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/models/sub_service_category.dart';
+import 'package:service_app_admin_panel/models/sub_service.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../../helpers/scroll_controller_funcs.dart';
 import '../../../../helpers/show_snackbar.dart';
@@ -32,8 +32,8 @@ class SubServicesListViewModel extends GetxController {
   /// Controller(s) & Form Keys End ///
 
   /// Sub-Services list data
-  List<SubServiceCategory> allSubServicesList = <SubServiceCategory>[];
-  RxList<SubServiceCategory> visibleSubServicesList = <SubServiceCategory>[].obs;
+  List<SubService> allSubServicesList = <SubService>[];
+  RxList<SubService> visibleSubServicesList = <SubService>[].obs;
 
   /// Service types list ///
   RxList<DropDownEntry> servicesList = <DropDownEntry>[].obs;
@@ -111,7 +111,7 @@ class SubServicesListViewModel extends GetxController {
   void populateSubServiceLists(List<dynamic> data) {
 
     allSubServicesList.clear();
-    allSubServicesList.addAll(data.map((e) => SubServiceCategory.fromJson(e)));
+    allSubServicesList.addAll(data.map((e) => SubService.fromJson(e)));
     addSubServicesToVisibleList();
   }
 
@@ -137,7 +137,7 @@ class SubServicesListViewModel extends GetxController {
           }).then((value) {
             stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
             if(value.success!) {
-              final subService = SubServiceCategory.fromJson(value.data);
+              final subService = SubService.fromJson(value.data);
               allSubServicesList.add(subService);
               addSubServicesToVisibleList();
               clearControllersAndVariables();
@@ -184,7 +184,7 @@ class SubServicesListViewModel extends GetxController {
     });
   }
 
-  /// Search table for service by name.
+  /// Search table for sub-service by name.
   void searchTableForSubService(String? value) {
     if(value == '' || value == null || value.isEmpty) {
       addSubServicesToVisibleList();

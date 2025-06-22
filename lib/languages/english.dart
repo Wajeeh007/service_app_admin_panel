@@ -130,13 +130,20 @@ class English {
       key.associatedItems: 'Associated Items',
       /// Services Listing Screen End ///
 
+      /// Edit Service ///
+      key.editService: 'Edit Service',
+      /// Edit Service End ///
+
       /// Sub Services Listing Screen ///
       key.searchSubService: 'Search Sub-Service',
       key.subServiceInfo: 'Sub-Service Information',
       key.subServiceName: 'Sub-Service Name',
-      key.serviceType: 'Service Type',
-      key.chooseService: 'Choose Service',
+      key.chooseSubService: 'Choose Sub-Service',
       /// Sub Services Listing Screen End ///
+
+      /// Edit Sub-Service ///
+      key.editSubService: 'Edit Sub-Service',
+      /// Edit Sub-Service End ///
 
       /// Items listing screen ///
       key.addItemDetails: 'Add Items Details',
@@ -148,6 +155,10 @@ class English {
       key.subService: 'Sub-Service',
 
       /// Items listing screen end ///
+
+      /// Edit Item ///
+      key.editItem: 'Edit Item',
+      /// Edit Item End ///
 
     /// Service Management End ///
 
@@ -216,6 +227,9 @@ class English {
     key.success: 'Success',
     key.cancel: 'Cancel',
     key.retry: 'Retry',
+    key.areYouSure: 'Are You Sure?',
+    key.deletionConfirmationMessage: 'This action is permanent and cannot be reversed. Do you wish to proceed?',
+    key.yes: 'Yes',
     
     /// Success Messages ///
 

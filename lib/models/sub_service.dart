@@ -1,6 +1,6 @@
 import 'service_item.dart';
 
-class SubServiceCategory {
+class SubService {
 
   String? id;
   String? serviceId;
@@ -12,7 +12,7 @@ class SubServiceCategory {
   String? image;
   DateTime? createdAt;
 
-  SubServiceCategory({
+  SubService({
     this.id,
     this.serviceId,
     this.serviceName,
@@ -24,7 +24,7 @@ class SubServiceCategory {
     this.createdAt
   });
 
-  SubServiceCategory.fromJson(Map<String, dynamic> json) {
+  SubService.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     serviceId = json['service_id'].toString();
     serviceName = json['service_type'];

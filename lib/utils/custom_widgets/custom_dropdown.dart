@@ -26,6 +26,7 @@ class CustomDropdown extends StatelessWidget {
     this.includeAsterisk = false,
     this.autoValidate,
     required this.selectedValueId,
+    this.onTap,
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -51,6 +52,7 @@ class CustomDropdown extends StatelessWidget {
   final TextEditingController textEditingController;
   final RxBool? autoValidate;
   final RxString selectedValueId;
+  final VoidCallback? onTap;
 
   final LayerLink link = LayerLink();
 
@@ -121,7 +123,7 @@ class CustomDropdown extends StatelessWidget {
                     size: 22,
                     color: suffixIconColor,
                   ),
-                  onTap: () {
+                  onTap: onTap ?? () {
                     showDropDown.value = !showDropDown.value;
                     overlayPortalController.toggle();
                     },

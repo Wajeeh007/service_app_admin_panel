@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/screens/service_management/services/service_list/service_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_cached_network_image.dart';
@@ -82,7 +83,7 @@ class ServiceListView extends StatelessWidget {
                             includeDelete: true,
                             includeEdit: true,
                             includeView: false,
-                            onDeletePressed: () => _viewModel.deleteService(_viewModel.visibleServicesList[index].id!),
+                            onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleServicesList[index].id!)),
                             onEditPressed: () => Get.toNamed(Routes.editService, arguments: {'serviceDetails': _viewModel.visibleServicesList[index]}),
                           ),
                         )

@@ -123,14 +123,22 @@ const ordersList = 'ordersList',
       searchService = 'searchService';
   /// Services Listing Screen End ///
 
+  /// Edit Service ///
+  const editService = 'editService';
+  /// Edit Service End ///
+
   /// Sub Services Listing Screen ///
   const searchSubService = 'searchSubService',
       subServiceInfo = 'subServiceInfo',
       subServiceName = 'subServiceName',
       serviceType = 'serviceType',
-      chooseService = 'chooseService',
+      chooseSubService = 'chooseSubService',
       associatedItems = 'associatedItems';
   /// Sub Services Listing Screen End ///
+
+  /// Edit Sub-Service ///
+  const editSubService = 'editSubService';
+  /// Edit Sub-Service End ///
 
   /// Items Listing Screen ///
   const addItemDetails = 'addItemDetails',
@@ -141,6 +149,10 @@ const ordersList = 'ordersList',
       service = 'service',
       subService = 'subService';
   /// Items Listing Screen End ///
+
+  /// Edit Item ///
+  const editItem = 'editItem';
+  ///  Edit Item End ///
 
 /// Service Management End ///
 
@@ -211,7 +223,10 @@ const fieldIsRequired = 'fieldIsRequired',
     error = 'error',
     success = 'success',
     cancel = 'cancel',
-    retry = 'retry';
+    retry = 'retry',
+    areYouSure = 'areYouSure',
+    deletionConfirmationMessage = 'deletionConfirmationMessage',
+    yes = 'yes';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

@@ -136,7 +136,7 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
                             dropDownWidth: constraints.maxWidth,
                             dropDownList: serviceTypeList,
                             overlayPortalController: serviceTypeOverlayController,
-                            hintText: lang_key.chooseService.tr,
+                            hintText: lang_key.chooseSubService.tr,
                             showDropDown: showServiceDropDown,
                           selectedValueId: selectedValue,
                         );

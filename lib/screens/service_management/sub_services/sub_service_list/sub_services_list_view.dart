@@ -4,7 +4,7 @@ import 'package:service_app_admin_panel/screens/service_management/sub_services/
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
-import 'package:service_app_admin_panel/utils/global_variables.dart';
+import '../../../../helpers/show_confirmation_dialog.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_widgets/custom_cached_network_image.dart';
 import '../../../../utils/custom_widgets/custom_switch.dart';
@@ -84,7 +84,7 @@ class SubServicesListView extends StatelessWidget {
                           includeDelete: true,
                           includeEdit: true,
                           includeView: false,
-                          onDeletePressed: () => _viewModel.deleteService(_viewModel.visibleSubServicesList[index].id!),
+                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleSubServicesList[index].id!)),
                           onEditPressed: () => Get.toNamed(Routes.editSubService, arguments: {'subServiceDetails': _viewModel.visibleSubServicesList[index], 'servicesList': _viewModel.servicesList}),
                         ),
                       )

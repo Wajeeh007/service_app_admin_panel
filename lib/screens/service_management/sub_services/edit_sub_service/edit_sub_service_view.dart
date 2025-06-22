@@ -15,7 +15,7 @@ class EditSubServiceView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         scrollController: _viewModel.scrollController,
-        selectedSidePanelItem: lang_key.subServicesList.tr,
+        selectedSidePanelItem: lang_key.editSubService.tr,
         children: [
           SectionHeadingText(headingText: lang_key.subServices.tr),
           SubServiceFormSection(

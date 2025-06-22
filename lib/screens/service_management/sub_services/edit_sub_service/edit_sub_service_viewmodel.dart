@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/scroll_controller_funcs.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
-import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
-import 'package:service_app_admin_panel/models/sub_service_category.dart';
+import 'package:service_app_admin_panel/models/sub_service.dart';
 import 'package:service_app_admin_panel/screens/service_management/sub_services/sub_service_list/sub_services_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
@@ -42,7 +41,7 @@ class EditSubServiceViewModel extends GetxController {
   Rx<Uint8List> addedServiceImage = Uint8List(0).obs;
 
   /// Variable to hold Sub-Service details
-  SubServiceCategory subServiceDetails = SubServiceCategory();
+  SubService subServiceDetails = SubService();
 
   @override
   void onReady() {
@@ -70,28 +69,30 @@ class EditSubServiceViewModel extends GetxController {
   /// Edit service API call
   void editService() {
 
-    GlobalVariables.showLoader.value = true;
+    if(subServiceEditFormKey.currentState!.validate()){
+      GlobalVariables.showLoader.value = true;
 
-    var body = {};
+      var body = {};
 
-    if(nameController.text != subServiceDetails.name) body.addAll({'name': nameController.text});
-    if(serviceTypeSelectedId.value != subServiceDetails.serviceId) body.addAll({'service_id': serviceTypeSelectedId.value});
+      if(nameController.text != subServiceDetails.name) body.addAll({'name': nameController.text});
+      if(serviceTypeSelectedId.value != subServiceDetails.serviceId) body.addAll({'service_id': serviceTypeSelectedId.value});
 
-    ApiBaseHelper.patchMethod(
-      url: Urls.editSubService(subServiceDetails.id!),
-      body: body
-    ).then((value) {
-      GlobalVariables.showLoader.value = false;
-      if(value.success!) {
-        SubServicesListViewModel subServicesListViewModel = Get.find();
-        subServicesListViewModel.allSubServicesList[subServicesListViewModel.allSubServicesList.indexWhere((element) => element.id == subServiceDetails.id)] = SubServiceCategory.fromJson(value.data);
-        subServicesListViewModel.addSubServicesToVisibleList();
-        Get.back();
-        showSnackBar(message: value.message!, success: true);
-      } else {
-        showSnackBar(message: value.message!, success: false);
-      }
-    });
+      ApiBaseHelper.patchMethod(
+          url: Urls.editSubService(subServiceDetails.id!),
+          body: body
+      ).then((value) {
+        GlobalVariables.showLoader.value = false;
+        if(value.success!) {
+          SubServicesListViewModel subServicesListViewModel = Get.find();
+          subServicesListViewModel.allSubServicesList[subServicesListViewModel.allSubServicesList.indexWhere((element) => element.id == subServiceDetails.id)] = SubService.fromJson(value.data);
+          subServicesListViewModel.addSubServicesToVisibleList();
+          Get.back();
+          showSnackBar(message: value.message!, success: true);
+        } else {
+          showSnackBar(message: value.message!, success: false);
+        }
+      });
+    }
 
   }
 
