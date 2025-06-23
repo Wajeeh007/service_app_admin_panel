@@ -15,6 +15,7 @@ class ApiBaseHelper {
     required String url,
     bool withBearer = false,
     bool withAuthorization = false,
+    Object? body,
   }) async {
     try {
       Map<String, String> header = {
@@ -50,7 +51,6 @@ class ApiBaseHelper {
     } on FormatException {
       return Errors().showFormatExceptionError();
     } catch (e) {
-      print('Error: $e');
       return Errors().showGeneralApiError();
     }
   }

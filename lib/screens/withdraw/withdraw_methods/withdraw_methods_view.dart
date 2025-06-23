@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_switch.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/heading_in_container_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/validators.dart';
@@ -73,8 +77,8 @@ class _NewMethodInformationBaseWidget extends StatelessWidget {
                     // if(_viewModel.dropDownSelectedValue.value)
                   }
                 },
-              text: lang_key.saveInformation.tr,
-              width: 180,
+              text: lang_key.saveInfo.tr,
+              width: 150,
             ),
           )
         ],
@@ -92,6 +96,7 @@ class _NewMethodInformationTextFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _viewModel.newMethodInfoFormKey,
       child: Column(
         spacing: 20,
         children: [
@@ -201,19 +206,57 @@ class _AllMethodsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
+        Obx(() => ListBaseContainer(
+            onSearch: (value) {},
             onRefresh: () {},
-          controller: _viewModel.allMethodsSearchController,
-            hintText: lang_key.searchMethod.tr,
-            listData: [].obs,
-            columnsNames: [
-              'SL',
-              lang_key.methodName.tr,
-              lang_key.fieldType.tr,
-              lang_key.isDefault.tr,
-              lang_key.status.tr,
-              lang_key.actions.tr,
-            ]
+            controller: _viewModel.allMethodsSearchController,
+              hintText: lang_key.searchMethod.tr,
+              listData: _viewModel.visibleAllMethodsList,
+              columnsNames: [
+                'SL',
+                lang_key.methodName.tr,
+                lang_key.fieldType.tr,
+                lang_key.isDefault.tr,
+                lang_key.status.tr,
+                lang_key.actions.tr,
+              ],
+          expandFirstColumn: false,
+          entryChildren: List.generate(_viewModel.visibleAllMethodsList.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
+                  ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
+                    WithdrawMethodFieldType.text => lang_key.text.tr,
+                    WithdrawMethodFieldType.number => lang_key.number.tr,
+                    WithdrawMethodFieldType.email => lang_key.email.tr,
+                  },),
+                  ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].isDefault!) {
+                    true => lang_key.yes.tr,
+                    false => lang_key.no.tr,
+                  }),
+                  ListEntryItem(
+                    child: CustomSwitch(
+                        switchValue: _viewModel.visibleAllMethodsList[index].status!,
+                        onChanged: (value) {}
+                    )
+                  ),
+                  ListEntryItem(
+                    child: ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: true,
+                        includeView: false,
+                      onDeletePressed: () {},
+                      onEditPressed: () {},
+                    ),
+                  )
+                ]
+              ),
+            );
+          }),
+          ),
         )
       ],
     );
@@ -230,21 +273,55 @@ class _ActiveMethodsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-          expandFirstColumn: false,
-          controller: _viewModel.activeMethodsSearchController,
-            hintText: lang_key.searchMethod.tr,
-            listData: [].obs,
-            columnsNames: [
-              'SL',
-              lang_key.methodName.tr,
-              lang_key.fieldType.tr,
-              lang_key.isDefault.tr,
-              lang_key.createdDate.tr,
-              lang_key.actions.tr,
-            ]
-        )
+        Obx(() => ListBaseContainer(
+              onSearch: (value) {},
+              onRefresh: () {},
+              expandFirstColumn: false,
+              controller: _viewModel.activeMethodsSearchController,
+                hintText: lang_key.searchMethod.tr,
+                listData: _viewModel.visibleActiveMethodsList,
+                columnsNames: [
+                  'SL',
+                  lang_key.methodName.tr,
+                  lang_key.fieldType.tr,
+                  lang_key.isDefault.tr,
+                  lang_key.createdDate.tr,
+                  lang_key.actions.tr,
+                ],
+            entryChildren: List.generate(_viewModel.visibleActiveMethodsList.length, (index) {
+              return Padding(
+                padding: listEntryPadding.copyWith(bottom: 5),
+                child: Row(
+                    children: [
+                      ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                      ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
+                      ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
+                        WithdrawMethodFieldType.text => lang_key.text.tr,
+                        WithdrawMethodFieldType.number => lang_key.number.tr,
+                        WithdrawMethodFieldType.email => lang_key.email.tr,
+                      },),
+                      ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].isDefault!) {
+                        true => lang_key.yes.tr,
+                        false => lang_key.no.tr,
+                      }),
+                      ListEntryItem(
+                          text: DateFormat('dd-MM-yyyy').format(_viewModel.visibleAllMethodsList[index].createdAt!),
+                      ),
+                      ListEntryItem(
+                        child: ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: true,
+                          includeView: false,
+                          onDeletePressed: () {},
+                          onEditPressed: () {},
+                        ),
+                      )
+                    ]
+                ),
+              );
+            }),
+            ),
+        ),
       ],
     );
   }
@@ -260,21 +337,55 @@ class _InActiveMethodsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-          expandFirstColumn: false,
-          controller: _viewModel.inActiveMethodsSearchController,
-            hintText: lang_key.searchMethod.tr,
-            listData: [].obs,
-            columnsNames: [
-              'SL',
-              lang_key.methodName.tr,
-              lang_key.fieldType.tr,
-              lang_key.isDefault.tr,
-              lang_key.createdDate.tr,
-              lang_key.actions.tr,
-            ]
-        )
+        Obx(() => ListBaseContainer(
+                onSearch: (value) {},
+                onRefresh: () {},
+              expandFirstColumn: false,
+              controller: _viewModel.inActiveMethodsSearchController,
+                hintText: lang_key.searchMethod.tr,
+                listData: _viewModel.visibleInActiveMethodsList,
+                columnsNames: [
+                  'SL',
+                  lang_key.methodName.tr,
+                  lang_key.fieldType.tr,
+                  lang_key.isDefault.tr,
+                  lang_key.createdDate.tr,
+                  lang_key.actions.tr,
+                ],
+          entryChildren: List.generate(_viewModel.visibleInActiveMethodsList.length, (index) {
+            return Padding(
+              padding: listEntryPadding.copyWith(bottom: 5),
+              child: Row(
+                  children: [
+                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
+                    ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
+                      WithdrawMethodFieldType.text => lang_key.text.tr,
+                      WithdrawMethodFieldType.number => lang_key.number.tr,
+                      WithdrawMethodFieldType.email => lang_key.email.tr,
+                    },),
+                    ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].isDefault!) {
+                      true => lang_key.yes.tr,
+                      false => lang_key.no.tr,
+                    }),
+                    ListEntryItem(
+                      text: DateFormat('dd-MM-yyyy').format(_viewModel.visibleAllMethodsList[index].createdAt!),
+                    ),
+                    ListEntryItem(
+                      child: ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: true,
+                        includeView: false,
+                        onDeletePressed: () {},
+                        onEditPressed: () {},
+                      ),
+                    )
+                  ]
+              ),
+            );
+          }),
+            ),
+        ),
       ],
     );
   }

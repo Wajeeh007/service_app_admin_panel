@@ -36,7 +36,7 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
 /// Constant Paddings ///
 const EdgeInsets basePaddingForScreens = EdgeInsets.all(20);
 const EdgeInsets basePaddingForContainers = EdgeInsets.all(20);
-const EdgeInsets listEntryPadding = EdgeInsets.only(left: 18.0);
+const EdgeInsets listEntryPadding = EdgeInsets.only(left: 18.0,);
 /// Constant Paddings End ///
 
 /// Input Decorations ///
@@ -82,7 +82,7 @@ enum OrderStatus {pending, accepted, ongoing, completed, cancelled, dispute}
 /// Order Status Enum End ///
 
 /// New Method Input Field Type ///
-enum NewMethodFieldType {text, number, email}
+enum WithdrawMethodFieldType {text, number, email}
 /// New Method Input Field Type End ///
 
 /// Months list

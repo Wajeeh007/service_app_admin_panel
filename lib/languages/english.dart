@@ -230,7 +230,8 @@ class English {
     key.areYouSure: 'Are You Sure?',
     key.deletionConfirmationMessage: 'This action is permanent and cannot be reversed. Do you wish to proceed?',
     key.yes: 'Yes',
-    
+    key.no: 'No',
+
     /// Success Messages ///
 
       /// Zone Setup ///

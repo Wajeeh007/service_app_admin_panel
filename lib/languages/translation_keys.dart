@@ -227,7 +227,8 @@ const fieldIsRequired = 'fieldIsRequired',
     retry = 'retry',
     areYouSure = 'areYouSure',
     deletionConfirmationMessage = 'deletionConfirmationMessage',
-    yes = 'yes';
+    yes = 'yes',
+    no = 'no';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

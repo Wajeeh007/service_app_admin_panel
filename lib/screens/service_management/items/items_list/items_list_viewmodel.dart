@@ -84,7 +84,7 @@ class ItemsListViewModel extends GetxController {
     if (responses[0].success!) populateItemsList(responses[0].data as List);
     if (responses[1].success!) populateSubServicesList(responses[1].data as List);
 
-    if(responses[0].success == false && responses[1].success == false) {
+    if(!responses[0].success! && !responses[1].success!) {
       stopLoaderAndShowSnackBar(
           message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}",
           success: false

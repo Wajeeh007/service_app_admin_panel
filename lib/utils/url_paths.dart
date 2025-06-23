@@ -78,4 +78,11 @@ class Urls {
     static String editItem(String id) {
       return '$itemsBaseUrl/$id';
     }
+
+    /// Items End ///
+
+    /// Withdraw Methods ///
+    static const String getWithdrawMethods = '/withdraw_methods/get';
+    static const String addWithdrawMethod = '/withdraw_methods/add';
+    /// Withdraw Methods End ///
 }
