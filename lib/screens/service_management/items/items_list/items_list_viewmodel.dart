@@ -122,6 +122,22 @@ class ItemsListViewModel extends GetxController {
     if(itemAdditionFormKey.currentState!.validate()) {
       if(addedItemImage.value != Uint8List(0) && addedItemImage.value.isNotEmpty) {
 
+        GlobalVariables.showLoader.value = true;
+
+        ApiBaseHelper.postMethod(url: Urls.addItem, body: {
+          'name': itemNameController.text,
+          'price': int.tryParse(itemPriceController.text),
+          'sub_service_id': subServiceTypeSelectedId.value,
+        }).then((value) {
+          stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
+
+          if(value.success!) {
+            final newServiceItem = ServiceItem.fromJson(value.data!);
+            allItemsList.add(newServiceItem);
+            visibleItemsList.add(newServiceItem);
+            visibleItemsList.refresh();
+          }
+        });
       } else {
         showSnackBar(
             message: lang_key.addItemImage.tr,
@@ -131,16 +147,16 @@ class ItemsListViewModel extends GetxController {
     }
   }
 
-  /// Delete sub-service by ID.
-  void deleteItem(String serviceId) {
+  /// Delete service item by ID.
+  void deleteItem(String serviceItemId) {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.deleteMethod(url: Urls.deleteSubService(serviceId)).then((value) {
+    ApiBaseHelper.deleteMethod(url: Urls.deleteItem(serviceItemId)).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
       if(value.success!) {
-        final allSubServicesListIndex = allItemsList.indexWhere((element) => element.id == serviceId);
-        final visibleSubServicesListIndex = visibleItemsList.indexWhere((element) => element.id == serviceId);
+        final allSubServicesListIndex = allItemsList.indexWhere((element) => element.id == serviceItemId);
+        final visibleSubServicesListIndex = visibleItemsList.indexWhere((element) => element.id == serviceItemId);
 
         allItemsList.removeAt(allSubServicesListIndex);
         visibleItemsList.removeAt(visibleSubServicesListIndex);
@@ -149,14 +165,14 @@ class ItemsListViewModel extends GetxController {
     });
   }
 
-  /// Change sub-service status to active or in-active.
-  void changeItemStatus(String subServiceId) {
+  /// Change service item status to active or in-active.
+  void changeItemStatus(String serviceItemId) {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.patchMethod(url: Urls.changeSubServiceStatus(subServiceId)).then((value) {
+    ApiBaseHelper.patchMethod(url: Urls.changeItemStatus(serviceItemId)).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
       if(value.success!) {
-        final index = allItemsList.indexWhere((element) => element.id == subServiceId);
+        final index = allItemsList.indexWhere((element) => element.id == serviceItemId);
         allItemsList[index].status = !allItemsList[index].status!;
         addItemsToVisibleList();
       }
@@ -179,7 +195,7 @@ class ItemsListViewModel extends GetxController {
   }
 
   /// Function to clear and add items to the visible list
-  addItemsToVisibleList() {
+  void addItemsToVisibleList() {
     visibleItemsList.clear();
     visibleItemsList.addAll(allItemsList);
     visibleItemsList.refresh();

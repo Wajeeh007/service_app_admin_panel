@@ -15,9 +15,9 @@ class EditItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
         scrollController: _viewModel.scrollController,
-        selectedSidePanelItem: lang_key.editItem.tr,
+        selectedSidePanelItem: lang_key.itemsList.tr,
         children: [
-          SectionHeadingText(headingText: lang_key.subServices.tr),
+          SectionHeadingText(headingText: lang_key.editItem.tr),
           ItemFormSection(
             isBeingEdited: true,
               onPressed: () => _viewModel.editItem(),

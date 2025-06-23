@@ -147,7 +147,8 @@ const ordersList = 'ordersList',
       price = 'price',
       subServiceType = 'subServiceType',
       service = 'service',
-      subService = 'subService';
+      subService = 'subService',
+      serviceItemInfo = 'serviceItemInfo';
   /// Items Listing Screen End ///
 
   /// Edit Item ///

@@ -110,7 +110,7 @@ class _AddItemDetailsAndButtonSection extends StatelessWidget {
         spacing: 30,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          HeadingInContainerText(text: lang_key.subServiceInfo.tr,),
+          HeadingInContainerText(text: lang_key.serviceItemInfo.tr,),
           _ItemDetailsFields(
               formKey: formKey,
               nameController: nameController,
@@ -166,7 +166,7 @@ class _ItemDetailsFields extends StatelessWidget {
         spacing: 15,
         children: [
           CustomTextFormField(
-            title: lang_key.subServiceName.tr,
+            title: lang_key.itemName.tr,
             controller: nameController,
             hint: lang_key.typeHere.tr,
             validator: (value) => Validators.validateEmptyField(value),
@@ -185,7 +185,7 @@ class _ItemDetailsFields extends StatelessWidget {
               builder: (context, constraints) {
                 return CustomDropdown(
                   textEditingController: subServiceTypeController,
-                  title: lang_key.serviceType.tr,
+                  title: lang_key.subServiceType.tr,
                   dropDownFieldColor: primaryWhite,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   height: 50,

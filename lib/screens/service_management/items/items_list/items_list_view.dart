@@ -40,62 +40,63 @@ class ItemsListView extends StatelessWidget {
               showDropDown: _viewModel.showSubServiceTypeDropDown,
               newImageToUpload: _viewModel.addedItemImage
           ),
-          ListBaseContainer(
-              onSearch: (value) => _viewModel.searchTableForServiceItem(value),
-              onRefresh: () => _viewModel.fetchServiceItems(),
-              controller: _viewModel.searchController,
-              listData: _viewModel.visibleItemsList,
-              hintText: lang_key.searchItem.tr,
-              expandFirstColumn: false,
-              columnsNames: [
-                'SL',
-                lang_key.image.tr,
-                lang_key.name.tr,
-                lang_key.subService.tr,
-                lang_key.price.tr,
-                lang_key.status.tr,
-                lang_key.actions.tr
-              ],
-            entryChildren: List.generate(_viewModel.visibleItemsList.length, (index) {
-              return Padding(
-                padding: listEntryPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                    ListEntryItem(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 8),
-                          width: 50,
-                          height: 40,
-                          child: CustomNetworkImage(
-                            imageUrl: _viewModel.visibleItemsList[index].image!,
-                            boxFit: BoxFit.fitHeight,
-                          ),
-                        )
-                    ),
-                    ListEntryItem(text: _viewModel.visibleItemsList[index].name,),
-                    ListEntryItem(text: _viewModel.visibleItemsList[index].subServiceName,),
-                    ListEntryItem(text: "\$${_viewModel.visibleItemsList[index].price}",),
-                    ListEntryItem(
-                      child: CustomSwitch(
-                        switchValue: _viewModel.visibleItemsList[index].status!,
-                        onChanged: (value) => _viewModel.changeItemStatus(_viewModel.visibleItemsList[index].id!),
+          Obx(() => ListBaseContainer(
+                onSearch: (value) => _viewModel.searchTableForServiceItem(value),
+                onRefresh: () => _viewModel.fetchServiceItems(),
+                controller: _viewModel.searchController,
+                listData: _viewModel.visibleItemsList,
+                hintText: lang_key.searchItem.tr,
+                expandFirstColumn: false,
+                columnsNames: [
+                  'SL',
+                  lang_key.image.tr,
+                  lang_key.name.tr,
+                  lang_key.subService.tr,
+                  lang_key.price.tr,
+                  lang_key.status.tr,
+                  lang_key.actions.tr
+                ],
+              entryChildren: List.generate(_viewModel.visibleItemsList.length, (index) {
+                return Padding(
+                  padding: listEntryPadding,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                      ListEntryItem(
+                          child: Container(
+                            padding: EdgeInsets.only(left: 8),
+                            width: 50,
+                            height: 40,
+                            child: CustomNetworkImage(
+                              imageUrl: _viewModel.visibleItemsList[index].image!,
+                              boxFit: BoxFit.fitHeight,
+                            ),
+                          )
                       ),
-                    ),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: true,
-                        includeView: false,
-                        onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteItem(_viewModel.visibleItemsList[index].id!)),
-                        onEditPressed: () => Get.toNamed(Routes.editItem, arguments: {'serviceItemDetails': _viewModel.visibleItemsList[index], 'subServicesList': _viewModel.subServicesList}),
+                      ListEntryItem(text: _viewModel.visibleItemsList[index].name,),
+                      ListEntryItem(text: _viewModel.visibleItemsList[index].subServiceName,),
+                      ListEntryItem(text: "\$${_viewModel.visibleItemsList[index].price}",),
+                      ListEntryItem(
+                        child: CustomSwitch(
+                          switchValue: _viewModel.visibleItemsList[index].status!,
+                          onChanged: (value) => _viewModel.changeItemStatus(_viewModel.visibleItemsList[index].id!),
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              );
-            }),
+                      ListEntryItem(
+                        child: ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: true,
+                          includeView: false,
+                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteItem(_viewModel.visibleItemsList[index].id!)),
+                          onEditPressed: () => Get.toNamed(Routes.editItem, arguments: {'serviceItemDetails': _viewModel.visibleItemsList[index], 'subServicesList': _viewModel.subServicesList}),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }),
+            ),
           ),
         ]
     );

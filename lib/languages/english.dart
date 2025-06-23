@@ -153,7 +153,7 @@ class English {
       key.subServiceType: 'Sub-Service Type',
       key.service: 'Service',
       key.subService: 'Sub-Service',
-
+      key.serviceItemInfo: 'Service Item Info',
       /// Items listing screen end ///
 
       /// Edit Item ///
