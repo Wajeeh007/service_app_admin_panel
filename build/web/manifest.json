@@ -1,11 +1,11 @@
 {
-    "name": "Admin Panel",
-    "short_name": "AP",
+    "name": "service_app_admin_panel",
+    "short_name": "service_app_admin_panel",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "This code is for the admin panel of the service app. The admin or any user created by the admin shall have access to the features and functionalities of this panel",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

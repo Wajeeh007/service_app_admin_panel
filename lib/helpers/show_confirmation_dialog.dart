@@ -34,7 +34,7 @@ Future<void> showConfirmationDialog({
         ),
         CustomMaterialButton(
           width: 200,
-          onPressed: onPressed,
+          onPressed: () => Get.back(),
           text: lang_key.cancel.tr,
           borderColor: primaryGrey,
           textColor: primaryWhite,

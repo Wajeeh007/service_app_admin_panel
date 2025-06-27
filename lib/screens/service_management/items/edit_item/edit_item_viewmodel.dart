@@ -12,6 +12,7 @@ import '../../../../helpers/show_snackbar.dart';
 import '../../../../models/drop_down_entry.dart';
 import '../../../../utils/global_variables.dart';
 import '../../../../utils/routes.dart';
+import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
 class EditItemViewModel extends GetxController {
 
@@ -97,18 +98,22 @@ class EditItemViewModel extends GetxController {
       if(itemPriceController.text != serviceItem.price.toString()) body.addAll({'price': itemPriceController.text});
       if(subServiceTypeSelectedId.value != serviceItem.subServiceId) body.addAll({'sub_service_id': subServiceTypeSelectedId.value});
 
-      ApiBaseHelper.patchMethod(url: Urls.editItem(serviceItem.id!)).then((value) {
-        GlobalVariables.showLoader.value = false;
-        if(value.success!) {
-          ItemsListViewModel itemsListViewModel = Get.find();
-          itemsListViewModel.allItemsList[itemsListViewModel.allItemsList.indexWhere((element) => element.id == serviceItem.id)] = ServiceItem.fromJson(value.data);
-          itemsListViewModel.addItemsToVisibleList();
-          Get.back();
-          showSnackBar(message: value.message!, success: true);
-        } else {
-          showSnackBar(message: value.message!, success: false);
-        }
-      });
+      if(body.isEmpty) {
+        showSnackBar(message: lang_key.noInfoChanged.tr, success: false);
+      } else {
+        ApiBaseHelper.patchMethod(url: Urls.editItem(serviceItem.id!)).then((value) {
+          GlobalVariables.showLoader.value = false;
+          if(value.success!) {
+            ItemsListViewModel itemsListViewModel = Get.find();
+            itemsListViewModel.allItemsList[itemsListViewModel.allItemsList.indexWhere((element) => element.id == serviceItem.id)] = ServiceItem.fromJson(value.data);
+            itemsListViewModel.addItemsToVisibleList();
+            Get.back();
+            showSnackBar(message: value.message!, success: true);
+          } else {
+            showSnackBar(message: value.message!, success: false);
+          }
+        });
+      }
     }
   }
 }

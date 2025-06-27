@@ -84,5 +84,17 @@ class Urls {
     /// Withdraw Methods ///
     static const String getWithdrawMethods = '/withdraw_methods/get';
     static const String addWithdrawMethod = '/withdraw_methods/add';
+
+    static String changeWithdrawMethodStatus(String id) {
+      return '/withdraw_methods/change_status/$id';
+    }
+
+    static String deleteWithdrawMethod(String id) {
+      return '/withdraw_methods/$id';
+    }
+
+    static String editWithdrawMethod(String id) {
+      return '/withdraw_methods/$id';
+    }
     /// Withdraw Methods End ///
 }

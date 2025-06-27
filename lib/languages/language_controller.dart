@@ -35,7 +35,7 @@ class LanguageController extends GetxController {
     getLanguageState();
   }
 
-  getLanguageState() async {
+  Future getLanguageState() async {
     if(storage.read('language_key') != null) {
       languageKey.value = storage.read('language_key');
       return setLanguage(key: storage.read('language_key'));
@@ -44,7 +44,7 @@ class LanguageController extends GetxController {
     setLanguage(key: 'en_US');
   }
 
-  setLanguage({required String key}) async {
+  Future<void> setLanguage({required String key}) async {
 
     final String languageCode = optionsLocales[key]['languageCode'];
     final String countryCode = optionsLocales[key]['countryCode'];

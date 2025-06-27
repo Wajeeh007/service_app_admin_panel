@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_switch.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/heading_in_container_text.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
-import 'package:service_app_admin_panel/utils/validators.dart';
-import '../../../utils/custom_widgets/custom_material_button.dart';
-import 'withdraw_methods_viewmodel.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/withdraw_method_form.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
+import 'withdraw_methods_list_viewmodel.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
-class WithdrawMethodsView extends StatelessWidget {
-  WithdrawMethodsView({super.key});
+class WithdrawMethodsListView extends StatelessWidget {
+  WithdrawMethodsListView({super.key});
 
-  final WithdrawMethodsViewModel _viewModel = Get.put(WithdrawMethodsViewModel());
+  final WithdrawMethodsListViewModel _viewModel = Get.put(WithdrawMethodsListViewModel());
   
   @override
   Widget build(BuildContext context) {
@@ -29,7 +26,18 @@ class WithdrawMethodsView extends StatelessWidget {
         selectedSidePanelItem: lang_key.methods.tr,
         children: [
           SectionHeadingText(headingText: lang_key.addMethod.tr),
-          _NewMethodInformationBaseWidget(),
+          WithdrawMethodForm(
+              onPressed: () => _viewModel.addWithdrawMethod(),
+              formKey: _viewModel.newMethodInfoFormKey,
+              nameController: _viewModel.newMethodNameController,
+              placeholderTextController: _viewModel.newMethodPlaceholderTextController,
+              checkBoxValue: _viewModel.makeMethodFieldDefaultValue,
+              fieldTypeOverlayPortalController: _viewModel.fieldTypeOverlayPortalController,
+              fieldTypeTextController: _viewModel.fieldTypeTextController,
+              showDropDown: _viewModel.showDropDown,
+              dropDownValue: _viewModel.dropDownSelectedValue,
+              fieldNameTextController: _viewModel.newMethodFieldNameController
+          ),
           SectionHeadingText(headingText: lang_key.methodsList.tr),
           CustomTabBar(
               controller: _viewModel.tabController,
@@ -52,163 +60,18 @@ class WithdrawMethodsView extends StatelessWidget {
   }
 }
 
-/// Base widget for adding new withdraw method's information
-class _NewMethodInformationBaseWidget extends StatelessWidget {
-  _NewMethodInformationBaseWidget();
-
-  final WithdrawMethodsViewModel _viewModel = Get.find();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: kContainerBoxDecoration,
-      padding: basePaddingForContainers,
-      child: Column(
-        spacing: 20,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          HeadingInContainerText(text: lang_key.setupMethodInfo.tr,),
-          _NewMethodInformationTextFormFields(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: CustomMaterialButton(
-                onPressed: () {
-                  if(_viewModel.newMethodInfoFormKey.currentState!.validate()) {
-                    // if(_viewModel.dropDownSelectedValue.value)
-                  }
-                },
-              text: lang_key.saveInfo.tr,
-              width: 150,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-/// Text form fields for adding new method's information
-class _NewMethodInformationTextFormFields extends StatelessWidget {
-  _NewMethodInformationTextFormFields();
-
-  final WithdrawMethodsViewModel _viewModel = Get.find();
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _viewModel.newMethodInfoFormKey,
-      child: Column(
-        spacing: 20,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 15,
-            children: [
-              Expanded(
-                flex: 2,
-                child: CustomTextFormField(
-                  hint: lang_key.typeHere.tr,
-                  includeAsterisk: true,
-                  controller: _viewModel.newMethodFieldNameController,
-                  validator: (value) => Validators.validateEmptyField(value),
-                  title: lang_key.methodName.tr,
-                ),
-              ),
-              Expanded(
-                child: Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Checkbox(
-                          value: _viewModel.makeMethodFieldDefaultValue.value,
-                          onChanged: (value) {
-                            _viewModel.makeMethodFieldDefaultValue.value = value!;
-                          }
-                      ),
-                    Text(
-                      lang_key.makeMethodDefault.tr,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: primaryGrey,
-                      ),
-                    )
-                  ],
-                ),
-                ),
-              ),
-            ],
-          ),
-          _NameTypeAndPlaceholderFormFields(),
-        ],
-      ),
-    );
-  }
-}
-
-/// Name, Type and Placeholder text fields
-class _NameTypeAndPlaceholderFormFields extends StatelessWidget {
-  _NameTypeAndPlaceholderFormFields();
-
-  final WithdrawMethodsViewModel _viewModel = Get.find();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 15,
-      children: [
-        Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return CustomDropdown(
-                  textEditingController: _viewModel.fieldTypeTextController,
-                  includeAsterisk: true,
-                  title: lang_key.inputFieldType.tr,
-                  dropDownFieldColor: primaryWhite,
-                  dropDownWidth: constraints.maxWidth,
-                  height: 58,
-                  width: constraints.maxWidth,
-                  hintText: lang_key.selectFieldType.tr,
-                    dropDownList: _viewModel.newMethodFieldTypeDropdownEntries,
-                    overlayPortalController: _viewModel.fieldTypeOverlayPortalController,
-                    showDropDown: _viewModel.showDropDown,
-                  selectedValueId: _viewModel.dropDownSelectedValue,
-                );
-              }
-            )
-        ),
-        Expanded(
-          child: CustomTextFormField(
-            includeAsterisk: true,
-            title: lang_key.fieldName.tr,
-            controller: _viewModel.newMethodFieldNameController,
-            validator: (value) => Validators.validateEmptyField(value),
-            hint: lang_key.typeHere.tr,
-          ),
-        ),
-        Expanded(
-          child: CustomTextFormField(
-            includeAsterisk: true,
-            title: lang_key.placeholderText.tr,
-            controller: _viewModel.newMethodPlaceholderTextController,
-            validator: (value) => Validators.validateEmptyField(value),
-            hint: lang_key.typeHere.tr,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _AllMethodsList extends StatelessWidget {
   _AllMethodsList();
 
-  final WithdrawMethodsViewModel _viewModel = Get.find();
+  final WithdrawMethodsListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() => ListBaseContainer(
-            onSearch: (value) {},
-            onRefresh: () {},
+            onSearch: (value) => _viewModel.searchListForMethod(_viewModel.allMethodsSearchController, _viewModel.visibleAllMethodsList, _viewModel.allMethodsList),
+            onRefresh: () => _viewModel.fetchAllMethods(),
             controller: _viewModel.allMethodsSearchController,
               hintText: lang_key.searchMethod.tr,
               listData: _viewModel.visibleAllMethodsList,
@@ -240,7 +103,7 @@ class _AllMethodsList extends StatelessWidget {
                   ListEntryItem(
                     child: CustomSwitch(
                         switchValue: _viewModel.visibleAllMethodsList[index].status!,
-                        onChanged: (value) {}
+                        onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromAllList(index)
                     )
                   ),
                   ListEntryItem(
@@ -248,8 +111,8 @@ class _AllMethodsList extends StatelessWidget {
                         includeDelete: true,
                         includeEdit: true,
                         includeView: false,
-                      onDeletePressed: () {},
-                      onEditPressed: () {},
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromAllList(_viewModel.visibleAllMethodsList[index].id!)),
+                      onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleAllMethodsList[index]}),
                     ),
                   )
                 ]
@@ -267,14 +130,14 @@ class _AllMethodsList extends StatelessWidget {
 class _ActiveMethodsList extends StatelessWidget {
   _ActiveMethodsList();
 
-  final WithdrawMethodsViewModel _viewModel = Get.find();
+  final WithdrawMethodsListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() => ListBaseContainer(
-              onSearch: (value) {},
+              onSearch: (value) => _viewModel.searchListForMethod(_viewModel.activeMethodsSearchController, _viewModel.visibleActiveMethodsList, _viewModel.activeMethodsList),
               onRefresh: () {},
               expandFirstColumn: false,
               controller: _viewModel.activeMethodsSearchController,
@@ -285,7 +148,7 @@ class _ActiveMethodsList extends StatelessWidget {
                   lang_key.methodName.tr,
                   lang_key.fieldType.tr,
                   lang_key.isDefault.tr,
-                  lang_key.createdDate.tr,
+                  lang_key.status.tr,
                   lang_key.actions.tr,
                 ],
             entryChildren: List.generate(_viewModel.visibleActiveMethodsList.length, (index) {
@@ -294,26 +157,29 @@ class _ActiveMethodsList extends StatelessWidget {
                 child: Row(
                     children: [
                       ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                      ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
-                      ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
+                      ListEntryItem(text: _viewModel.visibleActiveMethodsList[index].name!,),
+                      ListEntryItem(text: switch(_viewModel.visibleActiveMethodsList[index].fieldType!) {
                         WithdrawMethodFieldType.text => lang_key.text.tr,
                         WithdrawMethodFieldType.number => lang_key.number.tr,
                         WithdrawMethodFieldType.email => lang_key.email.tr,
                       },),
-                      ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].isDefault!) {
+                      ListEntryItem(text: switch(_viewModel.visibleActiveMethodsList[index].isDefault!) {
                         true => lang_key.yes.tr,
                         false => lang_key.no.tr,
                       }),
                       ListEntryItem(
-                          text: DateFormat('dd-MM-yyyy').format(_viewModel.visibleAllMethodsList[index].createdAt!),
+                          child: CustomSwitch(
+                              switchValue: _viewModel.visibleActiveMethodsList[index].status!,
+                              onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromActiveOrInActiveList(index, true)
+                          ),
                       ),
                       ListEntryItem(
                         child: ListActionsButtons(
                           includeDelete: true,
                           includeEdit: true,
                           includeView: false,
-                          onDeletePressed: () {},
-                          onEditPressed: () {},
+                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleActiveMethodsList[index].id!, true)),
+                          onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleActiveMethodsList[index]}),
                         ),
                       )
                     ]
@@ -331,14 +197,14 @@ class _ActiveMethodsList extends StatelessWidget {
 class _InActiveMethodsList extends StatelessWidget {
   _InActiveMethodsList();
 
-  final WithdrawMethodsViewModel _viewModel = Get.find();
+  final WithdrawMethodsListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() => ListBaseContainer(
-                onSearch: (value) {},
+                onSearch: (value) => _viewModel.searchListForMethod(_viewModel.inActiveMethodsSearchController, _viewModel.visibleInActiveMethodsList, _viewModel.inActiveMethodsList),
                 onRefresh: () {},
               expandFirstColumn: false,
               controller: _viewModel.inActiveMethodsSearchController,
@@ -349,7 +215,7 @@ class _InActiveMethodsList extends StatelessWidget {
                   lang_key.methodName.tr,
                   lang_key.fieldType.tr,
                   lang_key.isDefault.tr,
-                  lang_key.createdDate.tr,
+                  lang_key.status.tr,
                   lang_key.actions.tr,
                 ],
           entryChildren: List.generate(_viewModel.visibleInActiveMethodsList.length, (index) {
@@ -358,26 +224,29 @@ class _InActiveMethodsList extends StatelessWidget {
               child: Row(
                   children: [
                     ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                    ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
-                    ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
+                    ListEntryItem(text: _viewModel.visibleInActiveMethodsList[index].name!,),
+                    ListEntryItem(text: switch(_viewModel.visibleInActiveMethodsList[index].fieldType!) {
                       WithdrawMethodFieldType.text => lang_key.text.tr,
                       WithdrawMethodFieldType.number => lang_key.number.tr,
                       WithdrawMethodFieldType.email => lang_key.email.tr,
                     },),
-                    ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].isDefault!) {
+                    ListEntryItem(text: switch(_viewModel.visibleInActiveMethodsList[index].isDefault!) {
                       true => lang_key.yes.tr,
                       false => lang_key.no.tr,
                     }),
                     ListEntryItem(
-                      text: DateFormat('dd-MM-yyyy').format(_viewModel.visibleAllMethodsList[index].createdAt!),
+                      child: CustomSwitch(
+                          switchValue: _viewModel.visibleInActiveMethodsList[index].status!,
+                          onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromActiveOrInActiveList(index, false)
+                      ),
                     ),
                     ListEntryItem(
                       child: ListActionsButtons(
                         includeDelete: true,
                         includeEdit: true,
                         includeView: false,
-                        onDeletePressed: () {},
-                        onEditPressed: () {},
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleInActiveMethodsList[index].id!, false)),
+                        onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleInActiveMethodsList[index]}),
                       ),
                     )
                   ]

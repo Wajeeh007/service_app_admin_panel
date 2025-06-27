@@ -8,7 +8,7 @@ import 'package:service_app_admin_panel/screens/service_management/services/edit
 import 'package:service_app_admin_panel/screens/service_management/sub_services/edit_sub_service/edit_sub_service_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/new_requests/new_requests_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_view.dart';
-import 'package:service_app_admin_panel/screens/withdraw/withdraw_methods/withdraw_methods_view.dart';
+import 'package:service_app_admin_panel/screens/withdraw/edit_withdraw_method/edit_withdraw_method_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/withdraw_requests/withdraw_requests_view.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_view.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_view.dart';
@@ -18,6 +18,7 @@ import '../screens/service_management/services/service_list/service_list_view.da
 import '../screens/service_management/sub_services/sub_service_list/sub_services_list_view.dart';
 import '../screens/serviceman_management/active_serviceman_list/active_serviceman_list_view.dart';
 import '../screens/settings/business_setup/business_setup_view.dart';
+import '../screens/withdraw/withdraw_methods_list/withdraw_methods_list_view.dart';
 
 class Routes {
 
@@ -39,6 +40,7 @@ class Routes {
   static const editItem = '/editItem';
   static const withdrawRequests = '/withdrawRequests';
   static const withdrawMethods = '/withdrawMethods';
+  static const editWithdrawMethod = '/editWithdrawMethod';
   static const businessSetup = '/businessSetup';
 
   static final pages = [
@@ -59,7 +61,8 @@ class Routes {
     GetPage(name: editSubService, page: () => EditSubServiceView()),
     GetPage(name: itemsList, page: () => ItemsListView()),
     GetPage(name: editItem, page: () => EditItemView()),
-    GetPage(name: withdrawMethods, page: () => WithdrawMethodsView()),
+    GetPage(name: withdrawMethods, page: () => WithdrawMethodsListView()),
+    GetPage(name: editWithdrawMethod, page: () => EditWithdrawMethodView()),
     GetPage(name: withdrawRequests, page: () => WithdrawRequestsView()),
     GetPage(name: businessSetup, page: () => BusinessSetupView()),
 
