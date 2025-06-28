@@ -17,7 +17,7 @@ class StatsContainer extends StatelessWidget {
 
   final String? imagePath;
   final IconData? iconData;
-  final String statValue;
+  final int statValue;
   final String statName;
   final Color? iconContainerColor;
   final double height;
@@ -55,7 +55,7 @@ class StatsContainer extends StatelessWidget {
             ),
           ),
           Text(
-            statValue,
+            statValue.toString(),
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
               fontSize: 40
             ),

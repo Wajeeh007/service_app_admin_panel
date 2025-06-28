@@ -37,26 +37,30 @@ class WithdrawRequestsView extends StatelessWidget {
                 children: [
                   _AllWithdrawRequests(),
                   ListBaseContainer(
+                    onSearch: (value) {},
                       onRefresh: () {},
-                    includeSearchField: false,
+                      controller: _viewModel.pendingWithdrawsSearchController,
                       listData: [].obs,
                       columnsNames: []
                   ),
                   ListBaseContainer(
+                      onSearch: (value) {},
                       onRefresh: () {},
-                    includeSearchField: false,
+                      controller: _viewModel.approvedWithdrawsSearchController,
                       listData: [].obs,
                       columnsNames: []
                   ),
                   ListBaseContainer(
+                      onSearch: (value) {},
                       onRefresh: () {},
-                    includeSearchField: false,
+                      controller: _viewModel.settledWithdrawSearchController,
                       listData: [].obs,
                       columnsNames: []
                   ),
                   ListBaseContainer(
+                      onSearch: (value) {},
                       onRefresh: () {},
-                    includeSearchField: false,
+                      controller: _viewModel.deniedWithdrawSearchController,
                       listData: [].obs,
                       columnsNames: []
                   ),
@@ -80,6 +84,7 @@ class _AllWithdrawRequests extends StatelessWidget {
     return Column(
       children: [
         ListBaseContainer(
+          onSearch: (value) {},
             onRefresh: () {},
             controller: _viewModel.allWithdrawsSearchController,
             listData: _viewModel.allOrdersList,

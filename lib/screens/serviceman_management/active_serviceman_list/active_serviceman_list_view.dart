@@ -66,21 +66,21 @@ class _CustomerAnalyticsData extends StatelessWidget {
           children: [
             StatsContainer(
               height: 200,
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.totalCustomers.tr,
               iconContainerColor: Colors.purpleAccent,
               iconData: Icons.group,
             ),
             StatsContainer(
               height: 200,
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.activeCustomers.tr,
               iconData: Icons.local_activity,
               iconContainerColor: Colors.green,
             ),
             StatsContainer(
               height: 200,
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.suspendedCustomers.tr,
               iconData: Icons.block,
               iconContainerColor: errorRed,

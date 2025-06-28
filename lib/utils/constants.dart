@@ -126,3 +126,6 @@ List<Map<String, double>> sidePanelScrollPositions = [
 
 /// Zone Order Volume Enum
 enum ZoneOrderVolume {veryLow, low, medium, high, veryHigh}
+
+/// Gender Enum
+enum Gender {male, female, other}

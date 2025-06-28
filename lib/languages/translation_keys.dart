@@ -91,7 +91,8 @@ const ordersList = 'ordersList',
   const customersAnalyticalData = 'customersAnalyticalData',
       totalCustomers = 'totalCustomers',
       totalSpent = 'totalSpent',
-      gender = 'gender';
+      gender = 'gender',
+      searchCustomer = 'searchCustomer';
   /// Customer List Screen End ///
 
   /// Suspended Customer's List Screen
@@ -228,7 +229,10 @@ const fieldIsRequired = 'fieldIsRequired',
     areYouSure = 'areYouSure',
     deletionConfirmationMessage = 'deletionConfirmationMessage',
     yes = 'yes',
-    no = 'no';
+    no = 'no',
+    male = 'male',
+    female = 'female',
+    other = 'other';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

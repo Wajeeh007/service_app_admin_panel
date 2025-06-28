@@ -81,6 +81,7 @@ class Urls {
 
     /// Items End ///
 
+  /// Withdraws ///
     /// Withdraw Methods ///
     static const String getWithdrawMethods = '/withdraw_methods/get';
     static const String addWithdrawMethod = '/withdraw_methods/add';
@@ -97,4 +98,10 @@ class Urls {
       return '/withdraw_methods/$id';
     }
     /// Withdraw Methods End ///
+  /// Withdraws End ///
+
+  /// Customer Management ///
+    /// Customers List ///
+    static const String getCustomers = '/customers/get';
+    static const String getCustomersStats = '/customers/get_stats';
 }

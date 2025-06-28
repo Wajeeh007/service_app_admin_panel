@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
+import 'package:service_app_admin_panel/models/analytical_data.dart';
+import 'package:service_app_admin_panel/utils/api_base_helper.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/url_paths.dart';
+import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/customer.dart';
 
@@ -19,17 +24,32 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
     TextEditingController inActiveCustomersSearchController = TextEditingController();
     
   /// All Customers data list
-  RxList<Customer> allCustomers = <Customer>[].obs;
+  List<Customer> allCustomersList = <Customer>[];
+  RxList<Customer> visibleAllCustomersList = <Customer>[].obs;
 
   /// Active Customers data list
-  RxList<Customer> activeCustomers = <Customer>[].obs;
+  List<Customer> allActiveCustomersList = <Customer>[];
+  RxList<Customer> visibleActiveCustomersList = <Customer>[].obs;
 
   /// In-Active Customers data list
-  RxList<Customer> inActiveCustomers = <Customer>[].obs;
+  List<Customer> allInActiveCustomersList = <Customer>[];
+  RxList<Customer> visibleInActiveCustomersList = <Customer>[].obs;
 
-  /// Arguments variable
-  Map<String, dynamic>? args;
+  /// 'All' Tab pagination variables
+  int allTabLimit = 10;
+  RxInt allTabPage = 0.obs;
+  
+  /// 'Active' Tab pagination variables
+  int activeTabLimit = 10;
+  RxInt activeTabPage = 0.obs;
 
+  /// 'In-Active' Tab pagination variables
+  int inActiveTabLimit = 10;
+  RxInt inActiveTabPage = 0.obs;
+
+  /// Customers Analytical data variable
+  Rx<AnalyticalData> customersAnalyticalData = AnalyticalData().obs;
+  
   @override
   void onInit() {
     tabController = TabController(length: 3, vsync: this);
@@ -38,7 +58,9 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
 
   @override
   void onReady() {
+    GlobalVariables.showLoader.value = true;
     animateSidePanelScrollController(scrollController);
+    fetchCustomersLists();
     super.onReady();
   }
 
@@ -46,5 +68,60 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
   void onClose() {
     scrollController.dispose();
     super.onClose();
+  }
+  
+  /// Fetch customers list for each tab
+  void fetchCustomersLists() async {
+
+    if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
+
+    final fetchAllCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$allTabLimit&page=${allTabPage.value}");
+    final fetchActiveCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$activeTabLimit&page=${activeTabPage.value}&status=1");
+    final fetchInActiveCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
+    final fetchCustomersAnalyticalData = ApiBaseHelper.getMethod(url: Urls.getCustomersStats);
+    
+    final responses = await Future.wait([fetchAllCustomers, fetchActiveCustomers, fetchInActiveCustomers, fetchCustomersAnalyticalData]);
+    
+    if(responses[0].success!) populateLists(allCustomersList, responses[0].data as List, visibleAllCustomersList);
+    if(responses[1].success!) populateLists(allActiveCustomersList, responses[1].data as List, visibleActiveCustomersList);
+    if(responses[2].success!) populateLists(allInActiveCustomersList, responses[2].data as List, visibleInActiveCustomersList);
+    if(responses[3].success!) populateAnalyticalData(responses[3].data);
+
+    if(responses.isEmpty || responses.every((element) => !element.success!)) {
+      showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);
+    }
+
+    GlobalVariables.showLoader.value = false;
+  }
+
+  /// Add data to the main list.
+  void populateLists(List<Customer> list, List<dynamic> data, RxList<Customer> visibleList) {
+    list.clear();
+    list.addAll(data.map((e) => Customer.fromJson(e)));
+    addDataToVisibleList(list, visibleList);
+  }
+
+  /// Add data to the visible lists for each tab
+  void addDataToVisibleList(List<Customer> allList, RxList<Customer> visibleList) {
+    visibleList.clear();
+    visibleList.addAll(allList);
+    visibleList.refresh();
+  }
+
+  /// Add data to the analytical data map variable.
+  void populateAnalyticalData(Map<String, dynamic> data) {
+    customersAnalyticalData.value = AnalyticalData.fromJson(data);
+  }
+
+  /// Search customers by name.
+  void searchList(String? value, List<Customer> list, RxList<Customer> visibleList) {
+    if(value == null || value.isEmpty || value == '') {
+      addDataToVisibleList(list, visibleList);
+    } else {
+      addDataToVisibleList(
+          list.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList(),
+          visibleList
+      );
+    }
   }
 }

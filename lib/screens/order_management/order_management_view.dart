@@ -103,27 +103,27 @@ class _AllOrdersStatsSection extends StatelessWidget {
         spacing: 8,
         children: [
           StatsContainer(
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.pendingRequest.tr,
             iconData: Icons.pending_actions_rounded,
           ),
           StatsContainer(
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.acceptedRequest.tr,
             imagePath: ImagesPaths.acceptedRequests,
           ),
           StatsContainer(
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.ongoing.tr,
             imagePath: ImagesPaths.ongoingRequests,
           ),
           StatsContainer(
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.completed.tr,
             iconData: CupertinoIcons.check_mark_circled,
           ),
           StatsContainer(
-              statValue: '0',
+              statValue: 0,
               statName: lang_key.cancelled.tr,
             iconData: Icons.cancel_outlined,
           ),

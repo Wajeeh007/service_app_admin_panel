@@ -96,6 +96,10 @@ class English {
       key.totalCustomers: 'Total Customers',
       key.totalSpent: 'Total Spent',
       key.gender: 'Gender',
+      key.male: 'Male',
+      key.female: 'Female',
+      key.other: 'Other',
+      key.searchCustomer: 'Search Customer',
       /// Customers List Screen End ///
 
       /// Suspended Customers List Screen

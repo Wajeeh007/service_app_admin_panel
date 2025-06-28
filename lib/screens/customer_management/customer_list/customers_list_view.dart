@@ -1,13 +1,18 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/stats_container.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/user_status.dart';
 
 class CustomersListView extends StatelessWidget {
   CustomersListView({super.key});
@@ -18,7 +23,6 @@ class CustomersListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
       scrollController: _viewModel.scrollController,
-      args: {'scrollPosition': 0.0},
         selectedSidePanelItem: lang_key.customersList.tr,
         overlayPortalControllersAndShowDropDown: [],
         children: [
@@ -51,7 +55,9 @@ class CustomersListView extends StatelessWidget {
 
 /// Customer Analytics data
 class _CustomerAnalyticsData extends StatelessWidget {
-  const _CustomerAnalyticsData();
+  _CustomerAnalyticsData();
+
+  final CustomerListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -60,31 +66,32 @@ class _CustomerAnalyticsData extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeadingText(headingText: lang_key.customersAnalyticalData.tr),
-        Row(
-          spacing: 15,
-          children: [
-            StatsContainer(
-              height: 200,
-              statValue: '0',
-              statName: lang_key.totalCustomers.tr,
-              iconContainerColor: Colors.purpleAccent,
-              iconData: Icons.group,
-            ),
-            StatsContainer(
-              height: 200,
-              statValue: '0',
-              statName: lang_key.activeCustomers.tr,
-              iconData: Icons.local_activity,
-              iconContainerColor: Colors.green,
-            ),
-            StatsContainer(
-              height: 200,
-              statValue: '0',
-              statName: lang_key.suspendedCustomers.tr,
-              iconData: Icons.block,
-              iconContainerColor: errorRed,
-            ),
-          ],
+        Obx(() => Row(
+            spacing: 15,
+            children: [
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.customersAnalyticalData.value.total ?? 0,
+                statName: lang_key.totalCustomers.tr,
+                iconContainerColor: Colors.purpleAccent,
+                iconData: Icons.group,
+              ),
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.customersAnalyticalData.value.active ?? 0,
+                statName: lang_key.activeCustomers.tr,
+                iconData: Icons.local_activity,
+                iconContainerColor: Colors.green,
+              ),
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.customersAnalyticalData.value.inActive ?? 0,
+                statName: lang_key.suspendedCustomers.tr,
+                iconData: Icons.block,
+                iconContainerColor: errorRed,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -101,21 +108,71 @@ class _AllCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-          onRefresh: () {},
-            controller: _viewModel.allCustomersSearchController,
-            listData: _viewModel.allCustomers,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
-              lang_key.status.tr,
-              lang_key.actions.tr
-            ]
+        Obx(() => ListBaseContainer(
+            onSearch: (value) => _viewModel.searchList(value, _viewModel.allCustomersList, _viewModel.visibleAllCustomersList),
+            onRefresh: () => _viewModel.fetchCustomersLists(),
+              controller: _viewModel.allCustomersSearchController,
+              listData: _viewModel.visibleAllCustomersList,
+              expandFirstColumn: false,
+              hintText: lang_key.searchCustomer.tr,
+              columnsNames: [
+                'SL',
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.totalOrders.tr,
+                lang_key.totalSpent.tr,
+                lang_key.status.tr,
+                lang_key.actions.tr
+              ],
+          entryChildren: List.generate(_viewModel.visibleAllCustomersList.length, (index) {
+            return Padding(
+                padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListEntryItem(text: _viewModel.visibleAllCustomersList[index].name!,),
+                  ListEntryItem(
+                    child: Column(
+                      children: [
+                        Text(
+                          _viewModel.visibleAllCustomersList[index].phoneNo!,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          _viewModel.visibleAllCustomersList[index].email!,
+                          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w600
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalOrders.toString(),),
+                  ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalSpent.toString(),),
+                  ListEntryItem(
+                    child: UserStatus(
+                        status: _viewModel.visibleAllCustomersList[index].status!
+                    ),
+                  ),
+                  ListEntryItem(
+                    child: ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: false,
+                        includeView: true,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                      onViewPressed: () {},
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+          ),
         ),
       ],
     );
@@ -132,21 +189,52 @@ class _ActiveCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-            controller: _viewModel.activeCustomersSearchController,
-            listData: _viewModel.activeCustomers,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.gender.tr,
-              lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
-              lang_key.actions.tr
-            ]
+        Obx(() => ListBaseContainer(
+          onSearch: (value) => _viewModel.searchList(value, _viewModel.allActiveCustomersList, _viewModel.visibleActiveCustomersList),
+          onRefresh: () {},
+          controller: _viewModel.activeCustomersSearchController,
+          listData: _viewModel.visibleActiveCustomersList,
+          expandFirstColumn: false,
+          hintText: lang_key.searchCustomer.tr,
+          columnsNames: [
+            'SL',
+            lang_key.name.tr,
+            lang_key.contactInfo.tr,
+            lang_key.gender.tr,
+            lang_key.totalOrders.tr,
+            lang_key.totalSpent.tr,
+            lang_key.actions.tr
+          ],
+          entryChildren: List.generate(_viewModel.visibleActiveCustomersList.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].name!,),
+                  CustomerContactInfoDetails(email: _viewModel.visibleActiveCustomersList[index].email!, phoneNo: _viewModel.visibleActiveCustomersList[index].phoneNo!,),
+                  ListEntryItem(text: switch(_viewModel.visibleActiveCustomersList[index].gender!) {
+
+                    Gender.male => lang_key.male.tr,
+                    Gender.female => lang_key.female.tr,
+                    Gender.other => lang_key.other.tr,
+                  },),
+                  ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].totalOrders.toString(),),
+                  ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].totalSpent.toString(),),
+                  ListEntryItem(
+                    child: ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: false,
+                      includeView: true,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                      onViewPressed: () {},
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+          ),
         ),
       ],
     );
@@ -163,23 +251,78 @@ class _InActiveCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-            controller: _viewModel.inActiveCustomersSearchController,
-            listData: _viewModel.inActiveCustomers,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.gender.tr,
-              lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
-              lang_key.actions.tr
-            ]
+        Obx(() => ListBaseContainer(
+          onSearch: (value) => _viewModel.searchList(value, _viewModel.allInActiveCustomersList, _viewModel.visibleInActiveCustomersList),
+          onRefresh: () {},
+          controller: _viewModel.inActiveCustomersSearchController,
+          listData: _viewModel.visibleInActiveCustomersList,
+          expandFirstColumn: false,
+          hintText: lang_key.searchCustomer.tr,
+          columnsNames: [
+            'SL',
+            lang_key.name.tr,
+            lang_key.contactInfo.tr,
+            lang_key.gender.tr,
+            lang_key.totalOrders.tr,
+            lang_key.totalSpent.tr,
+            lang_key.actions.tr
+          ],
+          entryChildren: List.generate(_viewModel.visibleActiveCustomersList.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].name!,),
+                  CustomerContactInfoDetails(email: _viewModel.visibleInActiveCustomersList[index].email!, phoneNo: _viewModel.visibleActiveCustomersList[index].phoneNo!,),
+                  ListEntryItem(text: switch(_viewModel.visibleInActiveCustomersList[index].gender!) {
+
+                    Gender.male => lang_key.male.tr,
+                    Gender.female => lang_key.female.tr,
+                    Gender.other => lang_key.other.tr,
+                  },),
+                  ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].totalOrders.toString(),),
+                  ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].totalSpent.toString(),),
+                  ListEntryItem(
+                    child: ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: false,
+                      includeView: true,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                      onViewPressed: () {},
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+          ),
         ),
       ],
+    );
+  }
+}
+
+/// Customer contact information widget
+class CustomerContactInfoDetails extends StatelessWidget {
+  const CustomerContactInfoDetails({
+    super.key,
+    required this.email,
+    required this.phoneNo,
+  });
+
+  final String email;
+  final String phoneNo;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListEntryItem(
+      child: Column(
+        children: [
+          ListText(text: phoneNo),
+          ListText(text: email, maxLines: 1,),
+        ],
+      ),
     );
   }
 }
