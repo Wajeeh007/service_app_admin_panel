@@ -8,7 +8,7 @@ class Order {
 
   String? id;
   Customer? customerDetails;
-  ServiceMan? serviceManDetails;
+  Serviceman? serviceManDetails;
   Address? addressDetails;
   OrderStatus? orderStatus;
   DateTime? orderDateTime;

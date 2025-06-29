@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Admin Panel',
       getPages: Routes.pages,
-      initialRoute: Routes.customersList,
+      initialRoute: Routes.newServicemanRequests,
       translations: AppLanguages(),
       fallbackLocale: const Locale('en', 'US'),
       initialBinding: InitBinding(),

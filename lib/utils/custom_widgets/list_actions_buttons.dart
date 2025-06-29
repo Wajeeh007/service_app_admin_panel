@@ -12,9 +12,15 @@ class ListActionsButtons extends StatelessWidget {
     required this.includeDelete,
     required this.includeEdit,
     required this.includeView,
-  }) : assert(includeDelete && onDeletePressed != null || includeDelete == false && onDeletePressed == null, 'If includeDelete is false, onDeletePressed must be null and vice versa'),
-        assert(includeEdit && onEditPressed != null || includeEdit == false && onEditPressed == null, 'If includeEdit is false, onEditPressed must be null and vice versa'),
-        assert(includeView && onViewPressed != null || includeView == false && onViewPressed == null, 'If includeView is false, onViewPressed must be null and vice versa');
+    this.deleteIcon,
+    this.viewIcon,
+    this.editIcon,
+    this.deleteColor,
+    this.viewColor,
+    this.editColor,
+  }) : assert(includeDelete && onDeletePressed != null || includeDelete == false && onDeletePressed == null && deleteIcon == null && deleteColor == null, 'If includeDelete is false, onDeletePressed, deleteIcon and deleteColor must be null'),
+        assert(includeEdit && onEditPressed != null || includeEdit == false && onEditPressed == null && editIcon == null && editColor == null, 'If includeEdit is false, onEditPressed, editIcon and editColor must be null'),
+        assert(includeView && onViewPressed != null || includeView == false && onViewPressed == null && viewIcon == null && viewColor == null, 'If includeView is false, onViewPressed, viewIcon and viewColor must be null');
 
   final VoidCallback? onDeletePressed;
   final VoidCallback? onViewPressed;
@@ -22,6 +28,12 @@ class ListActionsButtons extends StatelessWidget {
   final bool includeDelete;
   final bool includeView;
   final bool includeEdit;
+  final IconData? deleteIcon;
+  final IconData? viewIcon;
+  final IconData? editIcon;
+  final Color? deleteColor;
+  final Color? viewColor;
+  final Color? editColor;
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +51,8 @@ class ListActionsButtons extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Icon(
-              CupertinoIcons.delete,
-              color: errorRed,
+              deleteIcon ?? CupertinoIcons.delete,
+              color: deleteColor ?? errorRed,
               size: 20,
             ),
           ),
@@ -55,8 +67,8 @@ class ListActionsButtons extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Icon(
-              Icons.edit,
-              color: primaryBlue,
+              editIcon ?? Icons.edit,
+              color: editColor ?? primaryBlue,
               size: 20,
             ),
           ),
@@ -71,8 +83,8 @@ class ListActionsButtons extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Icon(
-              CupertinoIcons.eye,
-              color: primaryBlue,
+              viewIcon ?? CupertinoIcons.eye,
+              color: viewColor ?? primaryBlue,
               size: 20,
             ),
           ),

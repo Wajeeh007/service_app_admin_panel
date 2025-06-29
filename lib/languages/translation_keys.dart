@@ -108,7 +108,11 @@ const ordersList = 'ordersList',
   /// New Requests List Screen End ///
 
   /// Active servicemen list screen ///
-  const earning = 'earning';
+  const earning = 'earning',
+      servicemenList = 'servicemenList',
+      servicemenAnalyticalData = 'servicemenAnalyticsData',
+      totalServicemen = 'totalServicemen',
+      suspendedServicemen = 'suspendedServicemen';
   /// Active servicemen list screen end ///
 /// Serviceman Management End ///
 
@@ -228,6 +232,7 @@ const fieldIsRequired = 'fieldIsRequired',
     retry = 'retry',
     areYouSure = 'areYouSure',
     deletionConfirmationMessage = 'deletionConfirmationMessage',
+    suspensionConfirmationMessage = 'suspensionConfirmationMessage',
     yes = 'yes',
     no = 'no',
     male = 'male',

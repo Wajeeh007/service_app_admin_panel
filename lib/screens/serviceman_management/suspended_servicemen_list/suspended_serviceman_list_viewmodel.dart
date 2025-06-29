@@ -12,7 +12,7 @@ class SuspendedServicemanListViewModel extends GetxController {
   GlobalKey<FormState> searchFormKey = GlobalKey<FormState>();
 
   /// List for servicemen suspended by the admin
-  RxList<ServiceMan> suspendedServicemen = <ServiceMan>[].obs;
+  RxList<Serviceman> suspendedServicemen = <Serviceman>[].obs;
 
   @override
   void onReady() {

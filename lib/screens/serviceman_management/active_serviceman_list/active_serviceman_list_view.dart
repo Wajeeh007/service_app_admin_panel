@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/active_serviceman_list/active_serviceman_list_viewmodel.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
 
 import '../../../utils/constants.dart';
+import '../../../utils/custom_widgets/contact_info_in_list.dart';
 import '../../../utils/custom_widgets/custom_tab_bar.dart';
 import '../../../utils/custom_widgets/list_base_container.dart';
 import '../../../utils/custom_widgets/screens_base_widget.dart';
@@ -10,6 +15,7 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 
 import '../../../utils/custom_widgets/section_heading_text.dart';
 import '../../../utils/custom_widgets/stats_container.dart';
+import '../../../utils/custom_widgets/user_status.dart';
 
 class ActiveServiceManListView extends StatelessWidget {
   ActiveServiceManListView({super.key});
@@ -23,8 +29,8 @@ class ActiveServiceManListView extends StatelessWidget {
         selectedSidePanelItem: lang_key.activeServicemen.tr,
         overlayPortalControllersAndShowDropDown: [],
         children: [
-          _CustomerAnalyticsData(),
-          SectionHeadingText(headingText: lang_key.customersList.tr),
+          _ServicemenAnalyticsData(),
+          SectionHeadingText(headingText: lang_key.servicemenList.tr),
           CustomTabBar(
               controller: _viewModel.tabController,
               tabsNames: [
@@ -39,9 +45,9 @@ class ActiveServiceManListView extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 controller: _viewModel.tabController,
                 children: [
-                  _AllCustomersListTabView(),
-                  _ActiveCustomersListTabView(),
-                  _InActiveCustomersListTabView(),
+                  _AllServicemenListTabView(),
+                  _ActiveServicemenListTabView(),
+                  _InActiveServicemenListTabView(),
                 ]
             ),
           )
@@ -51,8 +57,10 @@ class ActiveServiceManListView extends StatelessWidget {
 }
 
 /// Customer Analytics data
-class _CustomerAnalyticsData extends StatelessWidget {
-  const _CustomerAnalyticsData();
+class _ServicemenAnalyticsData extends StatelessWidget {
+  _ServicemenAnalyticsData();
+
+  final ActiveServiceManListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -60,32 +68,33 @@ class _CustomerAnalyticsData extends StatelessWidget {
       spacing: 15,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeadingText(headingText: lang_key.customersAnalyticalData.tr),
-        Row(
-          spacing: 15,
-          children: [
-            StatsContainer(
-              height: 200,
-              statValue: 0,
-              statName: lang_key.totalCustomers.tr,
-              iconContainerColor: Colors.purpleAccent,
-              iconData: Icons.group,
-            ),
-            StatsContainer(
-              height: 200,
-              statValue: 0,
-              statName: lang_key.activeCustomers.tr,
-              iconData: Icons.local_activity,
-              iconContainerColor: Colors.green,
-            ),
-            StatsContainer(
-              height: 200,
-              statValue: 0,
-              statName: lang_key.suspendedCustomers.tr,
-              iconData: Icons.block,
-              iconContainerColor: errorRed,
-            ),
-          ],
+        SectionHeadingText(headingText: lang_key.servicemenAnalyticalData.tr),
+        Obx(() => Row(
+            spacing: 15,
+            children: [
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.serviceMenAnalyticalData.value.total ?? 0,
+                statName: lang_key.totalCustomers.tr,
+                iconContainerColor: Colors.purpleAccent,
+                iconData: Icons.group,
+              ),
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.serviceMenAnalyticalData.value.active ?? 0,
+                statName: lang_key.activeCustomers.tr,
+                iconData: Icons.local_activity,
+                iconContainerColor: Colors.green,
+              ),
+              StatsContainer(
+                height: 200,
+                statValue: _viewModel.serviceMenAnalyticalData.value.inActive ?? 0,
+                statName: lang_key.suspendedCustomers.tr,
+                iconData: Icons.block,
+                iconContainerColor: errorRed,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -93,8 +102,8 @@ class _CustomerAnalyticsData extends StatelessWidget {
 }
 
 /// All Customers list tab view
-class _AllCustomersListTabView extends StatelessWidget {
-  _AllCustomersListTabView();
+class _AllServicemenListTabView extends StatelessWidget {
+  _AllServicemenListTabView();
 
   final ActiveServiceManListViewModel _viewModel = Get.find();
 
@@ -102,21 +111,48 @@ class _AllCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-            controller: _viewModel.allServiceMansSearchController,
-            listData: _viewModel.allServiceMen,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.totalOrders.tr,
-              lang_key.earning.tr,
-              lang_key.status.tr,
-              lang_key.actions.tr
-            ]
+        Obx(() => ListBaseContainer(
+            onSearch: (value) => _viewModel.searchList(value, _viewModel.allServiceMenList, _viewModel.visibleAllServiceMenList),
+              onRefresh: () => _viewModel.fetchServicemenLists(),
+              controller: _viewModel.allServiceMansSearchController,
+              listData: _viewModel.visibleAllServiceMenList,
+              expandFirstColumn: false,
+              hintText: lang_key.searchOrder.tr,
+              columnsNames: [
+                'SL',
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.totalOrders.tr,
+                lang_key.earning.tr,
+                lang_key.status.tr,
+                lang_key.actions.tr
+              ],
+            entryChildren: List.generate(_viewModel.visibleAllServiceMenList.length, (index) {
+              return Padding(
+                padding: listEntryPadding,
+                child: Row(
+                  children: [
+                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].name!),
+                    ContactInfoInList(email: _viewModel.visibleAllServiceMenList[index].email!, phoneNo: _viewModel.visibleAllServiceMenList[index].phoneNo!,),
+                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].totalOrders.toString()),
+                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].earnings.toString()),
+                    UserStatus(status: _viewModel.visibleAllServiceMenList[index].status!),
+                    ListEntryItem(
+                      child: ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: false,
+                          includeView: true,
+                        onViewPressed: () {},
+                        deleteIcon: CupertinoIcons.nosign,
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ],
     );
@@ -124,8 +160,8 @@ class _AllCustomersListTabView extends StatelessWidget {
 }
 
 /// Active customers list tab view
-class _ActiveCustomersListTabView extends StatelessWidget {
-  _ActiveCustomersListTabView();
+class _ActiveServicemenListTabView extends StatelessWidget {
+  _ActiveServicemenListTabView();
 
   final ActiveServiceManListViewModel _viewModel = Get.find();
 
@@ -133,21 +169,53 @@ class _ActiveCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-            controller: _viewModel.activeServiceMansSearchController,
-            listData: _viewModel.activeServicemen,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.gender.tr,
-              lang_key.totalOrders.tr,
-              lang_key.earning.tr,
-              lang_key.actions.tr
-            ]
+        Obx(() => ListBaseContainer(
+              onSearch: (value) => _viewModel.searchList(value, _viewModel.allActiveServiceMenList, _viewModel.visibleActiveServicemenList),
+              onRefresh: () => _viewModel.fetchServicemenWithStatus(true),
+              controller: _viewModel.activeServiceMansSearchController,
+              listData: _viewModel.visibleActiveServicemenList,
+              expandFirstColumn: false,
+              hintText: lang_key.searchOrder.tr,
+              columnsNames: [
+                'SL',
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.gender.tr,
+                lang_key.totalOrders.tr,
+                lang_key.earning.tr,
+                lang_key.actions.tr
+              ],
+            entryChildren: List.generate(_viewModel.visibleActiveServicemenList.length, (index) {
+              return Padding(
+                padding: listEntryPadding,
+                child: Row(
+                  children: [
+                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].name!),
+                    ContactInfoInList(email: _viewModel.visibleActiveServicemenList[index].email!, phoneNo: _viewModel.visibleActiveServicemenList[index].phoneNo!,),
+                    ListEntryItem(text: switch(_viewModel.visibleActiveServicemenList[index].gender!) {
+
+                      Gender.male => lang_key.male.tr,
+                      Gender.female => lang_key.female.tr,
+                      Gender.other => lang_key.other.tr,
+                    },),
+                    ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].totalOrders.toString()),
+                    ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].earnings.toString()),
+                    ListEntryItem(
+                      child: ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: false,
+                        includeView: true,
+                        onViewPressed: () {},
+                        deleteIcon: CupertinoIcons.nosign,
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ],
     );
@@ -155,8 +223,8 @@ class _ActiveCustomersListTabView extends StatelessWidget {
 }
 
 /// Inactive customers list tab view
-class _InActiveCustomersListTabView extends StatelessWidget {
-  _InActiveCustomersListTabView();
+class _InActiveServicemenListTabView extends StatelessWidget {
+  _InActiveServicemenListTabView();
 
   final ActiveServiceManListViewModel _viewModel = Get.find();
 
@@ -164,22 +232,53 @@ class _InActiveCustomersListTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListBaseContainer(
-            onRefresh: () {},
-            controller: _viewModel.inActiveServiceMansSearchController,
-            listData: _viewModel.inActiveServicemen,
-            expandFirstColumn: false,
-            hintText: lang_key.searchOrder.tr,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.gender.tr,
-              lang_key.totalOrders.tr,
-              lang_key.earning.tr,
-              lang_key.actions.tr
-            ]
-        ),
+        Obx(() => ListBaseContainer(
+              onSearch: (value) => _viewModel.searchList(value, _viewModel.allInActiveServiceMenList, _viewModel.visibleInActiveServicemenList),
+              onRefresh: () => _viewModel.fetchServicemenWithStatus(false),
+              controller: _viewModel.inActiveServiceMansSearchController,
+              listData: _viewModel.visibleInActiveServicemenList,
+              expandFirstColumn: false,
+              hintText: lang_key.searchOrder.tr,
+              columnsNames: [
+                'SL',
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.gender.tr,
+                lang_key.totalOrders.tr,
+                lang_key.earning.tr,
+                lang_key.actions.tr
+              ],
+          entryChildren: List.generate(_viewModel.visibleInActiveServicemenList.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].name!),
+                  ContactInfoInList(email: _viewModel.visibleInActiveServicemenList[index].email!, phoneNo: _viewModel.visibleInActiveServicemenList[index].phoneNo!,),
+                  ListEntryItem(text: switch(_viewModel.visibleInActiveServicemenList[index].gender!) {
+
+                    Gender.male => lang_key.male.tr,
+                    Gender.female => lang_key.female.tr,
+                    Gender.other => lang_key.other.tr,
+                  },),
+                  ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].totalOrders.toString()),
+                  ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].earnings.toString()),
+                  ListEntryItem(
+                    child: ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: false,
+                      includeView: true,
+                      onViewPressed: () {},
+                      deleteIcon: CupertinoIcons.nosign,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+        )),
       ],
     );
   }

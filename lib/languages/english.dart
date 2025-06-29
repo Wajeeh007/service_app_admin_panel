@@ -117,6 +117,10 @@ class English {
 
       /// Active servicemen list screen ///
       key.earning: 'Earning',
+      key.servicemenList: 'Servicemen List',
+      key.servicemenAnalyticalData: 'Servicemen Analytical Data',
+      key.totalServicemen: 'Total Servicemen',
+      key.suspendedServicemen: 'Suspended Servicemen',
       /// Active servicemen list screen end ///
 
     /// Serviceman Management End ///
@@ -233,6 +237,7 @@ class English {
     key.retry: 'Retry',
     key.areYouSure: 'Are You Sure?',
     key.deletionConfirmationMessage: 'This action is permanent and cannot be reversed. Do you wish to proceed?',
+    key.suspensionConfirmationMessage: 'This user\'s account will be suspended and they\'ll be unable to use their account. Do you wish to proceed?',
     key.yes: 'Yes',
     key.no: 'No',
 
