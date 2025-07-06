@@ -129,3 +129,6 @@ enum ZoneOrderVolume {veryLow, low, medium, high, veryHigh}
 
 /// Gender Enum
 enum Gender {male, female, other}
+
+/// Withdraw Request Status
+enum WithdrawRequestStatus {pending, approved, settled, denied}

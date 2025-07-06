@@ -8,7 +8,6 @@ import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/list_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';

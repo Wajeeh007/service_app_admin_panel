@@ -85,7 +85,7 @@ class Urls {
 
   /// Withdraws ///
     /// Withdraw Methods ///
-    static const String _methodsBaseUrl = '/methods';
+    static const String _methodsBaseUrl = 'methods';
     static const String getWithdrawMethods = '$_withdrawsBaseUrl/$_methodsBaseUrl/get';
     static const String addWithdrawMethod = '$_withdrawsBaseUrl/$_methodsBaseUrl/add';
 
@@ -101,6 +101,12 @@ class Urls {
       return '$_withdrawsBaseUrl/$_methodsBaseUrl/$id';
     }
     /// Withdraw Methods End ///
+
+    /// Withdraw Requests ///
+    static const String _requestsBaseUrl = 'requests';
+    static String getWithdrawRequests = '$_withdrawsBaseUrl/$_requestsBaseUrl/get';
+
+    /// Withdraw Requests End ///
   /// Withdraws End ///
 
   /// Customer Management ///
@@ -119,5 +125,12 @@ class Urls {
 
     /// New Servicemen Requests
     static const String getNewRequests = '$_serviceMenBaseUrl/get_new_requests';
+
+    /// New Servicemen Requests End ///
+
+    /// Suspended Servicemen ///
+    static const String getSuspendedServicemen = '$_serviceMenBaseUrl/get_suspended';
+    /// Suspended Servicemen End ///
+
   /// Serviceman Management End ///
 }

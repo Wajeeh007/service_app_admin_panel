@@ -114,6 +114,8 @@ const ordersList = 'ordersList',
       totalServicemen = 'totalServicemen',
       suspendedServicemen = 'suspendedServicemen';
   /// Active servicemen list screen end ///
+
+  const searchServiceman = 'searchServiceman';
 /// Serviceman Management End ///
 
 /// Service Management ///

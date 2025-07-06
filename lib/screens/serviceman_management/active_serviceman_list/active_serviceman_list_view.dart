@@ -75,21 +75,21 @@ class _ServicemenAnalyticsData extends StatelessWidget {
               StatsContainer(
                 height: 200,
                 statValue: _viewModel.serviceMenAnalyticalData.value.total ?? 0,
-                statName: lang_key.totalCustomers.tr,
+                statName: lang_key.totalServicemen.tr,
                 iconContainerColor: Colors.purpleAccent,
                 iconData: Icons.group,
               ),
               StatsContainer(
                 height: 200,
                 statValue: _viewModel.serviceMenAnalyticalData.value.active ?? 0,
-                statName: lang_key.activeCustomers.tr,
+                statName: lang_key.activeServicemen.tr,
                 iconData: Icons.local_activity,
                 iconContainerColor: Colors.green,
               ),
               StatsContainer(
                 height: 200,
                 statValue: _viewModel.serviceMenAnalyticalData.value.inActive ?? 0,
-                statName: lang_key.suspendedCustomers.tr,
+                statName: lang_key.suspendedServicemen.tr,
                 iconData: Icons.block,
                 iconContainerColor: errorRed,
               ),
@@ -117,7 +117,7 @@ class _AllServicemenListTabView extends StatelessWidget {
               controller: _viewModel.allServiceMansSearchController,
               listData: _viewModel.visibleAllServiceMenList,
               expandFirstColumn: false,
-              hintText: lang_key.searchOrder.tr,
+              hintText: lang_key.searchServiceman.tr,
               columnsNames: [
                 'SL',
                 lang_key.name.tr,
@@ -129,7 +129,7 @@ class _AllServicemenListTabView extends StatelessWidget {
               ],
             entryChildren: List.generate(_viewModel.visibleAllServiceMenList.length, (index) {
               return Padding(
-                padding: listEntryPadding,
+                padding: listEntryPadding.copyWith(bottom: 10),
                 child: Row(
                   children: [
                     ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
@@ -175,7 +175,7 @@ class _ActiveServicemenListTabView extends StatelessWidget {
               controller: _viewModel.activeServiceMansSearchController,
               listData: _viewModel.visibleActiveServicemenList,
               expandFirstColumn: false,
-              hintText: lang_key.searchOrder.tr,
+              hintText: lang_key.searchServiceman.tr,
               columnsNames: [
                 'SL',
                 lang_key.name.tr,
@@ -238,7 +238,7 @@ class _InActiveServicemenListTabView extends StatelessWidget {
               controller: _viewModel.inActiveServiceMansSearchController,
               listData: _viewModel.visibleInActiveServicemenList,
               expandFirstColumn: false,
-              hintText: lang_key.searchOrder.tr,
+              hintText: lang_key.searchServiceman.tr,
               columnsNames: [
                 'SL',
                 lang_key.name.tr,

@@ -24,48 +24,49 @@ class NewRequestsView extends StatelessWidget {
       selectedSidePanelItem: lang_key.newRequests.tr,
       children: [
         SectionHeadingText(headingText: lang_key.newRequests.tr),
-        ListBaseContainer(
-            onRefresh: () => _viewModel.fetchNewRequests(),
-            includeSearchField: false,
-            expandFirstColumn: false,
-            listData: _viewModel.serviceManNewRequests,
-            columnsNames: [
-              'SL',
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.identificationNo.tr,
-              lang_key.dateOfExpiry.tr,
-              lang_key.gender.tr,
-              lang_key.actions.tr
-            ],
-          entryChildren: List.generate(_viewModel.serviceManNewRequests.length, (index) {
-            return Padding(
-              padding: listEntryPadding,
-              child: Row(
-                children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
-                  ListEntryItem(text: _viewModel.serviceManNewRequests[index].name),
-                  ContactInfoInList(email: _viewModel.serviceManNewRequests[index].email!, phoneNo: _viewModel.serviceManNewRequests[index].phoneNo!),
-                  ListEntryItem(text: _viewModel.serviceManNewRequests[index].identificationNo!),
-                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.serviceManNewRequests[index].identificationExpiry!)),
-                  ListEntryItem(text: switch(_viewModel.serviceManNewRequests[index].gender!) {
-                    Gender.male => lang_key.male.tr,
-                    Gender.female => lang_key.female.tr,
-                    Gender.other => lang_key.other.tr,
-                  },),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: false,
-                        includeView: true,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
-                      onViewPressed: () {},
-                    ),
-                  )
-                ],
-              ),
-            );
-          }),
+        Obx(() => ListBaseContainer(
+              onRefresh: () => _viewModel.fetchNewRequests(),
+              includeSearchField: false,
+              expandFirstColumn: false,
+              listData: _viewModel.serviceManNewRequests,
+              columnsNames: [
+                'SL',
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.identificationNo.tr,
+                lang_key.dateOfExpiry.tr,
+                lang_key.gender.tr,
+                lang_key.actions.tr
+              ],
+            entryChildren: List.generate(_viewModel.serviceManNewRequests.length, (index) {
+              return Padding(
+                padding: listEntryPadding,
+                child: Row(
+                  children: [
+                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListEntryItem(text: _viewModel.serviceManNewRequests[index].name),
+                    ContactInfoInList(email: _viewModel.serviceManNewRequests[index].email!, phoneNo: _viewModel.serviceManNewRequests[index].phoneNo!),
+                    ListEntryItem(text: _viewModel.serviceManNewRequests[index].identificationNo!),
+                    ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.serviceManNewRequests[index].identificationExpiry!)),
+                    ListEntryItem(text: switch(_viewModel.serviceManNewRequests[index].gender!) {
+                      Gender.male => lang_key.male.tr,
+                      Gender.female => lang_key.female.tr,
+                      Gender.other => lang_key.other.tr,
+                    },),
+                    ListEntryItem(
+                      child: ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: false,
+                          includeView: true,
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                        onViewPressed: () {},
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
         )
       ]
     );

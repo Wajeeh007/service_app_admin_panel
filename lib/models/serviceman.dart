@@ -20,6 +20,7 @@ class Serviceman {
   bool? isVerified;
   bool? accountDeleted;
   String? identificationNo;
+  String? adminNote;
   DateTime? createdAt;
   DateTime? identificationExpiry;
 
@@ -42,6 +43,7 @@ class Serviceman {
     this.zoneId,
     this.totalOrders,
     this.earnings,
+    this.adminNote,
     this.identificationNo,
     this.identificationExpiry
   });
@@ -67,5 +69,6 @@ class Serviceman {
     identificationNo = json['identification_number'];
     createdAt = DateTime.tryParse(json['created_at']);
     identificationExpiry = DateTime.tryParse(json['identification_expiry']);
+    adminNote = json['note'] ?? '';
   }
 }

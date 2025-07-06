@@ -123,6 +123,7 @@ class English {
       key.suspendedServicemen: 'Suspended Servicemen',
       /// Active servicemen list screen end ///
 
+    key.searchServiceman: 'Search Serviceman',
     /// Serviceman Management End ///
 
     /// Service Management ///
