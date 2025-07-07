@@ -192,7 +192,18 @@ const ordersList = 'ordersList',
     denied = 'denied',
     amount = 'amount',
     method = 'method',
-    searchByServiceman = 'searchByServiceman';
+    searchByServiceman = 'searchByServiceman',
+    accountId = 'accountId',
+    approve = 'approve',
+    decline = 'decline',
+    settle = 'settle',
+    view = 'view',
+      transferDate = 'transferDate',
+    transactionId = 'transactionId',
+    provideReasonForDecliningRequest = 'provideReasonForDecliningRequest',
+    provideDetailsOfTransaction = 'provideDetailsOfTransaction',
+    uploadReceipt = 'uploadReceipt',
+    cont = 'continue';
 
   /// Withdraw Requests End ///
 
@@ -216,6 +227,7 @@ const fieldIsRequired = 'fieldIsRequired',
     status = 'status',
     actions = 'actions',
     date = 'date',
+    requestDate = 'requestDate',
     noDataAvailable = 'noDataAvailable',
     all = 'all',
     active = 'active',
@@ -233,6 +245,7 @@ const fieldIsRequired = 'fieldIsRequired',
     cancel = 'cancel',
     retry = 'retry',
     areYouSure = 'areYouSure',
+    thisActionIsIrreversible = 'thisActionIsIrreversible',
     deletionConfirmationMessage = 'deletionConfirmationMessage',
     suspensionConfirmationMessage = 'suspensionConfirmationMessage',
     yes = 'yes',
@@ -261,5 +274,6 @@ const addServiceError = 'addServiceError',
     errorChangingStatus = 'errorChangingStatus',
     addAreaPolygon = 'addAreaPolygon',
     noInfoChanged = 'noDataChanged',
-    clientExceptionError = 'clientExceptionError';
+    clientExceptionError = 'clientExceptionError',
+    addReceiptImageToProceed = 'addReceiptImageToProceed';
 /// Errors End ///

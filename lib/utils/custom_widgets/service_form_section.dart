@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_cached_network_image.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/overlay_icon.dart';
+import '../../helpers/pick_single_image.dart';
 import '../constants.dart';
 import '../images_paths.dart';
 import '../validators.dart';
@@ -155,7 +155,7 @@ class _AddServiceImageSection extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
-                      onTap: () => pickImage(),
+                      onTap: () => pickSingleImage(imageToUpload: addedServiceImage),
                       child: Obx(() => addedServiceImage.value.isNotEmpty && addedServiceImage.value != Uint8List(0) ? Stack(
                         children: [
                           Image.memory(addedServiceImage.value, fit: BoxFit.fitHeight,),
@@ -197,16 +197,5 @@ class _AddServiceImageSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void pickImage() async {
-    final image = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-        compressionQuality: 1,
-        allowedExtensions: ['png', 'jpg', 'jpeg']);
-
-    if(image != null) {
-      addedServiceImage.value = image.files.first.bytes!;
-    }
   }
 }

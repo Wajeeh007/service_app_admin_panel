@@ -36,7 +36,7 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
 /// Constant Paddings ///
 const EdgeInsets basePaddingForScreens = EdgeInsets.all(20);
 const EdgeInsets basePaddingForContainers = EdgeInsets.all(20);
-const EdgeInsets listEntryPadding = EdgeInsets.only(left: 18.0,);
+const EdgeInsets listEntryPadding = EdgeInsets.only(left: 16.0,);
 /// Constant Paddings End ///
 
 /// Input Decorations ///

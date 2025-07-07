@@ -106,6 +106,10 @@ class Urls {
     static const String _requestsBaseUrl = 'requests';
     static String getWithdrawRequests = '$_withdrawsBaseUrl/$_requestsBaseUrl/get';
 
+    static String updateWithdrawRequest(String id) {
+      return '$_withdrawsBaseUrl/$_requestsBaseUrl/$id';
+    }
+
     /// Withdraw Requests End ///
   /// Withdraws End ///
 

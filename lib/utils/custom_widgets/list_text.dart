@@ -5,12 +5,14 @@ class ListText extends StatelessWidget {
     super.key,
     required this.text,
     this.textColor,
-    this.maxLines
+    this.maxLines,
+    this.fontSize,
   });
 
   final String text;
   final Color? textColor;
   final int? maxLines;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,8 @@ class ListText extends StatelessWidget {
       text,
       style: Theme.of(context).textTheme.labelLarge?.copyWith(
         color: textColor,
-        fontWeight: FontWeight.w600
+        fontWeight: FontWeight.w600,
+        fontSize: fontSize
       ),
       textAlign: TextAlign.center,
       maxLines: maxLines,

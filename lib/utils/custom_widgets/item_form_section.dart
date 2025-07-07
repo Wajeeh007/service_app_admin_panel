@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/pick_single_image.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/models/drop_down_entry.dart';
 import '../constants.dart';
@@ -238,7 +239,7 @@ class _AddServiceImageSection extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
-                      onTap: () => _pickImage(),
+                      onTap: () => pickSingleImage(imageToUpload: newImageToUpload),
                       child: Obx(() => newImageToUpload.value.isNotEmpty && newImageToUpload.value != Uint8List(0) ?
                       Stack(
                         children: [
@@ -280,16 +281,5 @@ class _AddServiceImageSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _pickImage() async {
-    final image = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        compressionQuality: 1,
-        allowedExtensions: ['png', 'jpg', 'jpeg']);
-
-    if(image != null) {
-      newImageToUpload.value = image.files.first.bytes!;
-    }
   }
 }

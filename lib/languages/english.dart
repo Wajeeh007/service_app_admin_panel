@@ -199,6 +199,16 @@ class English {
       key.amount: 'Amount',
       key.method: 'Method',
       key.searchByServiceman: 'Search By Serviceman',
+      key.accountId: 'Account ID',
+      key.approve: 'Approve',
+      key.decline: 'Decline',
+      key.settle: 'Settle',
+      key.view: 'View',
+      key.transactionId: 'Transaction ID',
+      key.provideReasonForDecliningRequest: 'If you want to decline this request, please provide a reason.\n\nThis reason shall be shown to the serviceman',
+      key.provideDetailsOfTransaction: 'Provide the following details of transaction',
+      key.uploadReceipt: 'Upload Receipt',
+      key.cont: 'Continue',
       /// Withdraw Requests End ///
     /// Withdraws End ///
 
@@ -221,6 +231,8 @@ class English {
     key.actions: 'Actions',
     key.noDataAvailable: 'No Data Available',
     key.date: 'Date',
+    key.requestDate: 'Request Date',
+    key.transferDate: 'Transfer Date',
     key.active: 'Active',
     key.inactive: 'Inactive',
     key.all: 'All',
@@ -237,6 +249,7 @@ class English {
     key.cancel: 'Cancel',
     key.retry: 'Retry',
     key.areYouSure: 'Are You Sure?',
+    key.thisActionIsIrreversible: 'This action is irreversible. Proceed with caution.',
     key.deletionConfirmationMessage: 'This action is permanent and cannot be reversed. Do you wish to proceed?',
     key.suspensionConfirmationMessage: 'This user\'s account will be suspended and they\'ll be unable to use their account. Do you wish to proceed?',
     key.yes: 'Yes',
@@ -269,6 +282,7 @@ class English {
     key.addAreaPolygon: 'Add area polygon to proceed',
     key.noInfoChanged: 'No information changed to update.',
     key.clientExceptionError: 'Server unreachable.',
+    key.addReceiptImageToProceed: 'Add receipt image to proceed',
     /// Errors End ///
   };
 
