@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
 import 'package:service_app_admin_panel/models/service_category.dart';
@@ -37,15 +38,9 @@ class ServiceListViewModel extends GetxController {
   int limit = 10;
 
   @override
-  void onInit() {
-    fetchServices();
-    super.onInit();
-  }
-
-  @override
   void onReady() {
-    GlobalVariables.showLoader.value = true;
     animateSidePanelScrollController(scrollController);
+    fetchServices();
     super.onReady();
   }
 
@@ -60,15 +55,14 @@ class ServiceListViewModel extends GetxController {
 
   /// API Call to fetch services
   void fetchServices() {
-    
+
+    if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
+
     ApiBaseHelper.getMethod(url: "${Urls.getServices}?limit=$limit&page=$page").then((value) {
       GlobalVariables.showLoader.value = false;
 
       if(value.success!) {
-        allServicesList.clear();
-        final data = value.data! as List;
-        allServicesList.addAll(data.map((e) => ServiceCategory.fromJson(e)));
-        addServicesToVisibleList();
+        populateLists<ServiceCategory, dynamic>(allServicesList, value.data, visibleServicesList, (dynamic json) => ServiceCategory.fromJson(json));
       } else {
         showSnackBar(message: value.message!, success: false);
       }

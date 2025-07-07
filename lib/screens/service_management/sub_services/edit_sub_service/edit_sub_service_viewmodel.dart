@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/scroll_controller_funcs.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/sub_service.dart';
@@ -85,7 +86,7 @@ class EditSubServiceViewModel extends GetxController {
         if(value.success!) {
           SubServicesListViewModel subServicesListViewModel = Get.find();
           subServicesListViewModel.allSubServicesList[subServicesListViewModel.allSubServicesList.indexWhere((element) => element.id == subServiceDetails.id)] = SubService.fromJson(value.data);
-          subServicesListViewModel.addSubServicesToVisibleList();
+          addDataToVisibleList(subServicesListViewModel.allSubServicesList, subServicesListViewModel.visibleSubServicesList);
           Get.back();
           showSnackBar(message: value.message!, success: true);
         } else {

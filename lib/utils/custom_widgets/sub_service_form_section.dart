@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:service_app_admin_panel/helpers/pick_single_image.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;

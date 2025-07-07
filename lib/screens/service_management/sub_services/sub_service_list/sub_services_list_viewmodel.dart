@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/models/sub_service.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../../helpers/scroll_controller_funcs.dart';
@@ -53,17 +54,11 @@ class SubServicesListViewModel extends GetxController {
   /// Variables for pagination
   int page = 0;
   int limit = 10;
-
-  @override
-  void onInit() {
-    fetchServicesAndSubServices();
-    super.onInit();
-  }
   
   @override
   void onReady() {
-    GlobalVariables.showLoader.value = true;
     animateSidePanelScrollController(scrollController);
+    fetchServicesAndSubServices();
     super.onReady();
   }
 
@@ -79,13 +74,16 @@ class SubServicesListViewModel extends GetxController {
 
   /// API calls to fetch Sub-services list and services type for selection
   void fetchServicesAndSubServices() async {
+
+    if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
+
     final fetchServices = ApiBaseHelper.getMethod(url: Urls.getServices);
     final fetchSubServices = ApiBaseHelper.getMethod(url: "${Urls.getSubServices}?limit=$limit&page=$page");
 
     final responses = await Future.wait([fetchServices, fetchSubServices]);
 
     if (responses[0].success!) populateServiceTypeList(responses[0].data as List);
-    if (responses[1].success!) populateSubServiceLists(responses[1].data as List);
+    if (responses[1].success!) populateLists<SubService, dynamic>(allSubServicesList, responses[1].data, visibleSubServicesList, (dynamic json) => SubService.fromJson(json));
 
     if(responses[0].success == false && responses[1].success == false) {
       stopLoaderAndShowSnackBar(
@@ -102,17 +100,9 @@ class SubServicesListViewModel extends GetxController {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(url: "${Urls.getSubServices}?limit=$limit&page=$page").then((value) {
       GlobalVariables.showLoader.value = false;
-      populateSubServiceLists(value.data as List);
+      populateLists<SubService, dynamic>(allSubServicesList, value.data, visibleSubServicesList, (dynamic json) => SubService.fromJson(json));
     });
 
-  }
-
-  /// API Call to fetch sub-services
-  void populateSubServiceLists(List<dynamic> data) {
-
-    allSubServicesList.clear();
-    allSubServicesList.addAll(data.map((e) => SubService.fromJson(e)));
-    addSubServicesToVisibleList();
   }
 
   /// API call to fetch service types
@@ -139,7 +129,7 @@ class SubServicesListViewModel extends GetxController {
             if(value.success!) {
               final subService = SubService.fromJson(value.data);
               allSubServicesList.add(subService);
-              addSubServicesToVisibleList();
+              addDataToVisibleList(allSubServicesList, visibleSubServicesList);
               clearControllersAndVariables();
             }
           });
@@ -179,7 +169,7 @@ class SubServicesListViewModel extends GetxController {
       if(value.success!) {
         final index = allSubServicesList.indexWhere((element) => element.id == subServiceId);
         allSubServicesList[index].status = !allSubServicesList[index].status!;
-        addSubServicesToVisibleList();
+        addDataToVisibleList(allSubServicesList, visibleSubServicesList);
       }
     });
   }
@@ -187,23 +177,13 @@ class SubServicesListViewModel extends GetxController {
   /// Search table for sub-service by name.
   void searchTableForSubService(String? value) {
     if(value == '' || value == null || value.isEmpty) {
-      addSubServicesToVisibleList();
+      addDataToVisibleList(allSubServicesList, visibleSubServicesList);
     } else {
-      visibleSubServicesList.clear();
-      for (var element in allSubServicesList) {
-        if(element.name!.toLowerCase().trim().contains(value.toLowerCase().trim())) {
-          visibleSubServicesList.add(element);
-          visibleSubServicesList.refresh();
-        }
-      }
+      addDataToVisibleList(
+          allSubServicesList.where((element) => element.name!.toLowerCase().contains(value.toLowerCase())).toList(),
+          visibleSubServicesList
+      );
     }
-  }
-
-  /// Function to clear and add items to the visible list
-  void addSubServicesToVisibleList() {
-    visibleSubServicesList.clear();
-    visibleSubServicesList.addAll(allSubServicesList);
-    visibleSubServicesList.refresh();
   }
 
   /// Clear controllers and variables after adding service.

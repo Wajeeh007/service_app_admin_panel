@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -91,7 +92,7 @@ class EditWithdrawMethodViewModel extends GetxController {
               int inActiveMethodsListIndex = withdrawMethodsListViewModel.inActiveMethodsList.indexWhere((element) => element.id == withdrawMethod.id!);
               if(inActiveMethodsListIndex != -1) {
                 withdrawMethodsListViewModel.inActiveMethodsList[inActiveMethodsListIndex] = WithdrawMethod.fromJson(value.data);
-                withdrawMethodsListViewModel.addDataToVisibleMethodsList(withdrawMethodsListViewModel.inActiveMethodsList, withdrawMethodsListViewModel.visibleInActiveMethodsList);
+                addDataToVisibleList(withdrawMethodsListViewModel.inActiveMethodsList, withdrawMethodsListViewModel.visibleInActiveMethodsList);
               }
             }
           }
@@ -108,11 +109,11 @@ class EditWithdrawMethodViewModel extends GetxController {
         }
 
         if (element == allList.last) {
-          Get.find<WithdrawMethodsListViewModel>().addDataToVisibleMethodsList(allList, visibleList);
+          addDataToVisibleList(allList, visibleList);
         }
       }
     } else {
-      Get.find<WithdrawMethodsListViewModel>().addDataToVisibleMethodsList(allList, visibleList);
+      addDataToVisibleList(allList, visibleList);
     }
   }
 

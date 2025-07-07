@@ -8,6 +8,7 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
+import '../../../helpers/populate_lists.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
 
 class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
@@ -109,9 +110,9 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
 
     final response = await Future.wait([fetchAllMethods, fetchActiveMethods, fetchInActiveMethods]);
 
-    if(response[0].success!) populateMethodsList(response[0].data as List, allMethodsList, visibleAllMethodsList);
-    if(response[1].success!) populateMethodsList(response[1].data as List, activeMethodsList, visibleActiveMethodsList);
-    if(response[2].success!) populateMethodsList(response[2].data as List, inActiveMethodsList, visibleInActiveMethodsList);
+    if(response[0].success!) populateLists<WithdrawMethod, dynamic>(allMethodsList, response[0].data as List, visibleAllMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
+    if(response[1].success!) populateLists<WithdrawMethod, dynamic>(activeMethodsList,response[1].data as List, visibleActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
+    if(response[2].success!) populateLists<WithdrawMethod, dynamic>(inActiveMethodsList, response[2].data as List, visibleInActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
 
     if(!response[0].success! && !response[1].success! && !response[2].success!) {
       stopLoaderAndShowSnackBar(
@@ -131,7 +132,7 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
       if(value.success!) {
-        populateMethodsList(value.data as List, activeMethodsList, visibleActiveMethodsList);
+        populateLists<WithdrawMethod, dynamic>(activeMethodsList, value.data as List, visibleActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
       }
     });
   }
@@ -145,7 +146,7 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
       if(value.success!) {
-        populateMethodsList(value.data as List, inActiveMethodsList, visibleInActiveMethodsList);
+        populateLists<WithdrawMethod, dynamic>(inActiveMethodsList, value.data, visibleInActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
       }
     });
 
@@ -201,7 +202,7 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
           inActiveMethodsList.add(allMethodsList[allMethodsListIndex]);
           visibleInActiveMethodsList.add(allMethodsList[allMethodsListIndex]);
           visibleInActiveMethodsList.refresh();
-          addDataToVisibleMethodsList(allMethodsList, visibleAllMethodsList);
+          addDataToVisibleList(allMethodsList, visibleAllMethodsList);
         } else {
           int allInActiveMethodsListIndex = inActiveMethodsList.indexWhere((element) => element.id == visibleAllMethodsList[index].id!);
           if(allInActiveMethodsListIndex != -1) {
@@ -212,7 +213,7 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
           activeMethodsList.add(allMethodsList[allMethodsListIndex]);
           visibleActiveMethodsList.add(allMethodsList[allMethodsListIndex]);
           visibleActiveMethodsList.refresh();
-          addDataToVisibleMethodsList(allMethodsList, visibleAllMethodsList);
+          addDataToVisibleList(allMethodsList, visibleAllMethodsList);
         }
 
       }
@@ -234,7 +235,7 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
         if(allMethodsListIndex != -1) {
           allMethodsList[allMethodsListIndex].status = !allMethodsList[allMethodsListIndex].status!;
 
-          addDataToVisibleMethodsList(allMethodsList, visibleAllMethodsList);
+          addDataToVisibleList(allMethodsList, visibleAllMethodsList);
         }
         if(status) {
           int allActiveMethodsListIndex = activeMethodsList.indexWhere((element) => element.id == visibleActiveMethodsList[index].id!);
@@ -278,16 +279,16 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
 
         allMethodsList.removeAt(allMethodsList.indexWhere((element) => element.id == id));
 
-        addDataToVisibleMethodsList(allMethodsList, visibleAllMethodsList);
+        addDataToVisibleList(allMethodsList, visibleAllMethodsList);
 
         if(status) {
           activeMethodsList.removeAt(activeMethodsList.indexWhere((element) => element.id == id));
 
-          addDataToVisibleMethodsList(activeMethodsList, visibleActiveMethodsList);
+          addDataToVisibleList(activeMethodsList, visibleActiveMethodsList);
         } else {
           inActiveMethodsList.removeAt(inActiveMethodsList.indexWhere((element) => element.id == id));
 
-          addDataToVisibleMethodsList(inActiveMethodsList, visibleInActiveMethodsList);
+          addDataToVisibleList(inActiveMethodsList, visibleInActiveMethodsList);
         }
         Get.back();
         showSnackBar(message: value.message!, success: value.success!);
@@ -307,35 +308,21 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
       if(value.success!) {
         if (status) {
           activeMethodsList.removeAt(activeMethodsList.indexWhere((element) => element.id == id));
-          addDataToVisibleMethodsList(activeMethodsList, visibleActiveMethodsList);
+          addDataToVisibleList(activeMethodsList, visibleActiveMethodsList);
         } else {
           inActiveMethodsList.removeAt(inActiveMethodsList.indexWhere((element) => element.id == id));
-          addDataToVisibleMethodsList(inActiveMethodsList, visibleInActiveMethodsList);
+          addDataToVisibleList(inActiveMethodsList, visibleInActiveMethodsList);
         }
       }
     });
   }
 
-  /// Populate any of the three normal Lists containing Withdraw Methods data.
-  void populateMethodsList(List<dynamic> data, List<WithdrawMethod> allList, RxList<WithdrawMethod> visibleList) {
-    allList.clear();
-    allList.addAll(data.map((e) => WithdrawMethod.fromJson(e)));
-    addDataToVisibleMethodsList(allList, visibleList);
-  }
-
-  /// Add data to any of the three RxLists from their normal List type counterpart.
-  void addDataToVisibleMethodsList(List<WithdrawMethod> allList, RxList<WithdrawMethod> visibleList) {
-    visibleList.clear();
-    visibleList.addAll(allList);
-    visibleList.refresh();
-  }
-
   /// Search and populate the lists accordingly.
   void searchListForMethod(TextEditingController controller, RxList<WithdrawMethod> visibleList, List<WithdrawMethod> allList) {
     if(controller.text.isEmpty || controller.text == '') {
-        addDataToVisibleMethodsList(allList, visibleList);
+        addDataToVisibleList(allList, visibleList);
     } else {
-      addDataToVisibleMethodsList(allList.where((element) => element.name!.toLowerCase().contains(controller.text.toLowerCase())).toList(), visibleList);
+      addDataToVisibleList(allList.where((element) => element.name!.toLowerCase().contains(controller.text.toLowerCase())).toList(), visibleList);
     }
   }
 

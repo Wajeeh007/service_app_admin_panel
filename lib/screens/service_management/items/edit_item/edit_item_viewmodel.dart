@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/models/service_item.dart';
 import 'package:service_app_admin_panel/screens/service_management/items/items_list/items_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
@@ -106,7 +107,7 @@ class EditItemViewModel extends GetxController {
           if(value.success!) {
             ItemsListViewModel itemsListViewModel = Get.find();
             itemsListViewModel.allItemsList[itemsListViewModel.allItemsList.indexWhere((element) => element.id == serviceItem.id)] = ServiceItem.fromJson(value.data);
-            itemsListViewModel.addItemsToVisibleList();
+            addDataToVisibleList(itemsListViewModel.allItemsList, itemsListViewModel.visibleItemsList);
             Get.back();
             showSnackBar(message: value.message!, success: true);
           } else {

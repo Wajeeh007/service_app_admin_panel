@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/models/service_item.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
@@ -81,7 +82,7 @@ class ItemsListViewModel extends GetxController {
 
     final responses = await Future.wait([fetchItems, fetchSubServices]);
 
-    if (responses[0].success!) populateItemsList(responses[0].data as List);
+    if (responses[0].success!) populateLists<ServiceItem, dynamic>(allItemsList, responses[0].data, visibleItemsList, (dynamic json) => ServiceItem.fromJson(json));
     if (responses[1].success!) populateSubServicesList(responses[1].data as List);
 
     if(!responses[0].success! && !responses[1].success!) {
@@ -99,7 +100,7 @@ class ItemsListViewModel extends GetxController {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(url: "${Urls.getItems}?limit=$limit&page=$page").then((value) {
       GlobalVariables.showLoader.value = false;
-      populateItemsList(value.data as List);
+      populateLists<ServiceItem, dynamic>(allItemsList, value.data, visibleItemsList, (dynamic json) => ServiceItem.fromJson(json));
     });
   }
 
@@ -108,13 +109,6 @@ class ItemsListViewModel extends GetxController {
     subServicesList.clear();
     subServicesList.addAll(data.map((e) => DropDownEntry.fromJson(e)));
     subServicesList.refresh();
-  }
-
-  /// Populate Items list.
-  void populateItemsList(List<dynamic> data) {
-    allItemsList.clear();
-    allItemsList.addAll(data.map((e) => ServiceItem.fromJson(e)));
-    addItemsToVisibleList();
   }
 
   /// API call for adding a new Item.
@@ -174,7 +168,7 @@ class ItemsListViewModel extends GetxController {
       if(value.success!) {
         final index = allItemsList.indexWhere((element) => element.id == serviceItemId);
         allItemsList[index].status = !allItemsList[index].status!;
-        addItemsToVisibleList();
+        addDataToVisibleList(allItemsList, visibleItemsList);
       }
     });
   }
@@ -182,7 +176,7 @@ class ItemsListViewModel extends GetxController {
   /// Search table for service item by name.
   void searchTableForServiceItem(String? value) {
     if(value == '' || value == null || value.isEmpty) {
-      addItemsToVisibleList();
+      addDataToVisibleList(allItemsList, visibleItemsList);
     } else {
       visibleItemsList.clear();
       for (var element in allItemsList) {
@@ -192,12 +186,5 @@ class ItemsListViewModel extends GetxController {
         }
       }
     }
-  }
-
-  /// Function to clear and add items to the visible list
-  void addItemsToVisibleList() {
-    visibleItemsList.clear();
-    visibleItemsList.addAll(allItemsList);
-    visibleItemsList.refresh();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/zone.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
@@ -44,8 +45,8 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
   @override
   void onReady() {
-    getAllZones();
     animateSidePanelScrollController(scrollController);
+    getAllZones();
     determinePosition();
     super.onReady();  
   }
@@ -130,14 +131,13 @@ class ZoneListAndAdditionViewModel extends GetxController {
     ApiBaseHelper.getMethod(
         url: "${Urls.getAllZones}?limit=$limit&page=${currentPage.value}",
     ).then((value) {
+
+      GlobalVariables.showLoader.value = false;
+
       if(value.success!) {
-        GlobalVariables.showLoader.value = false;
-        final data = value.data as List;
-        allZonesList.clear();
-        allZonesList.addAll(data.map((e) => ZoneModel.fromJson(e)));
-        addDataToVisibleZoneList();
+        populateLists(allZonesList, value.data, visibleZoneList, (dynamic json) => ZoneModel.fromJson(json));
       } else {
-        stopLoaderAndShowSnackBar(message: value.message!, success: false);
+        showSnackBar(message: value.message!, success: false);
       }
     });
   }

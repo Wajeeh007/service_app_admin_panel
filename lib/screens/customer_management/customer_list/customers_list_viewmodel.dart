@@ -6,6 +6,7 @@ import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
+import '../../../helpers/populate_lists.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../models/customer.dart';
 
@@ -82,9 +83,9 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
     
     final responses = await Future.wait([fetchAllCustomers, fetchActiveCustomers, fetchInActiveCustomers, fetchCustomersAnalyticalData]);
     
-    if(responses[0].success!) populateLists(allCustomersList, responses[0].data as List, visibleAllCustomersList);
-    if(responses[1].success!) populateLists(allActiveCustomersList, responses[1].data as List, visibleActiveCustomersList);
-    if(responses[2].success!) populateLists(allInActiveCustomersList, responses[2].data as List, visibleInActiveCustomersList);
+    if(responses[0].success!) populateLists<Customer, dynamic>(allCustomersList, responses[0].data, visibleAllCustomersList, (dynamic json) => Customer.fromJson(json));
+    if(responses[1].success!) populateLists<Customer, dynamic>(allActiveCustomersList, responses[1].data as List, visibleActiveCustomersList, (dynamic json) => Customer.fromJson(json));
+    if(responses[2].success!) populateLists<Customer, dynamic>(allInActiveCustomersList, responses[2].data as List, visibleInActiveCustomersList, (dynamic json) => Customer.fromJson(json));
     if(responses[3].success!) populateAnalyticalData(responses[3].data);
 
     if(responses.isEmpty || responses.every((element) => !element.success!)) {
@@ -92,20 +93,6 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
     }
 
     GlobalVariables.showLoader.value = false;
-  }
-
-  /// Add data to the main list.
-  void populateLists(List<Customer> list, List<dynamic> data, RxList<Customer> visibleList) {
-    list.clear();
-    list.addAll(data.map((e) => Customer.fromJson(e)));
-    addDataToVisibleList(list, visibleList);
-  }
-
-  /// Add data to the visible lists for each tab
-  void addDataToVisibleList(List<Customer> allList, RxList<Customer> visibleList) {
-    visibleList.clear();
-    visibleList.addAll(allList);
-    visibleList.refresh();
   }
 
   /// Add data to the analytical data map variable.

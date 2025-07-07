@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/analytical_data.dart';
 
+import '../../../helpers/populate_lists.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../helpers/show_snackbar.dart';
 import '../../../models/serviceman.dart';
@@ -87,9 +88,9 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
 
     final responses = await Future.wait([fetchAllServicemen, fetchActiveServicemen, fetchInActiveServicemen, fetchServicemenAnalyticalData]);
 
-    if(responses[0].success!) populateLists(allServiceMenList, responses[0].data as List, visibleAllServiceMenList);
-    if(responses[1].success!) populateLists(allActiveServiceMenList, responses[1].data as List, visibleActiveServicemenList);
-    if(responses[2].success!) populateLists(allInActiveServiceMenList, responses[2].data as List, visibleInActiveServicemenList);
+    if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
+    if(responses[1].success!) populateLists<Serviceman, dynamic>(allActiveServiceMenList, responses[1].data, visibleActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
+    if(responses[2].success!) populateLists<Serviceman, dynamic>(allInActiveServiceMenList, responses[2].data, visibleInActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
     if(responses[3].success!) populateAnalyticalData(responses[3].data);
 
     if(responses.isEmpty || responses.every((element) => !element.success!)) {
@@ -111,26 +112,13 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
         populateLists(
             status ? allActiveServiceMenList : allInActiveServiceMenList,
             value.data as List,
-            status ? visibleActiveServicemenList : visibleInActiveServicemenList
+            status ? visibleActiveServicemenList : visibleInActiveServicemenList,
+            (dynamic json) => Serviceman.fromJson(json)
         );
       } else {
         showSnackBar(message: value.message!, success: value.success!);
       }
     });
-  }
-  
-  /// Add data to the main list.
-  void populateLists(List<Serviceman> list, List<dynamic> data, RxList<Serviceman> visibleList) {
-    list.clear();
-    list.addAll(data.map((e) => Serviceman.fromJson(e)));
-    addDataToVisibleList(list, visibleList);
-  }
-
-  /// Add data to the visible lists for each tab
-  void addDataToVisibleList(List<Serviceman> allList, RxList<Serviceman> visibleList) {
-    visibleList.clear();
-    visibleList.addAll(allList);
-    visibleList.refresh();
   }
 
   /// Add data to the analytical data map variable.

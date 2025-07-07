@@ -1,5 +1,3 @@
-import 'package:service_app_admin_panel/languages/translation_keys.dart';
-
 import '../utils/constants.dart';
 
 class WithdrawRequest {
