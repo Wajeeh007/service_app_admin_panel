@@ -114,7 +114,7 @@ List<Map<String, double>> sidePanelScrollPositions = [
   {Routes.customersList: 260},
   {Routes.suspendedCustomersList: 260},
   {Routes.newServicemanRequests: 390},
-  {Routes.activeServicemanList: 390},
+  {Routes.servicemenList: 390},
   {Routes.suspendedServicemanList: 390},
   {Routes.servicesList: 600},
   {Routes.subServicesList: 600},

@@ -14,6 +14,7 @@ import 'package:service_app_admin_panel/utils/routes.dart';
 import '../../../../utils/custom_widgets/custom_switch.dart';
 import '../../../../utils/custom_widgets/list_actions_buttons.dart';
 import '../../../../utils/custom_widgets/list_entry_item.dart';
+import '../../../../utils/custom_widgets/list_serial_no_text.dart';
 import '../../../../utils/custom_widgets/service_form_section.dart';
 
 class ServiceListView extends StatelessWidget {
@@ -46,7 +47,7 @@ class ServiceListView extends StatelessWidget {
                   onSearch: (value) => _viewModel.searchTableForService(value),
                   expandFirstColumn: false,
                   columnsNames: [
-                    'SL',
+                    lang_key.sl.tr,
                     lang_key.image.tr,
                     lang_key.name.tr,
                     lang_key.subServices.tr,
@@ -59,7 +60,7 @@ class ServiceListView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                        ListSerialNoText(index: index),
                         ListEntryItem(
                           child: Container(
                             padding: EdgeInsets.only(left: 8),

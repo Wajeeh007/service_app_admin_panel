@@ -252,7 +252,8 @@ const fieldIsRequired = 'fieldIsRequired',
     no = 'no',
     male = 'male',
     female = 'female',
-    other = 'other';
+    other = 'other',
+    sl = 'sl';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

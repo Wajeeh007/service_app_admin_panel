@@ -8,6 +8,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_button
 
 import '../../../utils/custom_widgets/list_base_container.dart';
 import '../../../utils/custom_widgets/list_entry_item.dart';
+import '../../../utils/custom_widgets/list_serial_no_text.dart';
 import '../../../utils/custom_widgets/screens_base_widget.dart';
 import '../../../utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -30,7 +31,7 @@ class SuspendedServicemanListView extends StatelessWidget {
               expandFirstColumn: false,
               listData: _viewModel.suspendedServicemen,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.contactInfo.tr,
                 lang_key.identificationNo.tr,
@@ -43,7 +44,7 @@ class SuspendedServicemanListView extends StatelessWidget {
                 padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].name),
                   ContactInfoInList(email: _viewModel.suspendedServicemen[index].email!, phoneNo: _viewModel.suspendedServicemen[index].phoneNo!),
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].identificationNo),

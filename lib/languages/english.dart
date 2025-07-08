@@ -254,6 +254,7 @@ class English {
     key.suspensionConfirmationMessage: 'This user\'s account will be suspended and they\'ll be unable to use their account. Do you wish to proceed?',
     key.yes: 'Yes',
     key.no: 'No',
+    key.sl: 'SL',
 
     /// Success Messages ///
 

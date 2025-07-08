@@ -16,7 +16,7 @@ import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_additio
 import '../screens/service_management/items/items_list/items_list_view.dart';
 import '../screens/service_management/services/service_list/service_list_view.dart';
 import '../screens/service_management/sub_services/sub_service_list/sub_services_list_view.dart';
-import '../screens/serviceman_management/active_serviceman_list/active_serviceman_list_view.dart';
+import '../screens/serviceman_management/servicemen_list/servicemen_list_view.dart';
 import '../screens/settings/business_setup/business_setup_view.dart';
 import '../screens/withdraw/withdraw_methods_list/withdraw_methods_list_view.dart';
 
@@ -30,7 +30,7 @@ class Routes {
   static const customersList = '/customersList';
   static const suspendedCustomersList = '/suspendedCustomersList';
   static const newServicemanRequests = '/newServicemanRequests';
-  static const activeServicemanList = '/activeServicemanList';
+  static const servicemenList = '/activeServicemanList';
   static const suspendedServicemanList = '/suspendedServicemanList';
   static const servicesList = '/servicesList';
   static const editService = '/editService';
@@ -53,7 +53,7 @@ class Routes {
     GetPage(name: customersList, page: () => CustomersListView()),
     GetPage(name: suspendedCustomersList, page: () => SuspendedCustomersListView()),
     GetPage(name: newServicemanRequests, page: () => NewRequestsView()),
-    GetPage(name: activeServicemanList, page: () => ActiveServiceManListView()),
+    GetPage(name: servicemenList, page: () => ServiceMenListView()),
     GetPage(name: suspendedServicemanList, page: () => SuspendedServicemanListView()),
     GetPage(name: servicesList, page: () => ServiceListView()),
     GetPage(name: editService, page: () => EditServiceView()),

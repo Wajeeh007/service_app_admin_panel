@@ -27,7 +27,7 @@ class OrderManagementView extends StatelessWidget {
           CustomTabBar(
               controller: _viewModel.tabController,
               tabsNames: [
-                lang_key.allOrders.tr,
+                lang_key.all.tr,
                 lang_key.pending.tr,
                 lang_key.ongoing.tr,
                 lang_key.accepted.tr,
@@ -72,6 +72,7 @@ class _AllOrders extends StatelessWidget {
         _AllOrdersStatsSection(),
         ListBaseContainer(
           onRefresh: () {},
+          onSearch: (value) {},
           expandFirstColumn: false,
           hintText: lang_key.searchOrder.tr,
             controller: _viewModel.allOrderSearchController,
@@ -145,6 +146,7 @@ class _PendingOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
           expandFirstColumn: false,
             controller: _viewModel.pendingOrdersSearchController,
             listData: _viewModel.pendingOrdersList,
@@ -176,6 +178,7 @@ class _AcceptedOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.acceptedOrdersSearchController,
             listData: _viewModel.acceptedOrdersList,
@@ -207,6 +210,7 @@ class _OngoingOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.ongoingOrdersSearchController,
             listData: _viewModel.ongoingOrdersList,
@@ -238,6 +242,7 @@ class _CompletedOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.completedOrdersSearchController,
             listData: _viewModel.completedOrdersList,
@@ -269,6 +274,7 @@ class _CancelledOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.cancelledOrdersSearchController,
             listData: _viewModel.cancelledOrdersList,
@@ -300,6 +306,7 @@ class _DisputedOrdersTabView extends StatelessWidget {
       children: [
         ListBaseContainer(
             onRefresh: () {},
+            onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.disputedOrdersSearchController,
             listData: _viewModel.disputedOrdersList,

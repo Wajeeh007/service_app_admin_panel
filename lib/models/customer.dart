@@ -14,6 +14,7 @@ class Customer {
   bool? accountDeleted;
   int? totalOrders;
   double? totalSpent;
+  String? adminNote;
   DateTime? createdAt;
 
   Customer({
@@ -29,6 +30,7 @@ class Customer {
     this.isVerified,
     this.totalOrders,
     this.totalSpent,
+    this.adminNote,
     this.createdAt,
   });
 
@@ -45,6 +47,7 @@ class Customer {
     profileImage = json['profile_image'];
     totalOrders = json['total_orders'];
     totalSpent = double.tryParse(json['total_spent']);
+    adminNote = json['note'];
     createdAt = DateTime.parse(json['created_at']);
   }
 }

@@ -11,6 +11,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/withdraw_method_form.dart';
 import 'package:service_app_admin_panel/utils/routes.dart';
+import '../../../utils/custom_widgets/list_serial_no_text.dart';
 import 'withdraw_methods_list_viewmodel.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
@@ -60,6 +61,7 @@ class WithdrawMethodsListView extends StatelessWidget {
   }
 }
 
+/// All Withdraw methods list tab
 class _AllMethodsList extends StatelessWidget {
   _AllMethodsList();
 
@@ -76,7 +78,7 @@ class _AllMethodsList extends StatelessWidget {
               hintText: lang_key.searchMethod.tr,
               listData: _viewModel.visibleAllMethodsList,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.methodName.tr,
                 lang_key.fieldType.tr,
                 lang_key.isDefault.tr,
@@ -89,7 +91,7 @@ class _AllMethodsList extends StatelessWidget {
               padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.visibleAllMethodsList[index].name!,),
                   ListEntryItem(text: switch(_viewModel.visibleAllMethodsList[index].fieldType!) {
                     WithdrawMethodFieldType.text => lang_key.text.tr,
@@ -126,7 +128,7 @@ class _AllMethodsList extends StatelessWidget {
   }
 }
 
-/// Active Methods list widget
+/// Active Methods list tab
 class _ActiveMethodsList extends StatelessWidget {
   _ActiveMethodsList();
 
@@ -138,13 +140,13 @@ class _ActiveMethodsList extends StatelessWidget {
       children: [
         Obx(() => ListBaseContainer(
               onSearch: (value) => _viewModel.searchListForMethod(_viewModel.activeMethodsSearchController, _viewModel.visibleActiveMethodsList, _viewModel.activeMethodsList),
-              onRefresh: () {},
+              onRefresh: () => _viewModel.fetchStatusBasedMethods(true),
               expandFirstColumn: false,
               controller: _viewModel.activeMethodsSearchController,
                 hintText: lang_key.searchMethod.tr,
                 listData: _viewModel.visibleActiveMethodsList,
                 columnsNames: [
-                  'SL',
+                  lang_key.sl.tr,
                   lang_key.methodName.tr,
                   lang_key.fieldType.tr,
                   lang_key.isDefault.tr,
@@ -156,7 +158,7 @@ class _ActiveMethodsList extends StatelessWidget {
                 padding: listEntryPadding.copyWith(bottom: 5),
                 child: Row(
                     children: [
-                      ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                      ListSerialNoText(index: index),
                       ListEntryItem(text: _viewModel.visibleActiveMethodsList[index].name!,),
                       ListEntryItem(text: switch(_viewModel.visibleActiveMethodsList[index].fieldType!) {
                         WithdrawMethodFieldType.text => lang_key.text.tr,
@@ -205,13 +207,13 @@ class _InActiveMethodsList extends StatelessWidget {
       children: [
         Obx(() => ListBaseContainer(
                 onSearch: (value) => _viewModel.searchListForMethod(_viewModel.inActiveMethodsSearchController, _viewModel.visibleInActiveMethodsList, _viewModel.inActiveMethodsList),
-                onRefresh: () {},
+                onRefresh: () => _viewModel.fetchStatusBasedMethods(false),
               expandFirstColumn: false,
               controller: _viewModel.inActiveMethodsSearchController,
                 hintText: lang_key.searchMethod.tr,
                 listData: _viewModel.visibleInActiveMethodsList,
                 columnsNames: [
-                  'SL',
+                  lang_key.sl.tr,
                   lang_key.methodName.tr,
                   lang_key.fieldType.tr,
                   lang_key.isDefault.tr,
@@ -223,7 +225,7 @@ class _InActiveMethodsList extends StatelessWidget {
               padding: listEntryPadding.copyWith(bottom: 5),
               child: Row(
                   children: [
-                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListSerialNoText(index: index),
                     ListEntryItem(text: _viewModel.visibleInActiveMethodsList[index].name!,),
                     ListEntryItem(text: switch(_viewModel.visibleInActiveMethodsList[index].fieldType!) {
                       WithdrawMethodFieldType.text => lang_key.text.tr,

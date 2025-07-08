@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_base_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/list_serial_no_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
@@ -44,7 +46,7 @@ class CustomersListView extends StatelessWidget {
                 children: [
                   _AllCustomersListTabView(),
                   _ActiveCustomersListTabView(),
-                  _InActiveCustomersListTabView(),
+                  // _InActiveCustomersListTabView(),
                 ]
             ),
           )
@@ -116,7 +118,7 @@ class _AllCustomersListTabView extends StatelessWidget {
               expandFirstColumn: false,
               hintText: lang_key.searchCustomer.tr,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.contactInfo.tr,
                 lang_key.totalOrders.tr,
@@ -129,7 +131,7 @@ class _AllCustomersListTabView extends StatelessWidget {
                 padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].name!,),
                   ContactInfoInList(email: _viewModel.visibleAllCustomersList[index].email!, phoneNo: _viewModel.visibleAllCustomersList[index].phoneNo!,),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalOrders.toString(),),
@@ -137,10 +139,11 @@ class _AllCustomersListTabView extends StatelessWidget {
                   UserStatus(status: _viewModel.visibleAllCustomersList[index].status!),
                   ListEntryItem(
                     child: ListActionsButtons(
-                        includeDelete: true,
+                        includeDelete: _viewModel.visibleAllCustomersList[index].status!,
                         includeEdit: false,
                         includeView: true,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                      deleteIcon: _viewModel.visibleAllCustomersList[index].status! ? CupertinoIcons.nosign : null,
+                      onDeletePressed: _viewModel.visibleAllCustomersList[index].status! ? () => showConfirmationDialog(onPressed: () {}) : null,
                       onViewPressed: () {},
                     ),
                   )
@@ -173,7 +176,7 @@ class _ActiveCustomersListTabView extends StatelessWidget {
           expandFirstColumn: false,
           hintText: lang_key.searchCustomer.tr,
           columnsNames: [
-            'SL',
+            lang_key.sl.tr,
             lang_key.name.tr,
             lang_key.contactInfo.tr,
             lang_key.gender.tr,
@@ -186,7 +189,7 @@ class _ActiveCustomersListTabView extends StatelessWidget {
               padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].name!,),
                   ContactInfoInList(email: _viewModel.visibleActiveCustomersList[index].email!, phoneNo: _viewModel.visibleActiveCustomersList[index].phoneNo!,),
                   ListEntryItem(text: switch(_viewModel.visibleActiveCustomersList[index].gender!) {
@@ -235,7 +238,7 @@ class _InActiveCustomersListTabView extends StatelessWidget {
           expandFirstColumn: false,
           hintText: lang_key.searchCustomer.tr,
           columnsNames: [
-            'SL',
+            lang_key.sl.tr,
             lang_key.name.tr,
             lang_key.contactInfo.tr,
             lang_key.gender.tr,
@@ -248,7 +251,7 @@ class _InActiveCustomersListTabView extends StatelessWidget {
               padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].name!,),
                   ContactInfoInList(email: _viewModel.visibleInActiveCustomersList[index].email!, phoneNo: _viewModel.visibleActiveCustomersList[index].phoneNo!,),
                   ListEntryItem(text: switch(_viewModel.visibleInActiveCustomersList[index].gender!) {

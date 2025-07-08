@@ -11,7 +11,7 @@ import '../../../utils/global_variables.dart';
 import '../../../utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
-class ActiveServiceManListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
+class ServiceMenListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// Controller(s) & Form Keys
   late TabController tabController;
@@ -55,7 +55,7 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
   
   @override
   void onInit() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.onInit();
   }
 
@@ -83,15 +83,19 @@ class ActiveServiceManListViewModel extends GetxController with GetSingleTickerP
 
     final fetchAllServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$allTabLimit&page=${allTabPage.value}");
     final fetchActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$activeTabLimit&page=${activeTabPage.value}&status=1");
-    final fetchInActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
+    // final fetchInActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
     final fetchServicemenAnalyticalData = ApiBaseHelper.getMethod(url: Urls.getServicemenStats);
 
-    final responses = await Future.wait([fetchAllServicemen, fetchActiveServicemen, fetchInActiveServicemen, fetchServicemenAnalyticalData]);
+    final responses = await Future.wait([
+      fetchAllServicemen,
+      fetchActiveServicemen,
+      // fetchInActiveServicemen,
+      fetchServicemenAnalyticalData]);
 
     if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
     if(responses[1].success!) populateLists<Serviceman, dynamic>(allActiveServiceMenList, responses[1].data, visibleActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
-    if(responses[2].success!) populateLists<Serviceman, dynamic>(allInActiveServiceMenList, responses[2].data, visibleInActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
-    if(responses[3].success!) populateAnalyticalData(responses[3].data);
+    // if(responses[2].success!) populateLists<Serviceman, dynamic>(allInActiveServiceMenList, responses[2].data, visibleInActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
+    if(responses[2].success!) populateAnalyticalData(responses[2].data);
 
     if(responses.isEmpty || responses.every((element) => !element.success!)) {
       showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);

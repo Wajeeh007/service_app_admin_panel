@@ -11,6 +11,7 @@ import '../../../../utils/custom_widgets/custom_switch.dart';
 import '../../../../utils/custom_widgets/list_actions_buttons.dart';
 import '../../../../utils/custom_widgets/list_base_container.dart';
 import '../../../../utils/custom_widgets/list_entry_item.dart';
+import '../../../../utils/custom_widgets/list_serial_no_text.dart';
 import '../../../../utils/custom_widgets/sub_service_form_section.dart';
 import '../../../../utils/routes.dart';
 
@@ -46,7 +47,7 @@ class SubServicesListView extends StatelessWidget {
                 hintText: lang_key.searchSubService.tr,
                 expandFirstColumn: false,
                 columnsNames: [
-                  'SL',
+                  lang_key.sl.tr,
                   lang_key.image.tr,
                   lang_key.name.tr,
                   lang_key.serviceType.tr,
@@ -61,7 +62,7 @@ class SubServicesListView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                      ListSerialNoText(index: index),
                       ListEntryItem(
                           child: Container(
                             padding: EdgeInsets.only(left: 8),

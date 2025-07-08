@@ -53,7 +53,7 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
   
   @override
   void onInit() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.onInit();
   }
 
@@ -78,15 +78,20 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
 
     final fetchAllCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$allTabLimit&page=${allTabPage.value}");
     final fetchActiveCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$activeTabLimit&page=${activeTabPage.value}&status=1");
-    final fetchInActiveCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
+    // final fetchInActiveCustomers = ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
     final fetchCustomersAnalyticalData = ApiBaseHelper.getMethod(url: Urls.getCustomersStats);
     
-    final responses = await Future.wait([fetchAllCustomers, fetchActiveCustomers, fetchInActiveCustomers, fetchCustomersAnalyticalData]);
+    final responses = await Future.wait([
+      fetchAllCustomers,
+      fetchActiveCustomers,
+      // fetchInActiveCustomers,
+      fetchCustomersAnalyticalData
+    ]);
     
     if(responses[0].success!) populateLists<Customer, dynamic>(allCustomersList, responses[0].data, visibleAllCustomersList, (dynamic json) => Customer.fromJson(json));
     if(responses[1].success!) populateLists<Customer, dynamic>(allActiveCustomersList, responses[1].data as List, visibleActiveCustomersList, (dynamic json) => Customer.fromJson(json));
-    if(responses[2].success!) populateLists<Customer, dynamic>(allInActiveCustomersList, responses[2].data as List, visibleInActiveCustomersList, (dynamic json) => Customer.fromJson(json));
-    if(responses[3].success!) populateAnalyticalData(responses[3].data);
+    // if(responses[2].success!) populateLists<Customer, dynamic>(allInActiveCustomersList, responses[2].data as List, visibleInActiveCustomersList, (dynamic json) => Customer.fromJson(json));
+    if(responses[2].success!) populateAnalyticalData(responses[2].data);
 
     if(responses.isEmpty || responses.every((element) => !element.success!)) {
       showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);

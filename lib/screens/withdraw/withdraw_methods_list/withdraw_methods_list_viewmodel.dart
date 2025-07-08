@@ -51,15 +51,15 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
   ];
 
   /// All Tabs pagination variables
-  int allMethodsPage = 0;
+  RxInt allMethodsPage = 0.obs;
   int allMethodsLimit = 10;
 
   /// Active Tabs pagination variables
-  int activeMethodsPage = 0;
+  RxInt activeMethodsPage = 0.obs;
   int activeMethodsLimit = 10;
 
   /// In-Active Tabs pagination variables
-  int inActiveMethodsPage = 0;
+  RxInt inActiveMethodsPage = 0.obs;
   int inActiveMethodsLimit = 10;
 
   /// Lists for all, active and in-active methods
@@ -73,15 +73,14 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
 
   @override
   void onInit() {
-    fetchAllMethods();
     tabController = TabController(length: tabsNames.length, vsync: this);
     super.onInit();
   }
 
   @override
   void onReady() {
-    GlobalVariables.showLoader.value = true;
     animateSidePanelScrollController(scrollController);
+    fetchAllMethods();
     super.onReady();
   }
 
@@ -104,9 +103,9 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
 
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
 
-    final fetchAllMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$allMethodsLimit&page=$allMethodsPage");
-    final fetchActiveMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$activeMethodsLimit&page=$activeMethodsPage&status=1");
-    final fetchInActiveMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$inActiveMethodsLimit&page=$inActiveMethodsPage&status=0");
+    final fetchAllMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$allMethodsLimit&page=${allMethodsPage.value}");
+    final fetchActiveMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$activeMethodsLimit&page=${activeMethodsPage.value}&status=1");
+    final fetchInActiveMethods = ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$inActiveMethodsLimit&page=${inActiveMethodsPage.value}&status=0");
 
     final response = await Future.wait([fetchAllMethods, fetchActiveMethods, fetchInActiveMethods]);
 
@@ -124,32 +123,17 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
     GlobalVariables.showLoader.value = false;
   }
 
-  /// Fetch only active methods
-  void fetchActiveMethods() {
+  /// Fetch methods based on their status, i.e., active or in-active
+  void fetchStatusBasedMethods(bool status) {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$activeMethodsLimit&page=$activeMethodsPage&status=1").then((value) {
+    ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=${status ? activeMethodsLimit : inActiveMethodsLimit}&page=${status ? activeMethodsPage.value : inActiveMethodsPage.value}&status=${status ? 1 : 0}").then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
 
       if(value.success!) {
-        populateLists<WithdrawMethod, dynamic>(activeMethodsList, value.data as List, visibleActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
+        populateLists<WithdrawMethod, dynamic>(status ? activeMethodsList : inActiveMethodsList, value.data, status ? visibleActiveMethodsList : visibleInActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
       }
     });
-  }
-
-  /// Fetch only in-active methods
-  void fetchInActiveMethods() {
-
-    GlobalVariables.showLoader.value = true;
-
-    ApiBaseHelper.getMethod(url: "${Urls.getWithdrawMethods}?limit=$inActiveMethodsLimit&page=$inActiveMethodsPage&status=0").then((value) {
-      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
-
-      if(value.success!) {
-        populateLists<WithdrawMethod, dynamic>(inActiveMethodsList, value.data, visibleInActiveMethodsList, (dynamic json) => WithdrawMethod.fromJson(json));
-      }
-    });
-
   }
 
   /// API call to add a new Withdraw Method

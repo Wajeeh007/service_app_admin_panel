@@ -35,9 +35,9 @@ class SuspendedServicemanListViewModel extends GetxController {
 
   /// API call to fetch new servicemen requests
   void fetchSuspendedServicemen() {
-    GlobalVariables.showLoader.value = true;
+    if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: "${Urls.getSuspendedServicemen}?limit=$limit&page=${page.value}").then((value) {
+    ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$limit&page=${page.value}&suspended=1").then((value) {
 
       GlobalVariables.showLoader.value = false;
 

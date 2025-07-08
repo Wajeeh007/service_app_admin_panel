@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
-import 'package:service_app_admin_panel/screens/serviceman_management/active_serviceman_list/active_serviceman_list_viewmodel.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/servicemen_list/servicemen_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
 
@@ -10,6 +10,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/custom_widgets/contact_info_in_list.dart';
 import '../../../utils/custom_widgets/custom_tab_bar.dart';
 import '../../../utils/custom_widgets/list_base_container.dart';
+import '../../../utils/custom_widgets/list_serial_no_text.dart';
 import '../../../utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
@@ -17,16 +18,16 @@ import '../../../utils/custom_widgets/section_heading_text.dart';
 import '../../../utils/custom_widgets/stats_container.dart';
 import '../../../utils/custom_widgets/user_status.dart';
 
-class ActiveServiceManListView extends StatelessWidget {
-  ActiveServiceManListView({super.key});
+class ServiceMenListView extends StatelessWidget {
+  ServiceMenListView({super.key});
 
-  final ActiveServiceManListViewModel _viewModel = Get.put(ActiveServiceManListViewModel());
+  final ServiceMenListViewModel _viewModel = Get.put(ServiceMenListViewModel());
 
   @override
   Widget build(BuildContext context) {
     return ScreensBaseWidget(
       scrollController: _viewModel.scrollController,
-        selectedSidePanelItem: lang_key.activeServicemen.tr,
+        selectedSidePanelItem: lang_key.servicemenList.tr,
         overlayPortalControllersAndShowDropDown: [],
         children: [
           _ServicemenAnalyticsData(),
@@ -36,7 +37,6 @@ class ActiveServiceManListView extends StatelessWidget {
               tabsNames: [
                 lang_key.all.tr,
                 lang_key.active.tr,
-                lang_key.inactive.tr
               ]
           ),
           SizedBox(
@@ -47,7 +47,7 @@ class ActiveServiceManListView extends StatelessWidget {
                 children: [
                   _AllServicemenListTabView(),
                   _ActiveServicemenListTabView(),
-                  _InActiveServicemenListTabView(),
+                  // _InActiveServicemenListTabView(),
                 ]
             ),
           )
@@ -60,7 +60,7 @@ class ActiveServiceManListView extends StatelessWidget {
 class _ServicemenAnalyticsData extends StatelessWidget {
   _ServicemenAnalyticsData();
 
-  final ActiveServiceManListViewModel _viewModel = Get.find();
+  final ServiceMenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class _ServicemenAnalyticsData extends StatelessWidget {
 class _AllServicemenListTabView extends StatelessWidget {
   _AllServicemenListTabView();
 
-  final ActiveServiceManListViewModel _viewModel = Get.find();
+  final ServiceMenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class _AllServicemenListTabView extends StatelessWidget {
               expandFirstColumn: false,
               hintText: lang_key.searchServiceman.tr,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.contactInfo.tr,
                 lang_key.totalOrders.tr,
@@ -132,7 +132,7 @@ class _AllServicemenListTabView extends StatelessWidget {
                 padding: listEntryPadding.copyWith(bottom: 10),
                 child: Row(
                   children: [
-                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListSerialNoText(index: index),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].name!),
                     ContactInfoInList(email: _viewModel.visibleAllServiceMenList[index].email!, phoneNo: _viewModel.visibleAllServiceMenList[index].phoneNo!,),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].totalOrders.toString()),
@@ -140,12 +140,12 @@ class _AllServicemenListTabView extends StatelessWidget {
                     UserStatus(status: _viewModel.visibleAllServiceMenList[index].status!),
                     ListEntryItem(
                       child: ListActionsButtons(
-                          includeDelete: true,
+                          includeDelete: _viewModel.visibleAllServiceMenList[index].status!,
                           includeEdit: false,
                           includeView: true,
                         onViewPressed: () {},
-                        deleteIcon: CupertinoIcons.nosign,
-                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                        deleteIcon: _viewModel.visibleAllServiceMenList[index].status! ? CupertinoIcons.nosign : null,
+                        onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! ? () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr) : null,
                       ),
                     )
                   ],
@@ -163,7 +163,7 @@ class _AllServicemenListTabView extends StatelessWidget {
 class _ActiveServicemenListTabView extends StatelessWidget {
   _ActiveServicemenListTabView();
 
-  final ActiveServiceManListViewModel _viewModel = Get.find();
+  final ServiceMenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +177,7 @@ class _ActiveServicemenListTabView extends StatelessWidget {
               expandFirstColumn: false,
               hintText: lang_key.searchServiceman.tr,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.contactInfo.tr,
                 lang_key.gender.tr,
@@ -190,7 +190,7 @@ class _ActiveServicemenListTabView extends StatelessWidget {
                 padding: listEntryPadding,
                 child: Row(
                   children: [
-                    ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                    ListSerialNoText(index: index),
                     ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].name!),
                     ContactInfoInList(email: _viewModel.visibleActiveServicemenList[index].email!, phoneNo: _viewModel.visibleActiveServicemenList[index].phoneNo!,),
                     ListEntryItem(text: switch(_viewModel.visibleActiveServicemenList[index].gender!) {
@@ -226,7 +226,7 @@ class _ActiveServicemenListTabView extends StatelessWidget {
 class _InActiveServicemenListTabView extends StatelessWidget {
   _InActiveServicemenListTabView();
 
-  final ActiveServiceManListViewModel _viewModel = Get.find();
+  final ServiceMenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +240,7 @@ class _InActiveServicemenListTabView extends StatelessWidget {
               expandFirstColumn: false,
               hintText: lang_key.searchServiceman.tr,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.contactInfo.tr,
                 lang_key.gender.tr,
@@ -253,7 +253,7 @@ class _InActiveServicemenListTabView extends StatelessWidget {
               padding: listEntryPadding,
               child: Row(
                 children: [
-                  ListEntryItem(text: (index + 1).toString(), shouldExpand: false,),
+                  ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].name!),
                   ContactInfoInList(email: _viewModel.visibleInActiveServicemenList[index].email!, phoneNo: _viewModel.visibleInActiveServicemenList[index].phoneNo!,),
                   ListEntryItem(text: switch(_viewModel.visibleInActiveServicemenList[index].gender!) {
