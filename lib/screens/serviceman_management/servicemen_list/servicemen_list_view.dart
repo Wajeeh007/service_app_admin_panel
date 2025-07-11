@@ -16,7 +16,7 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 
 import '../../../utils/custom_widgets/section_heading_text.dart';
 import '../../../utils/custom_widgets/stats_container.dart';
-import '../../../utils/custom_widgets/user_status.dart';
+import '../../../utils/custom_widgets/two_states_widget.dart';
 
 class ServiceMenListView extends StatelessWidget {
   ServiceMenListView({super.key});
@@ -137,16 +137,14 @@ class _AllServicemenListTabView extends StatelessWidget {
                     ContactInfoInList(email: _viewModel.visibleAllServiceMenList[index].email!, phoneNo: _viewModel.visibleAllServiceMenList[index].phoneNo!,),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].totalOrders.toString()),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].earnings.toString()),
-                    UserStatus(status: _viewModel.visibleAllServiceMenList[index].status!),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                          includeDelete: _viewModel.visibleAllServiceMenList[index].status!,
-                          includeEdit: false,
-                          includeView: true,
-                        onViewPressed: () {},
-                        deleteIcon: _viewModel.visibleAllServiceMenList[index].status! ? CupertinoIcons.nosign : null,
-                        onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! ? () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr) : null,
-                      ),
+                    TwoStatesWidget(status: _viewModel.visibleAllServiceMenList[index].status!),
+                    ListActionsButtons(
+                        includeDelete: _viewModel.visibleAllServiceMenList[index].status!,
+                        includeEdit: false,
+                        includeView: true,
+                      onViewPressed: () {},
+                      deleteIcon: _viewModel.visibleAllServiceMenList[index].status! ? CupertinoIcons.nosign : null,
+                      onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! ? () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr) : null,
                     )
                   ],
                 ),
@@ -201,15 +199,13 @@ class _ActiveServicemenListTabView extends StatelessWidget {
                     },),
                     ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].totalOrders.toString()),
                     ListEntryItem(text: _viewModel.visibleActiveServicemenList[index].earnings.toString()),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: false,
-                        includeView: true,
-                        onViewPressed: () {},
-                        deleteIcon: CupertinoIcons.nosign,
-                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
-                      ),
+                    ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: false,
+                      includeView: true,
+                      onViewPressed: () {},
+                      deleteIcon: CupertinoIcons.nosign,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
                     )
                   ],
                 ),
@@ -264,15 +260,13 @@ class _InActiveServicemenListTabView extends StatelessWidget {
                   },),
                   ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].totalOrders.toString()),
                   ListEntryItem(text: _viewModel.visibleInActiveServicemenList[index].earnings.toString()),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                      includeDelete: true,
-                      includeEdit: false,
-                      includeView: true,
-                      onViewPressed: () {},
-                      deleteIcon: CupertinoIcons.nosign,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
-                    ),
+                  ListActionsButtons(
+                    includeDelete: true,
+                    includeEdit: false,
+                    includeView: true,
+                    onViewPressed: () {},
+                    deleteIcon: CupertinoIcons.nosign,
+                    onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
                   )
                 ],
               ),

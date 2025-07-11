@@ -50,14 +50,12 @@ class SuspendedServicemanListView extends StatelessWidget {
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].identificationNo),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.suspendedServicemen[index].identificationExpiry!)),
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].adminNote, maxLines: 3,),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                      includeDelete: true,
-                      includeEdit: false,
-                      includeView: true,
-                      onViewPressed: () {},
-                      onDeletePressed: () {},
-                    ),
+                  ListActionsButtons(
+                    includeDelete: true,
+                    includeEdit: false,
+                    includeView: true,
+                    onViewPressed: () {},
+                    onDeletePressed: () {},
                   )
                 ],
               ),

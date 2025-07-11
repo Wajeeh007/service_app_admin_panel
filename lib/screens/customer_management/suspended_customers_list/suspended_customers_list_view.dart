@@ -50,13 +50,11 @@ class SuspendedCustomersListView extends StatelessWidget {
                   ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalOrders.toString(),),
                   ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalSpent.toString(),),
                   ListEntryItem(text: _viewModel.suspendedCustomersList[index].adminNote!, maxLines: 3,),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                      includeDelete: false,
-                      includeEdit: false,
-                      includeView: true,
-                      onViewPressed: () {},
-                    ),
+                  ListActionsButtons(
+                    includeDelete: false,
+                    includeEdit: false,
+                    includeView: true,
+                    onViewPressed: () {},
                   )
                 ],
               ),

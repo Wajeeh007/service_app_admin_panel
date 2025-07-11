@@ -79,14 +79,12 @@ class ServiceListView extends StatelessWidget {
                             onChanged: (value) => _viewModel.changeServiceStatus(_viewModel.visibleServicesList[index].id!),
                           ),
                         ),
-                        ListEntryItem(
-                          child: ListActionsButtons(
-                            includeDelete: true,
-                            includeEdit: true,
-                            includeView: false,
-                            onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleServicesList[index].id!)),
-                            onEditPressed: () => Get.toNamed(Routes.editService, arguments: {'serviceDetails': _viewModel.visibleServicesList[index]}),
-                          ),
+                        ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: true,
+                          includeView: false,
+                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleServicesList[index].id!)),
+                          onEditPressed: () => Get.toNamed(Routes.editService, arguments: {'serviceDetails': _viewModel.visibleServicesList[index]}),
                         )
                       ],
                     ),

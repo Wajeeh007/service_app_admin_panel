@@ -39,15 +39,15 @@ class Customer {
     name = json['name'];
     phoneNo = "+${json['phone_number']}";
     email = json['email'];
-    rating = double.tryParse(json['rating']);
+    rating = json['rating'] != null ? double.tryParse(json['rating']) : null;
     status = json['status'] == 1 ? true : false;
     gender = json['gender'] == 'male' ? Gender.male : json['gender'] == 'female' ? Gender.female : Gender.other;
     isVerified = json['is_verified'] == 1 ? true : false;
     accountDeleted = json['account_deleted'] == 1 ? true : false;
     profileImage = json['profile_image'];
     totalOrders = json['total_orders'];
-    totalSpent = double.tryParse(json['total_spent']);
+    totalSpent = json['total_spent'] != null ? double.tryParse(json['total_spent']) : null;
     adminNote = json['note'];
-    createdAt = DateTime.parse(json['created_at']);
+    createdAt = json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
   }
 }

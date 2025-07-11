@@ -8,6 +8,7 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 import '../../helpers/scroll_controller_funcs.dart';
 import '../../helpers/stop_loader_and_show_snackbar.dart';
 import '../../utils/api_base_helper.dart';
+import '../../utils/constants.dart';
 import '../../utils/url_paths.dart';
 
 class OrderManagementViewModel extends GetxController with GetSingleTickerProviderStateMixin{
@@ -147,5 +148,48 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
     }
 
     GlobalVariables.showLoader.value = false;
+  }
+  
+  void fetchSingleStatusOrders(OrderStatus? status, int limit, RxInt page, List<Order> allList, RxList<Order> visibleList) async {
+    
+    GlobalVariables.showLoader.value = true;
+    
+    if(status == null || status == '') {
+      final fetchAllOrders = ApiBaseHelper.getMethod(url: "${Urls.getOrders}?limit=$limit&page=${page.value}");
+      final fetchStats = ApiBaseHelper.getMethod(url: Urls.getOrdersStats);
+      
+      final responses = await Future.wait([fetchAllOrders, fetchStats]);
+
+      if(responses[0].success!) populateLists<Order, dynamic>(allOrdersList, responses[0].data, visibleAllOrdersList, (dynamic json) => Order.fromJson(json));
+      if(responses[1].success!) orderStats.value = AnalyticalData.fromJson(responses[7].data);
+
+      if(responses.isEmpty || responses.every((element) => !element.success!)) {
+        showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);
+      }
+      
+      GlobalVariables.showLoader.value = false;
+    } else {
+      ApiBaseHelper.getMethod(url: "${Urls.getOrders}?limit=$limit&page=${page.value}&status=${status.name.toLowerCase().trim()}").then((value) {
+        GlobalVariables.showLoader.value = false;
+        
+        if(value.success!) {
+          populateLists(allList, value.data, visibleList, (dynamic json) => Order.fromJson(json));
+        } else {
+          showSnackBar(message: value.message!, success: false);
+        }
+      });
+    }
+  }
+
+  void searchList(String? value, List<Order> allList, RxList<Order> visibleList) {
+    if(value == null || value.isEmpty || value == '') {
+      addDataToVisibleList(allList, visibleList);
+    } else {
+      addDataToVisibleList(
+          allList.where((element) => element.customerDetails!.name!.toLowerCase().contains(value.toLowerCase().trim())
+              || element.serviceManDetails!.name!.toLowerCase().trim().contains(value.toLowerCase().trim())
+          ).toList(), visibleList
+      );
+    }
   }
 }

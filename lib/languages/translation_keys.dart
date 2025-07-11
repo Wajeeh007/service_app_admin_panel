@@ -81,7 +81,9 @@ const ordersList = 'ordersList',
     customerName = 'customerName',
     reason = 'reason',
     serviceman = 'serviceman',
-    customer = 'customer';
+    customer = 'customer',
+    paid = 'paid',
+    unpaid = 'unpaid';
 /// Orders List Screen End ///
 
 /// Customer Management ///

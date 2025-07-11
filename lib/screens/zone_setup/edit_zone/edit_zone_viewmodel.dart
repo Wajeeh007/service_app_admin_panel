@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/format_polygon.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
 import 'package:service_app_admin_panel/models/zone.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_viewmodel.dart';
@@ -74,7 +75,7 @@ class EditZoneViewModel extends GetxController {
                 if(body.containsKey('name')) zoneViewModel.allZonesList[index].name = nameController.text;
                 if(body.containsKey('desc')) zoneViewModel.allZonesList[index].desc = descController.text;
                 if(body.containsKey('polylines')) zoneViewModel.allZonesList[index].polylines = extractCoords(areaPolygon);
-                zoneViewModel.addDataToVisibleZoneList();
+                addDataToVisibleList(zoneViewModel.allZonesList, zoneViewModel.visibleZoneList);
                 zoneViewModel.mapController.updateZonePolygon?.call({
                   'id': zoneViewModel.allZonesList[index].id.toString(),
                   'polylines': zoneViewModel.allZonesList[index].polylines

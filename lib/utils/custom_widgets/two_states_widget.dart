@@ -3,10 +3,17 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/constants.dart';
 
-class UserStatus extends StatelessWidget {
-  const UserStatus({super.key, required this.status});
+class TwoStatesWidget extends StatelessWidget {
+  const TwoStatesWidget({
+    super.key,
+    required this.status,
+    this.trueStateText,
+    this.falseStateText,
+  });
 
   final bool status;
+  final String? trueStateText;
+  final String? falseStateText;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,7 @@ class UserStatus extends StatelessWidget {
             borderRadius: kContainerBorderRadius
           ),
           child: Text(
-            '• ${status ? lang_key.active.tr : lang_key.inactive.tr}',
+            '• ${status ? trueStateText ?? lang_key.active.tr : falseStateText ?? lang_key.inactive.tr}',
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
               color: status ? Colors.green : Colors.red,
             ),

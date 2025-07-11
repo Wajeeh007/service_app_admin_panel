@@ -108,14 +108,12 @@ class _AllMethodsList extends StatelessWidget {
                         onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromAllList(index)
                     )
                   ),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: true,
-                        includeView: false,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromAllList(_viewModel.visibleAllMethodsList[index].id!)),
-                      onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleAllMethodsList[index]}),
-                    ),
+                  ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: true,
+                      includeView: false,
+                    onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromAllList(_viewModel.visibleAllMethodsList[index].id!)),
+                    onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleAllMethodsList[index]}),
                   )
                 ]
               ),
@@ -175,14 +173,12 @@ class _ActiveMethodsList extends StatelessWidget {
                               onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromActiveOrInActiveList(index, true)
                           ),
                       ),
-                      ListEntryItem(
-                        child: ListActionsButtons(
-                          includeDelete: true,
-                          includeEdit: true,
-                          includeView: false,
-                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleActiveMethodsList[index].id!, true)),
-                          onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleActiveMethodsList[index]}),
-                        ),
+                      ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: true,
+                        includeView: false,
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleActiveMethodsList[index].id!, true)),
+                        onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleActiveMethodsList[index]}),
                       )
                     ]
                 ),
@@ -242,14 +238,12 @@ class _InActiveMethodsList extends StatelessWidget {
                           onChanged: (value) => _viewModel.changeWithdrawMethodStatusFromActiveOrInActiveList(index, false)
                       ),
                     ),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                        includeDelete: true,
-                        includeEdit: true,
-                        includeView: false,
-                        onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleInActiveMethodsList[index].id!, false)),
-                        onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleInActiveMethodsList[index]}),
-                      ),
+                    ListActionsButtons(
+                      includeDelete: true,
+                      includeEdit: true,
+                      includeView: false,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteWithdrawMethodFromActiveOrInActiveList(_viewModel.visibleInActiveMethodsList[index].id!, false)),
+                      onEditPressed: () => Get.toNamed(Routes.editWithdrawMethod, arguments: {'withdrawMethodDetails': _viewModel.visibleInActiveMethodsList[index]}),
                     )
                   ]
               ),

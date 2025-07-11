@@ -14,7 +14,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/stats_container.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/user_status.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/two_states_widget.dart';
 
 class CustomersListView extends StatelessWidget {
   CustomersListView({super.key});
@@ -136,16 +136,14 @@ class _AllCustomersListTabView extends StatelessWidget {
                   ContactInfoInList(email: _viewModel.visibleAllCustomersList[index].email!, phoneNo: _viewModel.visibleAllCustomersList[index].phoneNo!,),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalOrders.toString(),),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalSpent.toString(),),
-                  UserStatus(status: _viewModel.visibleAllCustomersList[index].status!),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                        includeDelete: _viewModel.visibleAllCustomersList[index].status!,
-                        includeEdit: false,
-                        includeView: true,
-                      deleteIcon: _viewModel.visibleAllCustomersList[index].status! ? CupertinoIcons.nosign : null,
-                      onDeletePressed: _viewModel.visibleAllCustomersList[index].status! ? () => showConfirmationDialog(onPressed: () {}) : null,
-                      onViewPressed: () {},
-                    ),
+                  TwoStatesWidget(status: _viewModel.visibleAllCustomersList[index].status!),
+                  ListActionsButtons(
+                      includeDelete: _viewModel.visibleAllCustomersList[index].status!,
+                      includeEdit: false,
+                      includeView: true,
+                    deleteIcon: _viewModel.visibleAllCustomersList[index].status! ? CupertinoIcons.nosign : null,
+                    onDeletePressed: _viewModel.visibleAllCustomersList[index].status! ? () => showConfirmationDialog(onPressed: () {}) : null,
+                    onViewPressed: () {},
                   )
                 ],
               ),
@@ -200,14 +198,12 @@ class _ActiveCustomersListTabView extends StatelessWidget {
                   },),
                   ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].totalOrders.toString(),),
                   ListEntryItem(text: _viewModel.visibleActiveCustomersList[index].totalSpent.toString(),),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                      includeDelete: true,
-                      includeEdit: false,
-                      includeView: true,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
-                      onViewPressed: () {},
-                    ),
+                  ListActionsButtons(
+                    includeDelete: true,
+                    includeEdit: false,
+                    includeView: true,
+                    onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                    onViewPressed: () {},
                   )
                 ],
               ),
@@ -261,14 +257,12 @@ class _InActiveCustomersListTabView extends StatelessWidget {
                   },),
                   ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].totalOrders.toString(),),
                   ListEntryItem(text: _viewModel.visibleInActiveCustomersList[index].totalSpent.toString(),),
-                  ListEntryItem(
-                    child: ListActionsButtons(
-                      includeDelete: true,
-                      includeEdit: false,
-                      includeView: true,
-                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
-                      onViewPressed: () {},
-                    ),
+                  ListActionsButtons(
+                    includeDelete: true,
+                    includeEdit: false,
+                    includeView: true,
+                    onDeletePressed: () => showConfirmationDialog(onPressed: () {}),
+                    onViewPressed: () {},
                   )
                 ],
               ),

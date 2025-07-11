@@ -114,7 +114,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
             enableAutoValidation.value = false;
             allZonesList.add(ZoneModel.fromJson(value.data));
             mapController.addToPolygonRefs?.call({'id': value.data['id'], 'polylines': value.data['polylines']});
-            addDataToVisibleZoneList();
+            addDataToVisibleList(allZonesList, visibleZoneList);
             clearControllersAndVariables();
           }
         });
@@ -168,7 +168,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
       allZonesList.removeWhere((element) => element.id == visibleZoneList[index].id);
       allZonesList.refresh();
-      addDataToVisibleZoneList();
+      addDataToVisibleList(allZonesList, visibleZoneList);
 
     });
   }
@@ -181,25 +181,12 @@ class ZoneListAndAdditionViewModel extends GetxController {
     areaPolygons = '';
   }
 
-  /// Add data to RxList
-  void addDataToVisibleZoneList() {
-    visibleZoneList.clear();
-    visibleZoneList.addAll(allZonesList);
-    visibleZoneList.refresh();
-  }
-
   /// Search zone and update visible list.
   void searchInList(String? value) {
     if(value == '' || value == null || value.isEmpty) {
-      addDataToVisibleZoneList();
+      addDataToVisibleList(allZonesList, visibleZoneList);
     } else {
-      visibleZoneList.clear();
-      for (var element in allZonesList) {
-        if(element.name!.toLowerCase().trim().contains(value.toLowerCase().trim())) {
-          visibleZoneList.add(element);
-          visibleZoneList.refresh();
-        }
-      }
+      addDataToVisibleList(allZonesList.where((element) => element.name!.toLowerCase().trim().contains(value.toLowerCase().trim())).toList(), visibleZoneList);
     }
   }
 }

@@ -55,14 +55,12 @@ class NewRequestsView extends StatelessWidget {
                       Gender.female => lang_key.female.tr,
                       Gender.other => lang_key.other.tr,
                     },),
-                    ListEntryItem(
-                      child: ListActionsButtons(
-                          includeDelete: true,
-                          includeEdit: false,
-                          includeView: true,
-                        onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
-                        onViewPressed: () {},
-                      ),
+                    ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: false,
+                        includeView: true,
+                      onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
+                      onViewPressed: () {},
                     )
                   ],
                 ),

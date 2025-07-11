@@ -70,14 +70,12 @@ class ZoneListAndAdditionView extends StatelessWidget {
                             switchValue: _viewModel.visibleZoneList[index].status!,
                             onChanged: (value) => _viewModel.changeZoneStatus(_viewModel.visibleZoneList[index].id!),
                         ),),
-                        ListEntryItem(
-                          child: ListActionsButtons(
-                            includeDelete: true,
-                            includeEdit: true,
-                            includeView: false,
-                            onDeletePressed: () => _viewModel.deleteZone(index),
-                            onEditPressed: () => Get.toNamed(Routes.editZone, arguments: {'zoneDetails': _viewModel.visibleZoneList[index]}),
-                          ),
+                        ListActionsButtons(
+                          includeDelete: true,
+                          includeEdit: true,
+                          includeView: false,
+                          onDeletePressed: () => _viewModel.deleteZone(index),
+                          onEditPressed: () => Get.toNamed(Routes.editZone, arguments: {'zoneDetails': _viewModel.visibleZoneList[index]}),
                         )
                       ]
                   ),

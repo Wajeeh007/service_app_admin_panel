@@ -37,59 +37,61 @@ class ListActionsButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 5,
-      children: [
-        if(includeDelete) CustomMaterialButton(
-          width: 20,
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 5,
+        children: [
+          if(includeDelete) CustomMaterialButton(
+            width: 20,
+              height: 20,
+              borderRadius: BorderRadius.circular(8),
+              onPressed: onDeletePressed!,
+            buttonColor: primaryWhite,
+            borderColor: errorRed,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(
+                deleteIcon ?? CupertinoIcons.delete,
+                color: deleteColor ?? errorRed,
+                size: 20,
+              ),
+            ),
+          ),
+          if(includeEdit) CustomMaterialButton(
+            width: 20,
             height: 20,
-            borderRadius: BorderRadius.circular(8),
-            onPressed: onDeletePressed!,
-          buttonColor: primaryWhite,
-          borderColor: errorRed,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Icon(
-              deleteIcon ?? CupertinoIcons.delete,
-              color: deleteColor ?? errorRed,
-              size: 20,
+              borderRadius: BorderRadius.circular(8),
+              onPressed: onEditPressed!,
+            buttonColor: primaryWhite,
+            borderColor: primaryBlue,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(
+                editIcon ?? Icons.edit,
+                color: editColor ?? primaryBlue,
+                size: 20,
+              ),
             ),
           ),
-        ),
-        if(includeEdit) CustomMaterialButton(
-          width: 20,
-          height: 20,
-            borderRadius: BorderRadius.circular(8),
-            onPressed: onEditPressed!,
-          buttonColor: primaryWhite,
-          borderColor: primaryBlue,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Icon(
-              editIcon ?? Icons.edit,
-              color: editColor ?? primaryBlue,
-              size: 20,
+          if(includeView) CustomMaterialButton(
+            width: 20,
+            height: 20,
+              borderRadius: BorderRadius.circular(8),
+              onPressed: onViewPressed!,
+            buttonColor: primaryWhite,
+            borderColor: primaryBlue,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Icon(
+                viewIcon ?? CupertinoIcons.eye,
+                color: viewColor ?? primaryBlue,
+                size: 20,
+              ),
             ),
           ),
-        ),
-        if(includeView) CustomMaterialButton(
-          width: 20,
-          height: 20,
-            borderRadius: BorderRadius.circular(8),
-            onPressed: onViewPressed!,
-          buttonColor: primaryWhite,
-          borderColor: primaryBlue,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Icon(
-              viewIcon ?? CupertinoIcons.eye,
-              color: viewColor ?? primaryBlue,
-              size: 20,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

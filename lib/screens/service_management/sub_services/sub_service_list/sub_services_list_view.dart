@@ -80,14 +80,12 @@ class SubServicesListView extends StatelessWidget {
                           onChanged: (value) => _viewModel.changeServiceStatus(_viewModel.visibleSubServicesList[index].id!),
                         ),
                       ),
-                      ListEntryItem(
-                        child: ListActionsButtons(
-                          includeDelete: true,
-                          includeEdit: true,
-                          includeView: false,
-                          onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleSubServicesList[index].id!)),
-                          onEditPressed: () => Get.toNamed(Routes.editSubService, arguments: {'subServiceDetails': _viewModel.visibleSubServicesList[index], 'servicesList': _viewModel.servicesList}),
-                        ),
+                      ListActionsButtons(
+                        includeDelete: true,
+                        includeEdit: true,
+                        includeView: false,
+                        onDeletePressed: () => showConfirmationDialog(onPressed: () => _viewModel.deleteService(_viewModel.visibleSubServicesList[index].id!)),
+                        onEditPressed: () => Get.toNamed(Routes.editSubService, arguments: {'subServiceDetails': _viewModel.visibleSubServicesList[index], 'servicesList': _viewModel.servicesList}),
                       )
                     ],
                   ),

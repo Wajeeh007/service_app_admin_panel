@@ -52,23 +52,23 @@ class Serviceman {
     id = json['id'].toString();
     name = json['name'];
     phoneNo = "+${json['phone_number']}";
-    rating = double.tryParse(json['rating']) ?? 0.0;
+    rating = json['rating'] != null ? double.tryParse(json['rating']) : 0.0;
     email = json['email'];
-    zoneId = json['zoneId'].toString();
+    zoneId = json['zone_id'].toString();
     longitude = json['longitude'] != null ? double.tryParse(json['longitude']) : 0.0;
     latitude = json['latitude'] != null ? double.tryParse(json['latitude']) : 0.0;
-    profileImage = json['profileImage'];
-    idCardFront = json['idCardFront'];
-    idCardBack = json['idCardBack'];
-    gender = json['gender'] == 'male' ? Gender.male : json['gender'] == 'female' ? Gender.female : Gender.other;
+    profileImage = json['profile_image'];
+    idCardFront = json['id_card_front'];
+    idCardBack = json['id_card_back'];
+    gender = json['gender'] != null ? Gender.values.firstWhere((element) => element.name == json['gender']) : null;
     status = json['status'] == 1 ? true : false;
-    isVerified = json['isVerified'] == 1 ? true : false;
-    accountDeleted = json['accountDeleted'] == 1 ? true : false;
+    isVerified = json['is_verified'] == 1 ? true : false;
+    accountDeleted = json['account_deleted'] == 1 ? true : false;
     earnings = json['earnings'] != null ? double.tryParse(json['earnings']) : 0.0;
     totalOrders = json['total_orders'] ?? 0;
     identificationNo = json['identification_number'];
-    createdAt = DateTime.tryParse(json['created_at']);
-    identificationExpiry = DateTime.tryParse(json['identification_expiry']);
+    createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
+    identificationExpiry = json['identification_expiry'] != null ? DateTime.tryParse(json['identification_expiry']) : null;
     adminNote = json['note'] ?? '';
   }
 }

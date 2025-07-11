@@ -86,6 +86,8 @@ class English {
     key.reason: 'Reason',
     key.serviceman: 'Serviceman',
     key.customer: 'Customer',
+    key.paid: 'Paid',
+    key.unpaid: 'Un-Paid',
     /// Order List Screen End ///
 
     /// Customer Management ///
