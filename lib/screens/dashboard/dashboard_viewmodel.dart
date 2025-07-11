@@ -103,7 +103,7 @@ class DashboardViewModel extends GetxController {
     super.onClose();
   }
 
-  toggleOverlayPortalController({
+  void toggleOverlayPortalController({
     required OverlayPortalController overlayPortalController,
     required RxBool showDropDown
   }) {

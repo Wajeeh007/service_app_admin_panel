@@ -10,8 +10,6 @@ import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
-import '../../../helpers/show_snackbar.dart';
-
 class EditZoneViewModel extends GetxController {
 
   /// Controller(s) & Form Keys

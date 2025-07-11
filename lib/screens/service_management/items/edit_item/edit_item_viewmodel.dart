@@ -9,7 +9,7 @@ import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
 import '../../../../helpers/scroll_controller_funcs.dart';
-import '../../../../helpers/show_snackbar.dart';
+import '../../../../helpers/stop_loader_and_show_snackbar.dart';
 import '../../../../models/drop_down_entry.dart';
 import '../../../../utils/global_variables.dart';
 import '../../../../utils/routes.dart';

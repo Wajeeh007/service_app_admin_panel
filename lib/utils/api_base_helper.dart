@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:service_app_admin_panel/models/api_response.dart';
 import 'package:service_app_admin_panel/utils/errors.dart';
@@ -28,17 +29,21 @@ class ApiBaseHelper {
             : GlobalVariables.token.toString();
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
-      print(header);
+      if (kDebugMode) {
+        print('*********************** Request ********************************');
+        print(urlValue);
+        print(header);
+      }
 
       http.Response response = await http.get(urlValue, headers: header)
           .timeout(Duration(seconds: 50));
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(response.body);
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(response.body);
+      }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
       return ApiResponse.fromJson(parsedJSON);
@@ -72,18 +77,23 @@ class ApiBaseHelper {
       body = jsonEncode(body);
 
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
-      print(body);
+      if(kDebugMode) {
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+        print(body);
+      }
 
       http.Response response = await http
           .post(urlValue, headers: header, body: body)
           .timeout(Duration(seconds: 30));
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(response.body);
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(response.body);
+      }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
       return ApiResponse.fromJson(parsedJSON);
@@ -114,18 +124,23 @@ class ApiBaseHelper {
         body = jsonEncode(body);
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
-      print(body);
+      if(kDebugMode) {
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+        print(body);
+      }
 
       http.Response response = await http
           .put(urlValue, headers: header, body: body)
           .timeout(Duration(seconds: 30));
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(response.body);
+      if(kDebugMode) {
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(response.body);
+      }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
       return ApiResponse.fromJson(parsedJSON);
@@ -158,18 +173,23 @@ class ApiBaseHelper {
         body = jsonEncode(body);
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
-      print(body);
+      if(kDebugMode){
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+        print(body);
+      }
 
       http.Response response = await http
           .patch(urlValue, headers: header, body: body)
           .timeout(Duration(seconds: 30));
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(response.body);
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(response.body);
+      }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
       return ApiResponse.fromJson(parsedJSON);
@@ -198,17 +218,22 @@ class ApiBaseHelper {
             : GlobalVariables.token.toString();
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
+      if(kDebugMode){
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+      }
 
       http.Response response = await http
           .delete(urlValue, headers: header)
           .timeout(Duration(seconds: 50));
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(response.body);
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(response.body);
+      }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
       return ApiResponse.fromJson(parsedJSON);
@@ -235,8 +260,11 @@ class ApiBaseHelper {
             : GlobalVariables.token.toString();
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
+      if(kDebugMode){
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+      }
 
       http.MultipartRequest request = http.MultipartRequest('POST', urlValue);
       request.headers.addAll(header);
@@ -245,10 +273,12 @@ class ApiBaseHelper {
       http.StreamedResponse response = await request.send();
       Map<String, dynamic> parsedJSON = await jsonDecode(await response.stream.bytesToString());
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(parsedJSON.toString());
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(parsedJSON.toString());
+      }
       return ApiResponse.fromJson(parsedJSON);
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
@@ -278,8 +308,11 @@ class ApiBaseHelper {
             : GlobalVariables.token.toString();
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
-      print('*********************** Request ********************************');
-      print(urlValue);
+      if(kDebugMode){
+        print(
+            '*********************** Request ********************************');
+        print(urlValue);
+      }
 
       http.MultipartRequest request = http.MultipartRequest('PATCH', urlValue);
 
@@ -290,10 +323,12 @@ class ApiBaseHelper {
       Map<String, dynamic> parsedJSON =
       await jsonDecode(await response.stream.bytesToString());
 
-      print(
-          '*********************** Response ********************************');
-      print(urlValue);
-      print(parsedJSON.toString());
+      if(kDebugMode){
+        print(
+            '*********************** Response ********************************');
+        print(urlValue);
+        print(parsedJSON.toString());
+      }
       return ApiResponse.fromJson(parsedJSON);
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();

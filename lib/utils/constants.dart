@@ -78,7 +78,7 @@ double mapsZoomLevel = 14.0;
 /// Google Maps constant values End ///
 
 /// Order Status Enum
-enum OrderStatus {pending, accepted, ongoing, completed, cancelled, dispute}
+enum OrderStatus {pending, accepted, ongoing, completed, cancelled, disputed}
 /// Order Status Enum End ///
 
 /// New Method Input Field Type ///

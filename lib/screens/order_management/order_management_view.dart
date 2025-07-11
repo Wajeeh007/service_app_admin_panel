@@ -21,7 +21,6 @@ class OrderManagementView extends StatelessWidget {
     return ScreensBaseWidget(
         scrollController: _viewModel.scrollController,
         selectedSidePanelItem: lang_key.orders.tr,
-        overlayPortalControllersAndShowDropDown: [],
         children: [
           SectionHeadingText(headingText: lang_key.ordersList.tr),
           CustomTabBar(
@@ -29,11 +28,11 @@ class OrderManagementView extends StatelessWidget {
               tabsNames: [
                 lang_key.all.tr,
                 lang_key.pending.tr,
-                lang_key.ongoing.tr,
                 lang_key.accepted.tr,
+                lang_key.ongoing.tr,
                 lang_key.completed.tr,
                 lang_key.cancelled.tr,
-                lang_key.disputes.tr
+                lang_key.disputed.tr
               ]
           ),
           SizedBox(
@@ -76,7 +75,7 @@ class _AllOrders extends StatelessWidget {
           expandFirstColumn: false,
           hintText: lang_key.searchOrder.tr,
             controller: _viewModel.allOrderSearchController,
-            listData: _viewModel.allOrdersList,
+            listData: _viewModel.visibleAllOrdersList,
           columnsNames: [
             'SL',
             lang_key.date.tr,
@@ -94,7 +93,10 @@ class _AllOrders extends StatelessWidget {
 
 /// All Orders top stats containers section
 class _AllOrdersStatsSection extends StatelessWidget {
-  const _AllOrdersStatsSection();
+  _AllOrdersStatsSection();
+
+  final OrderManagementViewModel _viewModel = Get.find();
+  final double containersWidth = 180;
 
   @override
   Widget build(BuildContext context) {
@@ -104,29 +106,40 @@ class _AllOrdersStatsSection extends StatelessWidget {
         spacing: 8,
         children: [
           StatsContainer(
-              statValue: 0,
-              statName: lang_key.pendingRequest.tr,
+              statValue: _viewModel.orderStats.value.pending ?? 0,
+              statName: lang_key.pending.tr,
             iconData: Icons.pending_actions_rounded,
+            width: containersWidth,
           ),
           StatsContainer(
-              statValue: 0,
-              statName: lang_key.acceptedRequest.tr,
+              statValue: _viewModel.orderStats.value.accepted ?? 0,
+              statName: lang_key.accepted.tr,
             imagePath: ImagesPaths.acceptedRequests,
+            width: containersWidth,
           ),
           StatsContainer(
-              statValue: 0,
+              statValue: _viewModel.orderStats.value.ongoing ?? 0,
               statName: lang_key.ongoing.tr,
             imagePath: ImagesPaths.ongoingRequests,
+            width: containersWidth,
           ),
           StatsContainer(
-              statValue: 0,
+              statValue: _viewModel.orderStats.value.completed ?? 0,
               statName: lang_key.completed.tr,
             iconData: CupertinoIcons.check_mark_circled,
+            width: containersWidth,
           ),
           StatsContainer(
-              statValue: 0,
+              statValue: _viewModel.orderStats.value.cancelled ?? 0,
               statName: lang_key.cancelled.tr,
             iconData: Icons.cancel_outlined,
+            width: containersWidth,
+          ),
+          StatsContainer(
+              statValue: _viewModel.orderStats.value.disputed ?? 0,
+              statName: lang_key.disputed.tr,
+            iconData: Icons.report_problem_outlined,
+            width: containersWidth,
           ),
         ],
       ),
@@ -149,7 +162,7 @@ class _PendingOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
           expandFirstColumn: false,
             controller: _viewModel.pendingOrdersSearchController,
-            listData: _viewModel.pendingOrdersList,
+            listData: _viewModel.visiblePendingOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',
@@ -181,7 +194,7 @@ class _AcceptedOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.acceptedOrdersSearchController,
-            listData: _viewModel.acceptedOrdersList,
+            listData: _viewModel.visibleAcceptedOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',
@@ -213,7 +226,7 @@ class _OngoingOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.ongoingOrdersSearchController,
-            listData: _viewModel.ongoingOrdersList,
+            listData: _viewModel.visibleOngoingOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',
@@ -245,7 +258,7 @@ class _CompletedOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.completedOrdersSearchController,
-            listData: _viewModel.completedOrdersList,
+            listData: _viewModel.visibleCompletedOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',
@@ -277,7 +290,7 @@ class _CancelledOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.cancelledOrdersSearchController,
-            listData: _viewModel.cancelledOrdersList,
+            listData: _viewModel.visibleCancelledOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',
@@ -309,7 +322,7 @@ class _DisputedOrdersTabView extends StatelessWidget {
             onSearch: (value) {},
             expandFirstColumn: false,
             controller: _viewModel.disputedOrdersSearchController,
-            listData: _viewModel.disputedOrdersList,
+            listData: _viewModel.visibleDisputedOrdersList,
             hintText: lang_key.searchOrder.tr,
             columnsNames: [
               'SL',

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/populate_lists.dart';
-import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/zone.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libraries/map_controller.dart';
@@ -136,8 +135,6 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
       if(value.success!) {
         populateLists(allZonesList, value.data, visibleZoneList, (dynamic json) => ZoneModel.fromJson(json));
-      } else {
-        showSnackBar(message: value.message!, success: false);
       }
     });
   }

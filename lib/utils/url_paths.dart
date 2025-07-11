@@ -12,6 +12,7 @@ class Urls {
   static const _withdrawsBaseUrl = '/withdraw';
   static const _customersBaseUrl = '/customers';
   static const _serviceMenBaseUrl = '/servicemen';
+  static const _ordersBaseUrl = '/orders';
   /// Zone Setup
 
   static String editZone(String id) {
@@ -137,4 +138,11 @@ class Urls {
     /// Suspended Servicemen End ///
 
   /// Serviceman Management End ///
+
+  /// Orders Management ///
+    /// Orders List ///
+    static const String getOrders = '$_ordersBaseUrl/get';
+    static const String getOrdersStats = '$_ordersBaseUrl/stats';
+    /// Orders List End ///
+  /// Orders Management End ///
 }

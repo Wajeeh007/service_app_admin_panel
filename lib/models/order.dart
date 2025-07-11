@@ -10,15 +10,30 @@ class Order {
   Customer? customerDetails;
   Serviceman? serviceManDetails;
   Address? addressDetails;
-  OrderStatus? orderStatus;
+  OrderStatus? status;
   DateTime? orderDateTime;
+  DateTime? createdAt;
+  String? note;
 
   Order({
     this.id,
     this.customerDetails,
     this.serviceManDetails,
     this.addressDetails,
-    this.orderStatus,
-    this.orderDateTime
+    this.status,
+    this.orderDateTime,
+    this.createdAt,
+    this.note
   });
+
+  Order.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    customerDetails = json['customer_details'] != null ? Customer.fromJson(json['customer_details']) : null;
+    serviceManDetails = json['service_man_details'] != null ? Serviceman.fromJson(json['service_man_details']) : null;
+    addressDetails = json['address_details'] != null ? Address.fromJson(json['address_details']) : null;
+    status = OrderStatus.values.firstWhere((element) => element.name.toLowerCase().trim() == json['status'].toString().toLowerCase().trim());
+    orderDateTime = json['order_date_time'] != null ? DateTime.parse(json['order_date_time']) : null;
+    createdAt = json['created_at'] != null ? DateTime.parse(json['created_at']) : null;
+    note = json['note'];
+  }
 }

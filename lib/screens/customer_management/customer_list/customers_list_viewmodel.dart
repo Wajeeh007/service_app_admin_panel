@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:service_app_admin_panel/helpers/show_snackbar.dart';
 import 'package:service_app_admin_panel/models/analytical_data.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
@@ -8,6 +7,7 @@ import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import '../../../helpers/populate_lists.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
+import '../../../helpers/stop_loader_and_show_snackbar.dart';
 import '../../../models/customer.dart';
 
 class CustomerListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
