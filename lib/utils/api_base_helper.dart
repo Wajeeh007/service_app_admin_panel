@@ -24,9 +24,9 @@ class ApiBaseHelper {
         // 'Cookie': 'XSRF-token=${GlobalVariables.token}'
       };
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
       if (kDebugMode) {
@@ -35,8 +35,11 @@ class ApiBaseHelper {
         print(header);
       }
 
-      http.Response response = await http.get(urlValue, headers: header)
-          .timeout(Duration(seconds: 50));
+      http.Response response = await http.get(
+          urlValue,
+          headers: header,
+
+      ).timeout(Duration(seconds: 50));
 
       if(kDebugMode){
         print(
@@ -70,9 +73,9 @@ class ApiBaseHelper {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       body = jsonEncode(body);
 
@@ -116,9 +119,9 @@ class ApiBaseHelper {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       if (body != null) {
         body = jsonEncode(body);
@@ -165,9 +168,9 @@ class ApiBaseHelper {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       if (body != null) {
         body = jsonEncode(body);
@@ -213,9 +216,9 @@ class ApiBaseHelper {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
       if(kDebugMode){
@@ -255,9 +258,9 @@ class ApiBaseHelper {
     try {
       Map<String, String> header = {'Content-Type': 'multipart/form-data'};
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
       if(kDebugMode){
@@ -303,9 +306,9 @@ class ApiBaseHelper {
       Map<String, String> header = {'Content-Type': 'multipart/form-data'};
 
       if (withAuthorization) {
-        header['Authorization'] = withBearer
+        header.addAll({'Authorization': withBearer
             ? 'Bearer ${GlobalVariables.token}'
-            : GlobalVariables.token.toString();
+            : GlobalVariables.token.toString()});
       }
       Uri urlValue = Uri.parse(Urls.baseURL + url);
       if(kDebugMode){

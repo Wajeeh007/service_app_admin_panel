@@ -122,19 +122,24 @@ class Urls {
   /// Customer Management End ///
 
   /// Serviceman Management ///
+    static const String getServicemen = '$_serviceMenBaseUrl/get';
 
     /// Serviceman List ///
-    static const String getServicemen = '$_serviceMenBaseUrl/get';
-    static const String getServicemenStats = '$_serviceMenBaseUrl/get_stats';
+
+      static const String getServicemenStats = '$_serviceMenBaseUrl/stats';
+
+      static String suspendServiceman(String id) {
+        return '$_serviceMenBaseUrl/change_suspension_status/$id';
+      }
     /// Serviceman List End ///
 
     /// New Servicemen Requests
-    static const String getNewRequests = '$_serviceMenBaseUrl/get_new_requests';
+      static const String getNewRequests = '$_serviceMenBaseUrl/get_new_requests';
 
     /// New Servicemen Requests End ///
 
     /// Suspended Servicemen ///
-    static const String getSuspendedServicemen = '$_serviceMenBaseUrl/get_suspended';
+      static const String getSuspendedServicemen = '$_serviceMenBaseUrl/get_suspended';
     /// Suspended Servicemen End ///
 
   /// Serviceman Management End ///

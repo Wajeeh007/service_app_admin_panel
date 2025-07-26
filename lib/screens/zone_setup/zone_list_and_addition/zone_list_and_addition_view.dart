@@ -43,7 +43,7 @@ class ZoneListAndAdditionView extends StatelessWidget {
               expandFirstColumn: false,
               onSearch: (value) => _viewModel.searchInList(_viewModel.zoneSearchController.text),
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.zoneName.tr,
                 lang_key.orderVolume.tr,
                 lang_key.status.tr,

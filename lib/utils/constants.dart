@@ -85,6 +85,10 @@ enum OrderStatus {pending, accepted, ongoing, completed, cancelled, disputed}
 enum WithdrawMethodFieldType {text, number, email}
 /// New Method Input Field Type End ///
 
+/// User statuses ///
+enum UserStatuses {pending, active, inactive, suspended}
+/// User statuses End ///
+
 /// Months list
 const List<String> months = [
   'January',

@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:service_app_admin_panel/models/analytical_data.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
 
 import '../../../helpers/populate_lists.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../helpers/stop_loader_and_show_snackbar.dart';
 import '../../../models/serviceman.dart';
 import '../../../utils/api_base_helper.dart';
+import '../../../utils/custom_widgets/custom_material_button.dart';
 import '../../../utils/global_variables.dart';
 import '../../../utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
@@ -16,6 +21,9 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
   /// Controller(s) & Form Keys
   late TabController tabController;
   ScrollController scrollController = ScrollController();
+
+  TextEditingController suspensionNoteController = TextEditingController();
+  GlobalKey<FormState> suspensionNoteFormKey = GlobalKey<FormState>();
 
     /// All ServiceMen List
     TextEditingController allServiceMansSearchController = TextEditingController();
@@ -73,6 +81,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
     activeServiceMansSearchController.dispose();
     inActiveServiceMansSearchController.dispose();
     tabController.dispose();
+    suspensionNoteController.dispose();
     super.onClose();
   }
 
@@ -81,21 +90,21 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
 
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
 
-    final fetchAllServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$allTabLimit&page=${allTabPage.value}");
-    final fetchActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$activeTabLimit&page=${activeTabPage.value}&status=1");
+    // final fetchAllServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$allTabLimit&page=${allTabPage.value}");
+    final fetchActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$activeTabLimit&page=${activeTabPage.value}&status=${UserStatuses.active.name}");
     // final fetchInActiveServicemen = ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$inActiveTabLimit&page=${inActiveTabPage.value}&status=0");
     final fetchServicemenAnalyticalData = ApiBaseHelper.getMethod(url: Urls.getServicemenStats);
 
     final responses = await Future.wait([
-      fetchAllServicemen,
+      // fetchAllServicemen,
       fetchActiveServicemen,
       // fetchInActiveServicemen,
       fetchServicemenAnalyticalData]);
 
+    // if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
     if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
-    if(responses[1].success!) populateLists<Serviceman, dynamic>(allActiveServiceMenList, responses[1].data, visibleActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
     // if(responses[2].success!) populateLists<Serviceman, dynamic>(allInActiveServiceMenList, responses[2].data, visibleInActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
-    if(responses[2].success!) populateAnalyticalData(responses[2].data);
+    if(responses[1].success!) populateAnalyticalData(responses[1].data);
 
     if(responses.isEmpty || responses.every((element) => !element.success!)) {
       showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);
@@ -140,5 +149,85 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
           visibleList
       );
     }
+  }
+
+  /// Suspend a serviceman
+  Future<void> showSuspensionNoteDialog(int index) {
+    Get.back();
+    return showDialog(
+        context: Get.context!,
+        barrierColor: Colors.black38,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: primaryWhite,
+            content: Column(
+              spacing: 15,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                    lang_key.enterReasonForSuspension.tr,
+                ),
+                Form(
+                  key: suspensionNoteFormKey,
+                  child: CustomTextFormField(
+                    controller: suspensionNoteController,
+                    title: lang_key.reason.tr,
+                    includeAsterisk: true,
+                    maxLines: 2,
+                    minLines: 1,
+                  ),
+                )
+              ],
+            ),
+            actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              CustomMaterialButton(
+                width: 200,
+                onPressed: () => suspendServiceman(index),
+                text: lang_key.yes.tr,
+              ),
+              CustomMaterialButton(
+                width: 200,
+                onPressed: () => Get.back(),
+                text: lang_key.cancel.tr,
+                borderColor: primaryGrey,
+                textColor: primaryWhite,
+                buttonColor: primaryGrey,
+              ),
+            ],
+          );
+        });
+  }
+
+  /// API call for suspending the serviceman
+  void suspendServiceman(int index) {
+    if(suspensionNoteFormKey.currentState!.validate()) {
+      GlobalVariables.showLoader.value = true;
+      
+      ApiBaseHelper.patchMethod(
+          url: Urls.suspendServiceman(visibleAllServiceMenList[index].id!),
+          body: {
+            'suspension_note': suspensionNoteController.text
+          }
+      ).then((value) {
+        GlobalVariables.showLoader.value = false;
+
+        if(value.success!) {
+          allServiceMenList.removeAt(allServiceMenList.indexWhere((element) => element.id == visibleAllServiceMenList[index].id));
+          visibleAllServiceMenList.removeAt(index);
+          serviceMenAnalyticalData.value..active = serviceMenAnalyticalData.value.active! - 1
+            ..inActive = serviceMenAnalyticalData.value.inActive! + 1;
+
+          serviceMenAnalyticalData.value = AnalyticalData.fromJson(serviceMenAnalyticalData.value.toJson());
+          suspensionNoteController.clear();
+          Get.back();
+          showSnackBar(message: value.message!, success: true);
+        } else {
+          showSnackBar(message: value.message!, success: false);
+        }
+      });
+    }
+
   }
 }

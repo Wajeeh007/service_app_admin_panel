@@ -32,25 +32,25 @@ class ServiceMenListView extends StatelessWidget {
         children: [
           _ServicemenAnalyticsData(),
           SectionHeadingText(headingText: lang_key.servicemenList.tr),
-          CustomTabBar(
-              controller: _viewModel.tabController,
-              tabsNames: [
-                lang_key.all.tr,
-                lang_key.active.tr,
-              ]
-          ),
-          SizedBox(
-            height: 800,
-            child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _viewModel.tabController,
-                children: [
-                  _AllServicemenListTabView(),
-                  _ActiveServicemenListTabView(),
-                  // _InActiveServicemenListTabView(),
-                ]
-            ),
-          )
+          // CustomTabBar(
+          //     controller: _viewModel.tabController,
+          //     tabsNames: [
+          //       lang_key.all.tr,
+          //       lang_key.active.tr,
+          //     ]
+          // ),
+          _AllServicemenListTabView(),
+          // SizedBox(
+          //   height: 800,
+          //   child: TabBarView(
+          //       physics: NeverScrollableScrollPhysics(),
+          //       controller: _viewModel.tabController,
+          //       children: [
+          //
+          //         // _InActiveServicemenListTabView(),
+          //       ]
+          //   ),
+          // )
         ],
     );
   }
@@ -124,7 +124,7 @@ class _AllServicemenListTabView extends StatelessWidget {
                 lang_key.contactInfo.tr,
                 lang_key.totalOrders.tr,
                 lang_key.earning.tr,
-                lang_key.status.tr,
+                lang_key.gender.tr,
                 lang_key.actions.tr
               ],
             entryChildren: List.generate(_viewModel.visibleAllServiceMenList.length, (index) {
@@ -137,14 +137,22 @@ class _AllServicemenListTabView extends StatelessWidget {
                     ContactInfoInList(email: _viewModel.visibleAllServiceMenList[index].email!, phoneNo: _viewModel.visibleAllServiceMenList[index].phoneNo!,),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].totalOrders.toString()),
                     ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].earnings.toString()),
-                    TwoStatesWidget(status: _viewModel.visibleAllServiceMenList[index].status!),
+                    ListEntryItem(text: switch(_viewModel.visibleAllServiceMenList[index].gender!) {
+                      Gender.male => lang_key.male.tr,
+                      Gender.female => lang_key.female.tr,
+                      Gender.other => lang_key.other.tr,
+                    },),
+                    // TwoStatesWidget(status: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active, falseStateText: lang_key.suspended.tr,),
                     ListActionsButtons(
-                        includeDelete: _viewModel.visibleAllServiceMenList[index].status!,
+                        includeDelete: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active,
                         includeEdit: false,
                         includeView: true,
                       onViewPressed: () {},
-                      deleteIcon: _viewModel.visibleAllServiceMenList[index].status! ? CupertinoIcons.nosign : null,
-                      onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! ? () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr) : null,
+                      deleteIcon: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active ? CupertinoIcons.nosign : null,
+                      onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active ? () => showConfirmationDialog(
+                          onPressed: () =>_viewModel.showSuspensionNoteDialog(index),
+                          message: lang_key.suspensionConfirmationMessage.tr
+                      ) : null,
                     )
                   ],
                 ),

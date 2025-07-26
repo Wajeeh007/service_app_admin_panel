@@ -112,6 +112,7 @@ const ordersList = 'ordersList',
       servicemenList = 'servicemenList',
       servicemenAnalyticalData = 'servicemenAnalyticsData',
       totalServicemen = 'totalServicemen',
+      enterReasonForSuspension = 'enterReasonForSuspension',
       suspendedServicemen = 'suspendedServicemen';
   /// Active servicemen list screen end ///
 
@@ -253,7 +254,9 @@ const fieldIsRequired = 'fieldIsRequired',
     male = 'male',
     female = 'female',
     other = 'other',
-    sl = 'sl';
+    sl = 'sl',
+    suspended = 'suspended',
+    note = 'note';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',
@@ -276,5 +279,8 @@ const addServiceError = 'addServiceError',
     addAreaPolygon = 'addAreaPolygon',
     noInfoChanged = 'noDataChanged',
     clientExceptionError = 'clientExceptionError',
-    addReceiptImageToProceed = 'addReceiptImageToProceed';
+    addReceiptImageToProceed = 'addReceiptImageToProceed',
+    locationServiceDisabled = 'locationServicesDisabled',
+    locationPermissionsDenied = 'locationPermissionsDenied',
+    locationPermissionsPermanentlyDenied = 'locationPermissionsPermanentlyDenied';
 /// Errors End ///

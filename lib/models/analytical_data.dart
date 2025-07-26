@@ -33,4 +33,16 @@ class AnalyticalData {
     cancelled = json['cancelled'] ?? 0;
   }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total'] = total;
+    data['active'] = active;
+    data['in_active'] = inActive;
+    data['pending'] = pending;
+    data['accepted'] = accepted;
+    data['ongoing'] = ongoing;
+    data['completed'] = completed;
+    data['cancelled'] = cancelled;
+    return data;
+  }
 }

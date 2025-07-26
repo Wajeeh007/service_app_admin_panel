@@ -161,7 +161,7 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
       final responses = await Future.wait([fetchAllOrders, fetchStats]);
 
       if(responses[0].success!) populateLists<Order, dynamic>(allOrdersList, responses[0].data, visibleAllOrdersList, (dynamic json) => Order.fromJson(json));
-      if(responses[1].success!) orderStats.value = AnalyticalData.fromJson(responses[7].data);
+      if(responses[1].success!) orderStats.value = AnalyticalData.fromJson(responses[1].data);
 
       if(responses.isEmpty || responses.every((element) => !element.success!)) {
         showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);

@@ -46,7 +46,7 @@ class CustomersListView extends StatelessWidget {
                 children: [
                   _AllCustomersListTabView(),
                   _ActiveCustomersListTabView(),
-                  // _InActiveCustomersListTabView(),
+                  _InActiveCustomersListTabView(),
                 ]
             ),
           )

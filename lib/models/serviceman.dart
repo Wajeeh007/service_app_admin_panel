@@ -16,7 +16,7 @@ class Serviceman {
   String? idCardFront;
   String? idCardBack;
   Gender? gender;
-  bool? status;
+  UserStatuses? status;
   bool? isVerified;
   bool? accountDeleted;
   String? identificationNo;
@@ -51,7 +51,7 @@ class Serviceman {
   Serviceman.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     name = json['name'];
-    phoneNo = "+${json['phone_number']}";
+    phoneNo = json['phone'];
     rating = json['rating'] != null ? double.tryParse(json['rating']) : 0.0;
     email = json['email'];
     zoneId = json['zone_id'].toString();
@@ -61,7 +61,7 @@ class Serviceman {
     idCardFront = json['id_card_front'];
     idCardBack = json['id_card_back'];
     gender = json['gender'] != null ? Gender.values.firstWhere((element) => element.name == json['gender']) : null;
-    status = json['status'] == 1 ? true : false;
+    status = json['status'] != null ? UserStatuses.values.firstWhere((element) => element.name == json['status'].toString().toLowerCase().trim()) : null;
     isVerified = json['is_verified'] == 1 ? true : false;
     accountDeleted = json['account_deleted'] == 1 ? true : false;
     earnings = json['earnings'] != null ? double.tryParse(json['earnings']) : 0.0;

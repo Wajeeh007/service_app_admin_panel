@@ -66,7 +66,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      showSnackBar(message: 'Location Services disbaled', success: false);
+      showSnackBar(message: lang_key.locationServiceDisabled.tr, success: false);
       return Future.error('Location services are disabled.');
     }
 
@@ -74,13 +74,13 @@ class ZoneListAndAdditionViewModel extends GetxController {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        showSnackBar(message: 'Location permissions denied', success: false);
+        showSnackBar(message: lang_key.locationPermissionsDenied.tr, success: false);
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      showSnackBar(message: 'Location permissions are permanently denied, we cannot request permissions.', success: false);
+      showSnackBar(message: lang_key.locationPermissionsPermanentlyDenied.tr, success: false);
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
@@ -147,12 +147,9 @@ class ZoneListAndAdditionViewModel extends GetxController {
     ).then((value) {
       stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
       if(value.success!) {
-        GlobalVariables.showLoader.value = false;
         final allZoneListIndex = allZonesList.indexWhere((element) => element.id! == id);
         allZonesList[allZoneListIndex].status = !allZonesList[allZoneListIndex].status!;
-        final visibleZoneListIndex = visibleZoneList.indexWhere((element) => element.id == id);
-        visibleZoneList[visibleZoneListIndex].status = !visibleZoneList[visibleZoneListIndex].status!;
-        visibleZoneList.refresh();
+        addDataToVisibleList(allZonesList, visibleZoneList);
       }
     });
   }

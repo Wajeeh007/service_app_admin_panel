@@ -121,6 +121,7 @@ class English {
       key.servicemenAnalyticalData: 'Servicemen Analytical Data',
       key.totalServicemen: 'Total Servicemen',
       key.suspendedServicemen: 'Suspended Servicemen',
+      key.enterReasonForSuspension: 'Enter reason for suspension',
       /// Active servicemen list screen end ///
 
     key.searchServiceman: 'Search Serviceman',
@@ -221,8 +222,6 @@ class English {
     /// Business Setup End ///
 
     /// General
-    key.fieldIsRequired: 'Field is required',
-    key.invalidEmail: 'Invalid email',
     key.save: 'Save',
     key.search: 'Search',
     key.page: 'Page',
@@ -255,6 +254,8 @@ class English {
     key.yes: 'Yes',
     key.no: 'No',
     key.sl: 'SL',
+    key.suspended: 'Suspended',
+    key.note: 'Note',
 
     /// Success Messages ///
 
@@ -268,6 +269,8 @@ class English {
     /// Success Messages End ///
     
     /// Errors
+    key.fieldIsRequired: 'Field is required',
+    key.invalidEmail: 'Invalid email',
     key.addServiceError: 'Add service type to save sub-service category',
     key.addSubServiceImage: 'Add sub-service image to save information',
     key.addItemImage: 'Add Item image to save information',
@@ -284,6 +287,9 @@ class English {
     key.noInfoChanged: 'No information changed to update.',
     key.clientExceptionError: 'Server unreachable.',
     key.addReceiptImageToProceed: 'Add receipt image to proceed',
+    key.locationServiceDisabled: 'Location services disabled',
+    key.locationPermissionsDenied: 'Location permissions denied',
+    key.locationPermissionsPermanentlyDenied: 'Location permissions are permanently denied, we cannot request permissions.',
     /// Errors End ///
   };
 

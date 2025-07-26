@@ -53,7 +53,7 @@ class CustomerListViewModel extends GetxController with GetSingleTickerProviderS
   
   @override
   void onInit() {
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     super.onInit();
   }
 
