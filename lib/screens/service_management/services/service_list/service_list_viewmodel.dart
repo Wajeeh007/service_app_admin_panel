@@ -96,8 +96,7 @@ class ServiceListViewModel extends GetxController {
     GlobalVariables.showLoader.value = true;
     
     ApiBaseHelper.deleteMethod(url: Urls.deleteService(serviceId)).then((value) {
-      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
-
+      GlobalVariables.showLoader.value = false;
       if(value.success!) {
         final allServicesListIndex = allServicesList.indexWhere((element) => element.id == serviceId);
         final visibleServicesListIndex = visibleServicesList.indexWhere((element) => element.id == serviceId);
@@ -105,6 +104,11 @@ class ServiceListViewModel extends GetxController {
         allServicesList.removeAt(allServicesListIndex);
         visibleServicesList.removeAt(visibleServicesListIndex);
         visibleServicesList.refresh();
+
+        Get.back();
+        showSnackBar(message: value.message!, success: true);
+      } else {
+        showSnackBar(message: value.message!, success: false);
       }
     });
   }

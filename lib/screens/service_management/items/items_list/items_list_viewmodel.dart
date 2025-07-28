@@ -81,8 +81,8 @@ class ItemsListViewModel extends GetxController {
 
     final responses = await Future.wait([fetchItems, fetchSubServices]);
 
-    if (responses[0].success!) populateLists<ServiceItem, dynamic>(allItemsList, responses[0].data, visibleItemsList, (dynamic json) => ServiceItem.fromJson(json));
-    if (responses[1].success!) populateSubServicesList(responses[1].data as List);
+    if (responses[0].success! && responses[0].data != null) populateLists<ServiceItem, dynamic>(allItemsList, responses[0].data, visibleItemsList, (dynamic json) => ServiceItem.fromJson(json));
+    if (responses[1].success! && responses[1].data != null) populateSubServicesList(responses[1].data as List);
 
     if(!responses[0].success! && !responses[1].success!) {
       stopLoaderAndShowSnackBar(
@@ -113,7 +113,7 @@ class ItemsListViewModel extends GetxController {
   /// API call for adding a new Item.
   void addNewItem() {
     if(itemAdditionFormKey.currentState!.validate()) {
-      if(addedItemImage.value != Uint8List(0) && addedItemImage.value.isNotEmpty) {
+      // if(addedItemImage.value != Uint8List(0) && addedItemImage.value.isNotEmpty) {
 
         GlobalVariables.showLoader.value = true;
 
@@ -137,7 +137,7 @@ class ItemsListViewModel extends GetxController {
             success: false
         );
       }
-    }
+    // }
   }
 
   /// Delete service item by ID.

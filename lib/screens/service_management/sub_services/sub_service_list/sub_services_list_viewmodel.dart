@@ -116,7 +116,7 @@ class SubServicesListViewModel extends GetxController {
     autoValidate.value = true;
     if (subServiceAdditionFormKey.currentState!.validate()) {
       autoValidate.value = false;
-      if (addedServiceImage.value.isNotEmpty && addedServiceImage.value != Uint8List(0)) {
+      // if (addedServiceImage.value.isNotEmpty && addedServiceImage.value != Uint8List(0)) {
 
           GlobalVariables.showLoader.value = true;
 
@@ -137,7 +137,7 @@ class SubServicesListViewModel extends GetxController {
               message: lang_key.addSubServiceImage.tr,
               success: false
           );
-        }
+        // }
     }
   }
 

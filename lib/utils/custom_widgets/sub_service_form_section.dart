@@ -129,7 +129,7 @@ class _AddServiceNameAndButtonSection extends StatelessWidget {
                       builder: (context, constraints) {
                         return CustomDropdown(
                             textEditingController: serviceTypeController,
-                            title: lang_key.serviceType.tr,
+                            title: lang_key.serviceName.tr,
                             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                             height: 80,
                             width: constraints.maxWidth,

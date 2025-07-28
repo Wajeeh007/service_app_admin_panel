@@ -28,9 +28,9 @@ class ServiceItem {
     subServiceId = json['sub_service_id'].toString();
     subServiceName = json['sub_service_name'];
     name = json['name'];
-    price = json['price'];
+    price = json['price'] != null ? double.tryParse(json['price']) : 0.0;
     status = json['status'] == 1 ? true : false;
     image = json['image'];
-    createdAt = json['createdAt'];
+    createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
   }
 }

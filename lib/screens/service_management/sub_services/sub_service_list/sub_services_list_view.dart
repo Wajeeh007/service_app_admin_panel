@@ -50,7 +50,7 @@ class SubServicesListView extends StatelessWidget {
                   lang_key.sl.tr,
                   lang_key.image.tr,
                   lang_key.name.tr,
-                  lang_key.serviceType.tr,
+                  lang_key.serviceName.tr,
                   lang_key.associatedItems.tr,
                   lang_key.status.tr,
                   lang_key.actions.tr

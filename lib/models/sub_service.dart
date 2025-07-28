@@ -27,12 +27,12 @@ class SubService {
   SubService.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     serviceId = json['service_id'].toString();
-    serviceName = json['service_type'];
+    serviceName = json['service_name'];
     name = json['name'];
     status = json['status'] == 1 ? true : false;
     associatedItems = json['total_associated_items'];
     image = json['image'];
-    createdAt = json['createdAt'];
+    createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
   }
 
 }
