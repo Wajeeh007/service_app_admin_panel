@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/serviceman.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
@@ -36,7 +37,7 @@ class NewRequestsViewModel extends GetxController {
   void fetchNewRequests() {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: "${Urls.getNewRequests}?limit=$limit&page=${page.value}").then((value) {
+    ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$limit&page=${page.value}&status=${UserStatuses.pending.name}").then((value) {
 
       GlobalVariables.showLoader.value = false;
 

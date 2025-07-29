@@ -74,7 +74,7 @@ class _AllWithdrawRequests extends StatelessWidget {
               hintText: lang_key.searchByServiceman.tr,
               fieldWidth: 210,
               columnsNames: [
-                'SL',
+                lang_key.sl.tr,
                 lang_key.name.tr,
                 lang_key.amount.tr,
                 lang_key.method.tr,
@@ -264,7 +264,7 @@ class _ApprovedWithdrawRequestsTab extends StatelessWidget {
           hintText: lang_key.searchByServiceman.tr,
           fieldWidth: 210,
           columnsNames: [
-            'SL',
+            lang_key.sl.tr,
             lang_key.name.tr,
             lang_key.amount.tr,
             lang_key.method.tr,
@@ -359,7 +359,7 @@ class _SettledWithdrawRequestsTab extends StatelessWidget {
           hintText: lang_key.searchByServiceman.tr,
           fieldWidth: 210,
           columnsNames: [
-            'SL',
+            lang_key.sl.tr,
             lang_key.name.tr,
             lang_key.amount.tr,
             lang_key.method.tr,
@@ -432,7 +432,7 @@ class _DeniedWithdrawRequestsTab extends StatelessWidget {
           hintText: lang_key.searchByServiceman.tr,
           fieldWidth: 210,
           columnsNames: [
-            'SL',
+            lang_key.sl.tr,
             lang_key.name.tr,
             lang_key.amount.tr,
             lang_key.method.tr,

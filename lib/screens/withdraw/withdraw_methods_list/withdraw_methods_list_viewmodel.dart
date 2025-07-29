@@ -138,11 +138,10 @@ class WithdrawMethodsListViewModel extends GetxController with GetSingleTickerPr
   /// API call to add a new Withdraw Method
   void addWithdrawMethod() {
     if(newMethodInfoFormKey.currentState!.validate()) {
-
       GlobalVariables.showLoader.value = true;
 
       ApiBaseHelper.postMethod(url: Urls.addWithdrawMethod, body: {
-        'name': newMethodNameController,
+        'name': newMethodNameController.text,
         'field_type': fieldTypeTextController.text,
         'field_name': newMethodFieldNameController.text,
         'placeholder_text': newMethodPlaceholderTextController.text,

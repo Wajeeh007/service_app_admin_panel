@@ -25,41 +25,42 @@ class SuspendedCustomersListView extends StatelessWidget {
         overlayPortalControllersAndShowDropDown: [],
       children: [
         SectionHeadingText(headingText: lang_key.suspendedCustomers.tr),
-        ListBaseContainer(
-            onRefresh: () => _viewModel.fetchSuspendedCustomers(),
-            includeSearchField: false,
-            expandFirstColumn: false,
-            listData: _viewModel.suspendedCustomersList,
-            columnsNames: [
-            lang_key.sl.tr,
-              lang_key.name.tr,
-              lang_key.contactInfo.tr,
-              lang_key.totalOrders.tr,
-              lang_key.totalSpent.tr,
-              lang_key.adminNote.tr,
-              lang_key.actions.tr,
-            ],
-          entryChildren: List.generate(_viewModel.suspendedCustomersList.length, (index) {
-            return Padding(
-              padding: listEntryPadding,
-              child: Row(
-                children: [
-                  ListSerialNoText(index: index),
-                  ListEntryItem(text: _viewModel.suspendedCustomersList[index].name!,),
-                  ContactInfoInList(email: _viewModel.suspendedCustomersList[index].email!, phoneNo: _viewModel.suspendedCustomersList[index].phoneNo!,),
-                  ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalOrders.toString(),),
-                  ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalSpent.toString(),),
-                  ListEntryItem(text: _viewModel.suspendedCustomersList[index].adminNote!, maxLines: 3,),
-                  ListActionsButtons(
-                    includeDelete: false,
-                    includeEdit: false,
-                    includeView: true,
-                    onViewPressed: () {},
-                  )
-                ],
-              ),
-            );
-          }),
+        Obx(() => ListBaseContainer(
+              onRefresh: () => _viewModel.fetchSuspendedCustomers(),
+              includeSearchField: false,
+              expandFirstColumn: false,
+              listData: _viewModel.suspendedCustomersList,
+              columnsNames: [
+              lang_key.sl.tr,
+                lang_key.name.tr,
+                lang_key.contactInfo.tr,
+                lang_key.totalOrders.tr,
+                lang_key.totalSpent.tr,
+                lang_key.adminNote.tr,
+                lang_key.actions.tr,
+              ],
+            entryChildren: List.generate(_viewModel.suspendedCustomersList.length, (index) {
+              return Padding(
+                padding: listEntryPadding,
+                child: Row(
+                  children: [
+                    ListSerialNoText(index: index),
+                    ListEntryItem(text: _viewModel.suspendedCustomersList[index].name!,),
+                    ContactInfoInList(email: _viewModel.suspendedCustomersList[index].email!, phoneNo: _viewModel.suspendedCustomersList[index].phoneNo!,),
+                    ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalOrders.toString(),),
+                    ListEntryItem(text: _viewModel.suspendedCustomersList[index].totalSpent.toString(),),
+                    ListEntryItem(text: _viewModel.suspendedCustomersList[index].suspensionNote!, maxLines: 3,),
+                    ListActionsButtons(
+                      includeDelete: false,
+                      includeEdit: false,
+                      includeView: true,
+                      onViewPressed: () {},
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
         )
       ]
     );

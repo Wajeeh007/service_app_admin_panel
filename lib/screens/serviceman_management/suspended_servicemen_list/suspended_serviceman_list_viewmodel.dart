@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/serviceman.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../helpers/stop_loader_and_show_snackbar.dart';
@@ -37,7 +38,7 @@ class SuspendedServicemanListViewModel extends GetxController {
   void fetchSuspendedServicemen() {
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$limit&page=${page.value}&suspended=1").then((value) {
+    ApiBaseHelper.getMethod(url: "${Urls.getServicemen}?limit=$limit&page=${page.value}&status=${UserStatuses.suspended.name}").then((value) {
 
       GlobalVariables.showLoader.value = false;
 

@@ -86,20 +86,20 @@ class Urls {
 
   /// Withdraws ///
     /// Withdraw Methods ///
-    static const String _methodsBaseUrl = 'methods';
-    static const String getWithdrawMethods = '$_withdrawsBaseUrl/$_methodsBaseUrl/get';
-    static const String addWithdrawMethod = '$_withdrawsBaseUrl/$_methodsBaseUrl/add';
+    static const String _methodsBaseUrl = '/methods';
+    static const String getWithdrawMethods = '$_withdrawsBaseUrl$_methodsBaseUrl/get';
+    static const String addWithdrawMethod = '$_withdrawsBaseUrl$_methodsBaseUrl/add';
 
     static String changeWithdrawMethodStatus(String id) {
-      return '$_withdrawsBaseUrl/$_methodsBaseUrl/change_status/$id';
+      return '$_withdrawsBaseUrl$_methodsBaseUrl/change_status/$id';
     }
 
     static String deleteWithdrawMethod(String id) {
-      return '$_withdrawsBaseUrl/$_methodsBaseUrl/$id';
+      return '$_withdrawsBaseUrl$_methodsBaseUrl/$id';
     }
 
     static String editWithdrawMethod(String id) {
-      return '$_withdrawsBaseUrl/$_methodsBaseUrl/$id';
+      return '$_withdrawsBaseUrl$_methodsBaseUrl/$id';
     }
     /// Withdraw Methods End ///
 
@@ -117,7 +117,11 @@ class Urls {
   /// Customer Management ///
     /// Customers List ///
     static const String getCustomers = '$_customersBaseUrl/get';
-    static const String getCustomersStats = '$_customersBaseUrl/get_stats';
+    static const String getCustomersStats = '$_customersBaseUrl/stats';
+
+    static String changeCustomerStatus(String id) {
+      return '$_customersBaseUrl/change_status/$id';
+    }
 
   /// Customer Management End ///
 
@@ -128,8 +132,8 @@ class Urls {
 
       static const String getServicemenStats = '$_serviceMenBaseUrl/stats';
 
-      static String suspendServiceman(String id) {
-        return '$_serviceMenBaseUrl/change_suspension_status/$id';
+      static String changeServicemanStatus(String id) {
+        return '$_serviceMenBaseUrl/change_status/$id';
       }
     /// Serviceman List End ///
 

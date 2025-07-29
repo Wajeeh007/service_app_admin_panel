@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/models/customer.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
@@ -30,11 +31,12 @@ class SuspendedCustomersListViewModel extends GetxController {
   void fetchSuspendedCustomers() {
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
     
-    ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?suspended=1").then((value) {
+    ApiBaseHelper.getMethod(url: "${Urls.getCustomers}?status=${UserStatuses.suspended.name}").then((value) {
       GlobalVariables.showLoader.value = false;
 
       if(value.success!) {
         final data = value.data as List;
+        suspendedCustomersList.clear();
         suspendedCustomersList.addAll(data.map((e) => Customer.fromJson(e)));
         suspendedCustomersList.refresh();
       } else {

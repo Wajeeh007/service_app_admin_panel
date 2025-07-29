@@ -49,7 +49,7 @@ class SuspendedServicemanListView extends StatelessWidget {
                   ContactInfoInList(email: _viewModel.suspendedServicemen[index].email!, phoneNo: _viewModel.suspendedServicemen[index].phoneNo!),
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].identificationNo),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.suspendedServicemen[index].identificationExpiry!)),
-                  ListEntryItem(text: _viewModel.suspendedServicemen[index].adminNote, maxLines: 3,),
+                  ListEntryItem(text: _viewModel.suspendedServicemen[index].suspensionNote, maxLines: 3,),
                   ListActionsButtons(
                     includeDelete: true,
                     includeEdit: false,

@@ -20,7 +20,8 @@ class Serviceman {
   bool? isVerified;
   bool? accountDeleted;
   String? identificationNo;
-  String? adminNote;
+  String? suspensionNote;
+  String? selfNote;
   DateTime? createdAt;
   DateTime? identificationExpiry;
 
@@ -43,9 +44,10 @@ class Serviceman {
     this.zoneId,
     this.totalOrders,
     this.earnings,
-    this.adminNote,
+    this.suspensionNote,
     this.identificationNo,
-    this.identificationExpiry
+    this.identificationExpiry,
+    this.selfNote,
   });
 
   Serviceman.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class Serviceman {
     identificationNo = json['identification_number'];
     createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
     identificationExpiry = json['identification_expiry'] != null ? DateTime.tryParse(json['identification_expiry']) : null;
-    adminNote = json['note'] ?? '';
+    suspensionNote = json['suspension_note'] ?? '';
+    selfNote = json['note'] ?? '';
   }
 }

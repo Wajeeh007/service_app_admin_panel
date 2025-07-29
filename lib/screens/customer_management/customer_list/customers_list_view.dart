@@ -30,26 +30,27 @@ class CustomersListView extends StatelessWidget {
         children: [
           _CustomerAnalyticsData(),
           SectionHeadingText(headingText: lang_key.customersList.tr),
-          CustomTabBar(
-              controller: _viewModel.tabController,
-              tabsNames: [
-                lang_key.all.tr,
-                lang_key.active.tr,
-                lang_key.inactive.tr
-              ]
-          ),
-          SizedBox(
-            height: 800,
-            child: TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _viewModel.tabController,
-                children: [
-                  _AllCustomersListTabView(),
-                  _ActiveCustomersListTabView(),
-                  _InActiveCustomersListTabView(),
-                ]
-            ),
-          )
+          // CustomTabBar(
+          //     controller: _viewModel.tabController,
+          //     tabsNames: [
+          //       lang_key.all.tr,
+          //       lang_key.active.tr,
+          //       lang_key.inactive.tr
+          //     ]
+          // ),
+          _AllCustomersListTabView(),
+          // SizedBox(
+          //   height: 800,
+          //   child: TabBarView(
+          //       physics: NeverScrollableScrollPhysics(),
+          //       controller: _viewModel.tabController,
+          //       children: [
+          //
+          //         _ActiveCustomersListTabView(),
+          //         _InActiveCustomersListTabView(),
+          //       ]
+          //   ),
+          // )
         ],
     );
   }
@@ -127,8 +128,9 @@ class _AllCustomersListTabView extends StatelessWidget {
                 lang_key.actions.tr
               ],
           entryChildren: List.generate(_viewModel.visibleAllCustomersList.length, (index) {
+
             return Padding(
-                padding: listEntryPadding,
+                padding: listEntryPadding.copyWith(bottom: 5),
               child: Row(
                 children: [
                   ListSerialNoText(index: index),
@@ -136,13 +138,13 @@ class _AllCustomersListTabView extends StatelessWidget {
                   ContactInfoInList(email: _viewModel.visibleAllCustomersList[index].email!, phoneNo: _viewModel.visibleAllCustomersList[index].phoneNo!,),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalOrders.toString(),),
                   ListEntryItem(text: _viewModel.visibleAllCustomersList[index].totalSpent.toString(),),
-                  TwoStatesWidget(status: _viewModel.visibleAllCustomersList[index].status!),
+                  TwoStatesWidget(status: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active),
                   ListActionsButtons(
-                      includeDelete: _viewModel.visibleAllCustomersList[index].status!,
+                      includeDelete: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active,
                       includeEdit: false,
                       includeView: true,
-                    deleteIcon: _viewModel.visibleAllCustomersList[index].status! ? CupertinoIcons.nosign : null,
-                    onDeletePressed: _viewModel.visibleAllCustomersList[index].status! ? () => showConfirmationDialog(onPressed: () {}) : null,
+                    deleteIcon: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? CupertinoIcons.nosign : null,
+                    onDeletePressed: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? () => showConfirmationDialog(onPressed: () => _viewModel.showSuspensionNoteDialog(index)) : null,
                     onViewPressed: () {},
                   )
                 ],

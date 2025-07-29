@@ -11,7 +11,7 @@ import 'heading_in_container_text.dart';
 
 /// Base widget for adding new withdraw method's information
 class WithdrawMethodForm extends StatelessWidget {
-  const WithdrawMethodForm({
+  const   WithdrawMethodForm({
     super.key,
     required this.onPressed,
     required this.formKey,
@@ -174,9 +174,9 @@ class _NameTypeAndPlaceholderFormFields extends StatelessWidget {
   final OverlayPortalController fieldTypeOverlayPortalController;
 
   final List<DropDownEntry> newMethodFieldTypeDropdownEntries = [
-    DropDownEntry(value: WithdrawMethodFieldType.text, label: lang_key.text.tr),
-    DropDownEntry(value: WithdrawMethodFieldType.number, label: lang_key.number.tr),
-    DropDownEntry(value: WithdrawMethodFieldType.email, label: lang_key.email.tr),
+    DropDownEntry(value: WithdrawMethodFieldType.text.name, label: lang_key.text.tr),
+    DropDownEntry(value: WithdrawMethodFieldType.number.name, label: lang_key.number.tr),
+    DropDownEntry(value: WithdrawMethodFieldType.email.name, label: lang_key.email.tr),
   ];
 
   @override

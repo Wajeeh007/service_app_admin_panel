@@ -151,7 +151,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
     }
   }
 
-  /// Suspend a serviceman
+  /// Suspension note for serviceman dialog
   Future<void> showSuspensionNoteDialog(int index) {
     Get.back();
     return showDialog(
@@ -184,7 +184,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
             actions: [
               CustomMaterialButton(
                 width: 200,
-                onPressed: () => suspendServiceman(index),
+                onPressed: () => _suspendServiceman(index),
                 text: lang_key.yes.tr,
               ),
               CustomMaterialButton(
@@ -201,13 +201,14 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
   }
 
   /// API call for suspending the serviceman
-  void suspendServiceman(int index) {
+  void _suspendServiceman(int index) {
     if(suspensionNoteFormKey.currentState!.validate()) {
       GlobalVariables.showLoader.value = true;
       
       ApiBaseHelper.patchMethod(
-          url: Urls.suspendServiceman(visibleAllServiceMenList[index].id!),
+          url: Urls.changeServicemanStatus(visibleAllServiceMenList[index].id!),
           body: {
+            'status': UserStatuses.suspended.name,
             'suspension_note': suspensionNoteController.text
           }
       ).then((value) {
@@ -228,6 +229,5 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
         }
       });
     }
-
   }
 }
