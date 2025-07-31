@@ -11,6 +11,9 @@ import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
+import '../../../helpers/scroll_controller_funcs.dart';
+import '../../../utils/routes.dart';
+
 class EditZoneViewModel extends GetxController {
 
   /// Controller(s) & Form Keys
@@ -30,8 +33,14 @@ class EditZoneViewModel extends GetxController {
 
   @override
   void onReady() {
-    zoneDetails = Get.arguments['zoneDetails'];
-    _initializeValues();
+    Map<String, dynamic>? args = Get.arguments;
+    if(args == null || args.isEmpty) {
+      Get.offAllNamed(Routes.zoneListAndAddition);
+    } else {
+      zoneDetails = Get.arguments['zoneDetails'];
+      _initializeValues();
+      animateSidePanelScrollController(scrollController, routeName: Routes.zoneListAndAddition);
+    }
     super.onReady();
   }
 

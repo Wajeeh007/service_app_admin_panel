@@ -98,6 +98,22 @@ const ordersList = 'ordersList',
   /// Suspended Customer's List Screen
   const adminNote = 'adminNote';
   /// Suspended Customer's List Screen End ///
+
+  /// Customer Details Screen ///
+  const customerInfo = 'customerInfo',
+      customerActivityRate = 'customerActivityRate',
+      averageActivityRate = 'averageActivityRate',
+      averageSpending = 'averageSpendingValue',
+      positiveReviewRate = 'positiveReviewRate',
+      successRate = 'successRate',
+      cancellationRate = 'cancellationRate',
+      customerOrderDetails = 'customerOrderDetails',
+      totalCompletedOrders = 'totalCompletedOrders',
+      totalCancelledOrders = 'totalCancelledOrders',
+      highestAmountOrder = 'highestAmountOrder',
+      lowestAmountOrder = 'lowestAmountOrder';
+  /// Customer Details Screen End ///
+
 /// Customer Management End ///
 
 /// Serviceman Management ///
@@ -256,7 +272,8 @@ const fieldIsRequired = 'fieldIsRequired',
     other = 'other',
     sl = 'sl',
     suspended = 'suspended',
-    note = 'note';
+    note = 'note',
+    suspend = 'suspend';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

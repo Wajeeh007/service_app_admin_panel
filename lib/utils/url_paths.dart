@@ -123,6 +123,10 @@ class Urls {
       return '$_customersBaseUrl/change_status/$id';
     }
 
+    static String getCustomer(String id) {
+      return '$_customersBaseUrl/$id';
+    }
+
   /// Customer Management End ///
 
   /// Serviceman Management ///

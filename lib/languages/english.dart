@@ -106,7 +106,23 @@ class English {
       key.adminNote: 'Admin Note',
       /// Suspended Customers List Screen End ///
 
-    /// Customer Management End ///
+      /// Customer Details Screen ///
+      key.customerInfo: 'Customer Information',
+      key.customerActivityRate: 'Customer Activity Rate',
+      key.averageActivityRate: 'Average Activity Rate',
+      key.averageSpending: 'Average Spending',
+      key.positiveReviewRate: 'Positive Review Rate',
+      key.successRate: 'Success Rate',
+      key.cancellationRate: 'Cancellation Rate',
+      key.customerOrderDetails: 'Customer Order Details',
+      key.totalCompletedOrders: 'Total Completed Orders',
+      key.totalCancelledOrders: 'Total Cancelled Orders',
+      key.highestAmountOrder: 'Highest Amount Order',
+      key.lowestAmountOrder: 'Lowest Amount Order',
+      /// Customer Details Screen End ///
+
+
+  /// Customer Management End ///
 
     /// Serviceman Management ///
       /// New Requests List Screen ///
@@ -256,6 +272,7 @@ class English {
     key.sl: 'SL',
     key.suspended: 'Suspended',
     key.note: 'Note',
+    key.suspend: 'Suspend',
 
     /// Success Messages ///
 

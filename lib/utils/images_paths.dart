@@ -8,6 +8,7 @@ class ImagesPaths {
   static final String zoneSetupExample = '${_imagesPath}zone_setup_instructions.gif';
   static final String noData = '${_imagesPath}no_data.png';
   static final String imagePlaceholder = '${_imagesPath}image_placeholder.png';
+  static final String dummyCustomerImage = '${_imagesPath}dummy_customer_image.png';
 
   /// Logos
   static String adawatLogo = '${_logosPath}adawat.jpg';
@@ -22,4 +23,5 @@ class ImagesPaths {
   static String acceptedRequests = '${_iconsPath}accepted_requests.png';
   static String ongoingRequests = '${_iconsPath}ongoing_requests.png';
   static String uploadFile = '${_iconsPath}upload_file.png';
+  static String userDetailsSectionHeading = '${_iconsPath}user_details_section_heading.png';
 }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/screens/customer_management/customer_details/customer_details_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/suspended_customers_list/suspended_customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_view.dart';
@@ -29,6 +30,7 @@ class Routes {
   static const orders = '/orderManagement';
   static const customersList = '/customersList';
   static const suspendedCustomersList = '/suspendedCustomersList';
+  static const customerDetails = '/customerDetails';
   static const newServicemanRequests = '/newServicemanRequests';
   static const servicemenList = '/activeServicemanList';
   static const suspendedServicemanList = '/suspendedServicemanList';
@@ -52,6 +54,7 @@ class Routes {
     GetPage(name: orders, page: () => OrderManagementView()),
     GetPage(name: customersList, page: () => CustomersListView()),
     GetPage(name: suspendedCustomersList, page: () => SuspendedCustomersListView()),
+    GetPage(name: customerDetails, page: () => CustomerDetailsView()),
     GetPage(name: newServicemanRequests, page: () => NewRequestsView()),
     GetPage(name: servicemenList, page: () => ServiceMenListView()),
     GetPage(name: suspendedServicemanList, page: () => SuspendedServicemanListView()),
