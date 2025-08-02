@@ -127,6 +127,14 @@ class Urls {
       return '$_customersBaseUrl/$id';
     }
 
+    static String getCustomerOrders(String id) {
+      return '$_customersBaseUrl/orders/$id';
+    }
+
+    static String getCustomerActivityStats(String id) {
+      return '$_customersBaseUrl/activity/$id';
+    }
+
   /// Customer Management End ///
 
   /// Serviceman Management ///

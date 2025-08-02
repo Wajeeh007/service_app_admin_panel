@@ -10,4 +10,5 @@ class GlobalVariables {
 
   static String token = '';
 
+  static RxDouble listHeight = 0.0.obs;
 }

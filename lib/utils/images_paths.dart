@@ -23,5 +23,6 @@ class ImagesPaths {
   static String acceptedRequests = '${_iconsPath}accepted_requests.png';
   static String ongoingRequests = '${_iconsPath}ongoing_requests.png';
   static String uploadFile = '${_iconsPath}upload_file.png';
+  static String customerRating = '${_iconsPath}customer_rating.png';
   static String userDetailsSectionHeading = '${_iconsPath}user_details_section_heading.png';
 }

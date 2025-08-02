@@ -111,7 +111,13 @@ const ordersList = 'ordersList',
       totalCompletedOrders = 'totalCompletedOrders',
       totalCancelledOrders = 'totalCancelledOrders',
       highestAmountOrder = 'highestAmountOrder',
-      lowestAmountOrder = 'lowestAmountOrder';
+      lowestAmountOrder = 'lowestAmountOrder',
+      overView = 'overView',
+      reviews = 'reviews',
+      transactions = 'transactions',
+      customerRating = 'customerRating',
+      reviewFromServiceman = 'reviewFromServiceman',
+      reviewGivenToServiceman = 'reviewGivenToServiceman';
   /// Customer Details Screen End ///
 
 /// Customer Management End ///
@@ -273,7 +279,9 @@ const fieldIsRequired = 'fieldIsRequired',
     sl = 'sl',
     suspended = 'suspended',
     note = 'note',
-    suspend = 'suspend';
+    suspend = 'suspend',
+    rating = 'rating',
+    review = 'review';
 
 /// Success Messages ///
 const zoneCreated = 'zoneAdded',

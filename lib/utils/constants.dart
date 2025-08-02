@@ -136,3 +136,6 @@ enum Gender {male, female, other}
 
 /// Withdraw Request Status
 enum WithdrawRequestStatus {pending, approved, settled, denied}
+
+/// Transactions Payment Status
+enum TransactionPaymentStatus {paid, unpaid}

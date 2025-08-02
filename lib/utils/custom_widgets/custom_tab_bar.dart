@@ -6,10 +6,12 @@ class CustomTabBar extends StatelessWidget {
     super.key,
     required this.controller,
     required this.tabsNames,
+    this.onChanged,
   });
 
   final TabController controller;
   final List<String> tabsNames;
+  final Function(int)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class CustomTabBar extends StatelessWidget {
               unselectedLabelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
                   color: primaryGrey
               ),
+              onTap: onChanged,
               dividerColor: Colors.transparent,
               indicator: BoxDecoration(
                 color: primaryBlue,

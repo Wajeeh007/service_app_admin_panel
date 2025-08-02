@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:service_app_admin_panel/helpers/determine_list_height.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/no_data_found.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/refresh_and_logs_button.dart';
@@ -20,6 +21,7 @@ class ListBaseContainer extends StatelessWidget {
     this.fieldWidth = 200,
     this.entryChildren,
     this.onSearch,
+    this.itemSize
   }) : assert((
       includeSearchField == false && (controller == null && onSearch == null)) || (includeSearchField == true && (controller != null && onSearch != null)), 'controller and onSearch must be null, if search field is not included. And must be provided if search field is included.');
 
@@ -33,6 +35,7 @@ class ListBaseContainer extends StatelessWidget {
   final List<Widget>? entryChildren;
   final void Function(String?)? onSearch;
   final VoidCallback onRefresh;
+  final double? itemSize;
 
   @override
   Widget build(BuildContext context) {

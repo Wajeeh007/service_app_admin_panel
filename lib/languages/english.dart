@@ -119,6 +119,12 @@ class English {
       key.totalCancelledOrders: 'Total Cancelled Orders',
       key.highestAmountOrder: 'Highest Amount Order',
       key.lowestAmountOrder: 'Lowest Amount Order',
+      key.overView: 'Overview',
+      key.reviews: 'Reviews',
+      key.transactions: 'Transactions',
+      key.customerRating: 'Customer Rating',
+      key.reviewFromServiceman: 'Review From Serviceman',
+      key.reviewGivenToServiceman: 'Review Given To Serviceman',
       /// Customer Details Screen End ///
 
 
@@ -273,6 +279,8 @@ class English {
     key.suspended: 'Suspended',
     key.note: 'Note',
     key.suspend: 'Suspend',
+    key.rating: 'Rating',
+    key.review: 'Review',
 
     /// Success Messages ///
 
