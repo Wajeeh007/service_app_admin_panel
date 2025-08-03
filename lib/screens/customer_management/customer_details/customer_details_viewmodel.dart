@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/models/customer.dart';
 import 'package:service_app_admin_panel/models/order.dart';
 import 'package:service_app_admin_panel/models/review.dart';
@@ -42,6 +42,9 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
   /// Reviews tab view section height
   RxDouble reviewsVisibilityHeight = 0.0.obs;
 
+  /// Customer activity stats data
+  RxMap<String, dynamic> activityStats = <String, dynamic>{}.obs;
+
   List<String> ratingPercentageBarTexts = [
     'Excellent',
     'Good',
@@ -49,6 +52,16 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
     'Below Average',
     'Poor'
   ];
+
+  /// Pagination variables for reviews
+  int reviewsByServicemenLimit = 10;
+  int reviewsToServicemenLimit = 10;
+  int ordersLimit = 10;
+  int transactionsLimit = 10;
+  RxInt reviewsByServicemanPage = 0.obs;
+  RxInt reviewsToServicemanPage = 0.obs;
+  RxInt transactionsPage = 0.obs;
+  RxInt ordersPage = 0.obs;
 
   @override
   void onInit() {
@@ -77,22 +90,57 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
 
   void _fetchCustomerDetailsAndActivity() async {
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
-    final customerDetails = ApiBaseHelper.getMethod(url: Urls.getCustomer(customerId));
-    // final customerActivity = ApiBaseHelper.getMethod(url: Urls.getCustomerActivityStats(customerId));
+    final getCustomerDetails = ApiBaseHelper.getMethod(url: Urls.getCustomer(customerId));
+    final getCustomerActivity = ApiBaseHelper.getMethod(url: Urls.getCustomerActivityStats(customerId));
+    final getCustomerOrders = ApiBaseHelper.getMethod(url: "${Urls.getCustomerOrders(customerId)}?limit=$ordersLimit&page=${ordersPage.value}");
+    // final getCustomerTransactions = ApiBaseHelper.getMethod(url: "${Urls.getCustomerTransactions(customerDetails.value.id!)}?limit=$transactionsLimit&page=${transactionsPage.value}");
+    final getCustomerReviewsByServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsByServicemen(customerId)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}");
+    final getCustomerReviewsToServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsToServicemen(customerId)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}");
 
-    final responses = Future.wait([customerDetails,
-      // customerActivity
+    final responses = await Future.wait([
+      getCustomerDetails,
+      getCustomerActivity,
+      getCustomerOrders,
+      // getCustomerTransactions,
+      getCustomerReviewsByServicemen,
+      getCustomerReviewsToServicemen,
     ]);
+
+    if(responses[0].success! && responses[0].data != null) customerDetails.value = Customer.fromJson(responses[0].data!);
+    if(responses[1].success! && responses[1].data != null) activityStats.value = responses[1].data!;
+    if(responses[2].success! && responses[2].data != null) populateLists(allCustomerOrders, responses[2].data, visibleCustomerOrders, (dynamic json) => Order.fromJson(json));
+    // if(responses[3].success! && responses[3].data != null) {
+    //   final data = responses[3].data as List;
+    //   transactions.addAllIf(data.isNotEmpty, data.map((e)=> Transaction.fromJson(e)));
+    //   transactions.refresh();
+    // }
+    if(responses[3].success! && responses[3].data != null) reviewsByServiceman.addAllIf(responses[3].data.isNotEmpty, responses[3].data.map((e) => Review.fromJson(e)));
+    if(responses[4].success! && responses[4].data != null) reviewsToServiceman.addAllIf(responses[4].data.isNotEmpty, responses[4].data.map((e) => Review.fromJson(e)));
+
+    GlobalVariables.showLoader.value = false;
   }
 
+  /// API to fetch customer orders on pressing the refresh button on the orders list.
   void fetchCustomerOrders() {
+    GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(url: Urls.getCustomerOrders(customerDetails.value.id!)).then((value) {
+      GlobalVariables.showLoader.value = false;
+      if(value.success!) populateLists(allCustomerOrders, value.data, visibleCustomerOrders, (dynamic json) => Order.fromJson(json));
+    });
+  }
+
+  /// API to fetch customer transactions on pressing the refresh button on the transactions list.
+  void fetchCustomerTransactions() {
+
+    GlobalVariables.showLoader.value = true;
+
+    ApiBaseHelper.getMethod(url: Urls.getCustomerTransactions(customerDetails.value.id!)).then((value) {
       if(value.success!) {
-        allCustomerOrders.clear();
+        GlobalVariables.showLoader.value = false;
+        transactions.clear();
         final data = value.data as List;
-        allCustomerOrders.addAllIf(data.isNotEmpty, data.map((e) => Order.fromJson(e)));
-        visibleCustomerOrders.value = allCustomerOrders;
-        visibleCustomerOrders.refresh();
+        transactions.addAll(data.map((e) => Transaction.fromJson(e)));
+        transactions.refresh();
       }
     });
   }

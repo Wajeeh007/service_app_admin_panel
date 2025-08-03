@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:service_app_admin_panel/helpers/determine_list_height.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/no_data_found.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/refresh_and_logs_button.dart';
@@ -21,7 +20,10 @@ class ListBaseContainer extends StatelessWidget {
     this.fieldWidth = 200,
     this.entryChildren,
     this.onSearch,
-    this.itemSize
+    this.itemSize,
+    this.onLogsPressed,
+    this.showLogs = true,
+    this.showRefresh = true,
   }) : assert((
       includeSearchField == false && (controller == null && onSearch == null)) || (includeSearchField == true && (controller != null && onSearch != null)), 'controller and onSearch must be null, if search field is not included. And must be provided if search field is included.');
 
@@ -36,6 +38,9 @@ class ListBaseContainer extends StatelessWidget {
   final void Function(String?)? onSearch;
   final VoidCallback onRefresh;
   final double? itemSize;
+  final bool showLogs;
+  final bool showRefresh;
+  final VoidCallback? onLogsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,12 @@ class ListBaseContainer extends StatelessWidget {
                 hint: hintText,
                 onChanged: onSearch,
               ) : SizedBox(),
-              RefreshAndLogsButton(onRefresh: onRefresh,),
+              RefreshAndLogsButton(
+                onRefresh: onRefresh,
+                showLogs: showLogs,
+                showRefresh: showRefresh,
+                onLogsPressed: onLogsPressed,
+              ),
             ],
           ),
           _ListColumNames(columnNames: columnsNames, expandFirstColumn: expandFirstColumn,),

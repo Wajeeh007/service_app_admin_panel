@@ -12,7 +12,7 @@ class Arc extends StatelessWidget {
     this.color,
   });
 
-  final double figure;
+  final num figure;
   final String figureUnit;
   final Color? color;
 
@@ -45,7 +45,7 @@ class Arc extends StatelessWidget {
 class _SemiArcPainter extends CustomPainter {
   _SemiArcPainter({required this.percentage, this.fillColor});
 
-  final double percentage;
+  final num percentage;
   final Color? fillColor;
 
   @override

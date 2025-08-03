@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:service_app_admin_panel/helpers/determine_list_height.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_details/customer_details_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_cached_network_image.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_material_button.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_tab_bar.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/rating_and_value.dart';
@@ -36,7 +37,7 @@ class CustomerDetailsView extends StatelessWidget {
       scrollController: _viewModel.scrollController,
       selectedSidePanelItem: lang_key.customersList.tr,
       children: [
-        SectionHeadingText(headingText: "${lang_key.customer.tr}_"),
+        Obx(() => SectionHeadingText(headingText: "${lang_key.customer.tr}_${_viewModel.customerDetails.value.id}")),
         _CustomerInfoAndActivity(),
         CustomTabBar(
             controller: _viewModel.mainTabController,
@@ -156,56 +157,62 @@ class _CustomerActivitySection extends StatelessWidget {
 
 /// Customer activity rate bar
 class _CustomerActivityRateBar extends StatelessWidget {
-  const _CustomerActivityRateBar();
+  _CustomerActivityRateBar();
+
+  final CustomerDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      spacing: 10,
-      children: [
-        Text(
-          lang_key.averageActivityRate.tr,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: primaryBlue
-          ),
-        ),
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            height: 5,
-            decoration: BoxDecoration(
-                borderRadius: kContainerBorderRadius,
-                border: Border.all(
-                    color: Colors.transparent,
-                    width: 0.1
-                ),
-                gradient: LinearGradient(
-                    colors: [
-                      primaryBlue,
-                      primaryBlue,
-                      primaryGrey.withValues(alpha: 0.2),
-                      primaryGrey.withValues(alpha: 0.2)
-                    ],
-                    stops: [
-                      0,
-                      0.02,
-                      0.02,
-                      1
-                    ]
-                )
+
+    return Obx(() => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: 10,
+        children: [
+          Text(
+            lang_key.averageActivityRate.tr,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: primaryBlue
             ),
           ),
-        ),
-        Text('2%', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryBlue))
-      ],
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: 5,
+              decoration: BoxDecoration(
+                  borderRadius: kContainerBorderRadius,
+                  border: Border.all(
+                      color: Colors.transparent,
+                      width: 0.1
+                  ),
+                  gradient: LinearGradient(
+                      colors: [
+                        primaryBlue,
+                        primaryBlue,
+                        primaryGrey.withValues(alpha: 0.2),
+                        primaryGrey.withValues(alpha: 0.2)
+                      ],
+                      stops: [
+                        0,
+                        _viewModel.activityStats['average_activity_rate'] == null ? 0.0 : _viewModel.activityStats['average_activity_rate'] / 100 ?? 0.0,
+                        _viewModel.activityStats['average_activity_rate'] == null ? 0.0 : _viewModel.activityStats['average_activity_rate'] / 100 ?? 0.0,
+                        1
+                      ]
+                  )
+              ),
+            ),
+          ),
+          Text("${_viewModel.activityStats['average_activity_rate'] ?? 0}%", style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryBlue))
+        ],
+      ),
     );
   }
 }
 
 /// Customer image, name, phone, rating and email
 class _CustomerBasicInfo extends StatelessWidget {
-  const _CustomerBasicInfo();
+  _CustomerBasicInfo();
+
+  final CustomerDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -213,42 +220,44 @@ class _CustomerBasicInfo extends StatelessWidget {
       child: Row(
         spacing: 15,
         children: [
-          ClipRRect(
-            borderRadius: kContainerBorderRadius,
-            child: Image.asset(ImagesPaths.dummyCustomerImage, height: 200, width: 180,),
+          Obx(() => ClipRRect(
+              borderRadius: kContainerBorderRadius,
+              child: CustomNetworkImage(imageUrl: _viewModel.customerDetails.value.profileImage ?? '', height: 200, width: 180,),
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 5,
-            children: [
-              Row(
-                spacing: 20,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('Name', style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
+          Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 5,
+              children: [
+                Row(
+                    spacing: 20,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(_viewModel.customerDetails.value.name ?? '', style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
 
-                  )),
-                  RatingAndValue(ratingValue: 5.0)
-                ],
-              ),
-              Text(
-                '+123456789',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Colors.grey,
-                    letterSpacing: 0.4
+                      )),
+                      RatingAndValue(ratingValue: _viewModel.customerDetails.value.rating ?? 0.0)
+                    ],
+                  ),
+                Text(
+                  _viewModel.customerDetails.value.phoneNo ?? '',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Colors.grey,
+                      letterSpacing: 0.4
+                  ),
                 ),
-              ),
-              Text(
-                'dummy@example.com',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: Colors.grey,
-                    letterSpacing: 0.4
-                ),
-              )
-            ],
+                Text(
+                  _viewModel.customerDetails.value.email ?? '',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Colors.grey,
+                      letterSpacing: 0.4
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -258,7 +267,9 @@ class _CustomerBasicInfo extends StatelessWidget {
 
 /// Customer Order details container
 class _CustomerOverviewTab extends StatelessWidget {
-  const _CustomerOverviewTab();
+  _CustomerOverviewTab();
+
+  final CustomerDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -278,16 +289,17 @@ class _CustomerOverviewTab extends StatelessWidget {
             spacing: 20,
             children: [
               _ContainerInsideHeadingTextAndIcon(text: lang_key.customerOrderDetails.tr),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 10,
-                children: [
-                  _OrderStatisticsTextAndValue(text: lang_key.totalCompletedOrders.tr, value: '0'),
-                  _OrderStatisticsTextAndValue(text: lang_key.totalCancelledOrders.tr, value: '0'),
-                  _OrderStatisticsTextAndValue(text: lang_key.highestAmountOrder.tr, value: "\$0.00"),
-                  _OrderStatisticsTextAndValue(text: lang_key.lowestAmountOrder.tr, value: "\$0.00"),
-                ],
+              Obx(() => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 10,
+                  children: [
+                    _OrderStatisticsTextAndValue(text: lang_key.totalCompletedOrders.tr, value: _viewModel.activityStats['total_completed_orders'] ?? 0),
+                    _OrderStatisticsTextAndValue(text: lang_key.totalCancelledOrders.tr, value: _viewModel.activityStats['total_cancelled_orders'] ?? 0),
+                    _OrderStatisticsTextAndValue(text: lang_key.highestAmountOrder.tr, value: "\$${_viewModel.activityStats['highest_amount_order'] ?? 0.0}"),
+                    _OrderStatisticsTextAndValue(text: lang_key.lowestAmountOrder.tr, value: "\$${_viewModel.activityStats['lowest_amount_order'] ?? 0.0}"),
+                  ],
+                ),
               )
             ],
           ),
@@ -359,18 +371,33 @@ class _CustomerTransactionsTab extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return ListBaseContainer(
-        onRefresh: () {},
-        includeSearchField: false,
-        expandFirstColumn: false,
-        listData: _viewModel.transactions,
-        columnsNames: [
-          lang_key.sl.tr,
-          lang_key.date.tr,
-          lang_key.totalAmount.tr,
-          lang_key.commission.tr,
-          lang_key.paymentStatus.tr,
-        ],
+    return Obx(() => ListBaseContainer(
+          onRefresh: () => _viewModel.fetchCustomerTransactions(),
+          includeSearchField: false,
+          expandFirstColumn: false,
+          listData: _viewModel.transactions,
+          columnsNames: [
+            lang_key.sl.tr,
+            lang_key.date.tr,
+            lang_key.totalAmount.tr,
+            lang_key.commission.tr,
+            lang_key.paymentStatus.tr,
+          ],
+      entryChildren: List.generate(_viewModel.transactions.length, (index) {
+        return Padding(
+          padding: listEntryPadding,
+          child: Row(
+            children: [
+              ListSerialNoText(index: index),
+              ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.transactions[index].transactionDate!)),
+              ListEntryItem(text: _viewModel.transactions[index].totalAmount.toString(),),
+              ListEntryItem(text: _viewModel.transactions[index].commission.toString(),),
+              TwoStatesWidget(status: _viewModel.transactions[index].paymentStatus == TransactionPaymentStatus.paid, trueStateText: lang_key.paid.tr, falseStateText: lang_key.unpaid.tr,),
+            ],
+          ),
+        );
+      }),
+      ),
     );
   }
 }
@@ -444,18 +471,33 @@ class _ReviewsByServicemanList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListBaseContainer(
-      includeSearchField: false,
-        expandFirstColumn: false,
-        listData: _viewModel.reviewsByServiceman,
-        columnsNames: [
-          lang_key.sl.tr,
-          lang_key.serviceman.tr,
-          lang_key.rating.tr,
-          lang_key.date.tr,
-          lang_key.review.tr,
-        ],
-        onRefresh: () {}
+    return Obx(() => ListBaseContainer(
+        includeSearchField: false,
+          expandFirstColumn: false,
+          listData: _viewModel.reviewsByServiceman,
+          columnsNames: [
+            lang_key.sl.tr,
+            lang_key.serviceman.tr,
+            lang_key.rating.tr,
+            lang_key.date.tr,
+            lang_key.review.tr,
+          ],
+          onRefresh: () {},
+        entryChildren: List.generate(_viewModel.reviewsByServiceman.length, (index) {
+          return Padding(
+            padding: listEntryPadding,
+            child: Row(
+              children: [
+                ListSerialNoText(index: index),
+                ListEntryItem(text: _viewModel.reviewsByServiceman[index].servicemanName ?? '',),
+                ListEntryItem(text: _viewModel.reviewsByServiceman[index].ratingByServiceman.toString()),
+                ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.reviewsByServiceman[index].servicemanReviewDate!)),
+                ListEntryItem(text: _viewModel.reviewsByServiceman[index].servicemanRemarks),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }
@@ -468,18 +510,33 @@ class _ReviewsToServicemanList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListBaseContainer(
-      includeSearchField: false,
-        expandFirstColumn: false,
-        listData: _viewModel.reviewsToServiceman,
-        columnsNames: [
-          lang_key.sl.tr,
-          lang_key.serviceman.tr,
-          lang_key.rating.tr,
-          lang_key.date.tr,
-          lang_key.review.tr,
-        ],
-        onRefresh: () {}
+    return Obx(() => ListBaseContainer(
+        includeSearchField: false,
+          expandFirstColumn: false,
+          listData: _viewModel.reviewsToServiceman,
+          columnsNames: [
+            lang_key.sl.tr,
+            lang_key.serviceman.tr,
+            lang_key.rating.tr,
+            lang_key.date.tr,
+            lang_key.review.tr,
+          ],
+          onRefresh: () {},
+          entryChildren: List.generate(_viewModel.reviewsToServiceman.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListSerialNoText(index: index),
+                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].servicemanName ?? '',),
+                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].ratingByServiceman.toString()),
+                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.reviewsToServiceman[index].servicemanReviewDate!)),
+                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].servicemanRemarks),
+                ],
+              ),
+            );
+          })
+      ),
     );
   }
 }
@@ -548,14 +605,14 @@ class _RatingValueAndStars extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            4.5.toString(),
+            _viewModel.customerDetails.value.rating == null ? 0.0.toString() : _viewModel.customerDetails.value.rating.toString(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontSize: 50
             ),
           ),
           RatingStars(
             iconSize: 15,
-            initialRating: 4.5,
+            initialRating: _viewModel.customerDetails.value.rating ?? 0.0,
           )
         ],
       ),
@@ -643,19 +700,22 @@ class _ContainerInsideHeadingTextAndIcon extends StatelessWidget {
 
 /// Mathematical rate stats of the customer
 class _RatesSection extends StatelessWidget {
-  const _RatesSection();
+  _RatesSection();
+
+  final CustomerDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 15,
-      children: [
-        _SingleRateContainer(value: 1, figureText: lang_key.averageSpending.tr, figureUnit: '\$',),
-        _SingleRateContainer(value: 0, figureText: lang_key.positiveReviewRate.tr, color: Colors.orange,),
-        _SingleRateContainer(value: 0, figureText: lang_key.successRate.tr, color: Colors.green,),
-        _SingleRateContainer(value: 0, figureText: lang_key.cancellationRate.tr, color: Colors.redAccent,),
-      ],
+    return Obx(() => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 15,
+        children: [
+          _SingleRateContainer(value: _viewModel.activityStats['average_spending_value'] ?? 0, figureText: lang_key.averageSpending.tr, figureUnit: '\$',),
+          _SingleRateContainer(value: _viewModel.activityStats['positive_review_rate'] ?? 0, figureText: lang_key.positiveReviewRate.tr, color: Colors.orange,),
+          _SingleRateContainer(value: _viewModel.activityStats['success_rate'] ?? 0, figureText: lang_key.successRate.tr, color: Colors.green,),
+          _SingleRateContainer(value: _viewModel.activityStats['cancellation_rate'] ?? 0, figureText: lang_key.cancellationRate.tr, color: Colors.redAccent,),
+        ],
+      ),
     );
   }
 }
@@ -669,7 +729,7 @@ class _SingleRateContainer extends StatelessWidget {
     this.color,
   });
 
-  final double value;
+  final num value;
   final String figureUnit;
   final String figureText;
   final Color? color;
@@ -715,7 +775,7 @@ class _OrderStatisticsTextAndValue extends StatelessWidget {
   const _OrderStatisticsTextAndValue({required this.text, required this.value});
 
   final String text;
-  final String value;
+  final dynamic value;
   
   @override
   Widget build(BuildContext context) {
@@ -729,7 +789,7 @@ class _OrderStatisticsTextAndValue extends StatelessWidget {
           ),
         ),
         Text(
-          value,
+          value.toString(),
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             color: primaryGrey
           ),

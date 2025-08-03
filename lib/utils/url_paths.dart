@@ -13,6 +13,8 @@ class Urls {
   static const _customersBaseUrl = '/customers';
   static const _serviceMenBaseUrl = '/servicemen';
   static const _ordersBaseUrl = '/orders';
+  static const _transactionsBaseUrl = '/transactions';
+  static const _reviewsBaseUrl = '/reviews';
   /// Zone Setup
 
   static String editZone(String id) {
@@ -128,7 +130,7 @@ class Urls {
     }
 
     static String getCustomerOrders(String id) {
-      return '$_customersBaseUrl/orders/$id';
+      return '$_ordersBaseUrl/$id';
     }
 
     static String getCustomerActivityStats(String id) {
@@ -166,4 +168,20 @@ class Urls {
     static const String getOrdersStats = '$_ordersBaseUrl/stats';
     /// Orders List End ///
   /// Orders Management End ///
+
+  /// Transactions ///
+  static String getCustomerTransactions(String id) {
+    return '$_transactionsBaseUrl/customer/$id';
+  }
+  /// Transactions End ///
+
+  /// Reviews ///
+  static String getCustomerReviewsByServicemen(String id) {
+    return '$_reviewsBaseUrl/review_to/customer/$id';
+  }
+
+  static String getCustomerReviewsToServicemen(String id) {
+    return '$_reviewsBaseUrl/review_by/customer/$id';
+  }
+  /// Reviews End ///
 }

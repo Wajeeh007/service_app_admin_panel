@@ -3,11 +3,15 @@ class Review {
   String? id;
   String? customerId;
   String? servicemanId;
+  String? servicemanName;
+  String? customerName;
   String? customerRemarks;
   double? ratingByCustomer;
   String? servicemanRemarks;
   double? ratingByServiceman;
   String? orderId;
+  DateTime? customerReviewDate;
+  DateTime? servicemanReviewDate;
 
   Review({
     this.id,
@@ -18,6 +22,8 @@ class Review {
     this.servicemanRemarks,
     this.ratingByServiceman,
     this.orderId,
+    this.servicemanName,
+    this.customerName
   });
 
   Review.fromJson(Map<String, dynamic> json) {
@@ -29,6 +35,9 @@ class Review {
     servicemanRemarks = json['serviceman_remarks'];
     ratingByServiceman = json['rating_by_serviceman'] != null ? double.tryParse(json['rating_by_serviceman']) : null;
     orderId = json['order_id'];
-
+    customerName = json['customer_name'];
+    servicemanName = json['serviceman_name'];
+    customerReviewDate = json['customer_review_date'] != null ? DateTime.tryParse(json['customer_review_date']) : DateTime.now();
+    servicemanReviewDate = json['serviceman_review_date'] != null ? DateTime.tryParse(json['serviceman_review_date']) : DateTime.now();
   }
 }
