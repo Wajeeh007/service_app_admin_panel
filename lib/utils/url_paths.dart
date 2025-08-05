@@ -183,5 +183,9 @@ class Urls {
   static String getCustomerReviewsToServicemen(String id) {
     return '$_reviewsBaseUrl/review_by/customer/$id';
   }
+
+  static String getCustomerRatingStats(String id) {
+    return '$_reviewsBaseUrl/customer_rating_stats/$id';
+  }
   /// Reviews End ///
 }

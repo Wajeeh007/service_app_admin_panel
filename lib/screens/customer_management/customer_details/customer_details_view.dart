@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -482,7 +481,7 @@ class _ReviewsByServicemanList extends StatelessWidget {
             lang_key.date.tr,
             lang_key.review.tr,
           ],
-          onRefresh: () {},
+          onRefresh: () => _viewModel.fetchReviews(false),
         entryChildren: List.generate(_viewModel.reviewsByServiceman.length, (index) {
           return Padding(
             padding: listEntryPadding,
@@ -521,7 +520,7 @@ class _ReviewsToServicemanList extends StatelessWidget {
             lang_key.date.tr,
             lang_key.review.tr,
           ],
-          onRefresh: () {},
+          onRefresh: () => _viewModel.fetchReviews(true),
           entryChildren: List.generate(_viewModel.reviewsToServiceman.length, (index) {
             return Padding(
               padding: listEntryPadding,
@@ -556,34 +555,40 @@ class _RatingSection extends StatelessWidget {
         _RatingValueAndStars(),
         Expanded(
           flex: 6,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 5,
-            children: List.generate(5, (index) {
+          child: Obx(() => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 5,
+              children: List.generate(5, (index) {
 
-              int randomRatingValue = Random().nextInt(9);
-
-              return Row(
-                spacing: 15,
-                children: [
-                  Expanded(
-                    flex: 5,
-                      child: _RatingPercentageBar(
-                        ratingValue: randomRatingValue,
-                        index: index,
-                      )
-                  ),
-                  Expanded(
-                    child: Text(
-                      _viewModel.ratingPercentageBarTexts[index],
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Colors.grey
-                      ),
+                return Row(
+                  spacing: 15,
+                  children: [
+                    Expanded(
+                      flex: 5,
+                        child: _RatingPercentageBar(
+                          ratingValue: switch(index) {
+                            0 => _viewModel.reviewStats.value.fiveStar ?? 0.0,
+                            1 => _viewModel.reviewStats.value.fourStar ?? 0.0,
+                            2 => _viewModel.reviewStats.value.threeStar ?? 0.0,
+                            3 => _viewModel.reviewStats.value.twoStar ?? 0.0,
+                            4 => _viewModel.reviewStats.value.oneStar ?? 0.0,
+                            int() => 0.0,
+                          },
+                          index: index,
+                        )
                     ),
-                  )
-                ],
-              );
-            }),
+                    Expanded(
+                      child: Text(
+                        _viewModel.ratingPercentageBarTexts[index],
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Colors.grey
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+            ),
           ),
         )
       ],
@@ -625,7 +630,7 @@ class _RatingPercentageBar extends StatelessWidget {
   const _RatingPercentageBar({required this.ratingValue, required this.index});
 
   final int index;
-  final int ratingValue;
+  final double ratingValue;
 
   @override
   Widget build(BuildContext context) {
@@ -659,8 +664,8 @@ class _RatingPercentageBar extends StatelessWidget {
                       ],
                       stops: [
                         0.0,
-                        ratingValue / 10,
-                        ratingValue / 10,
+                        ratingValue,
+                        ratingValue,
                         1.0
                       ]
                   )

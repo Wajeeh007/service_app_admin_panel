@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/populate_lists.dart';
+import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
 import 'package:service_app_admin_panel/models/customer.dart';
 import 'package:service_app_admin_panel/models/order.dart';
 import 'package:service_app_admin_panel/models/review.dart';
+import 'package:service_app_admin_panel/screens/customer_management/customer_details/review_stats_model.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
 import '../../../helpers/scroll_controller_funcs.dart';
+import '../../../languages/translation_keys.dart' as lang_key;
 import '../../../models/transaction.dart';
 import '../../../utils/routes.dart';
 
@@ -53,6 +56,9 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
     'Poor'
   ];
 
+  /// Map variable for storing review stats
+  Rx<ReviewStats> reviewStats = ReviewStats().obs;
+  
   /// Pagination variables for reviews
   int reviewsByServicemenLimit = 10;
   int reviewsToServicemenLimit = 10;
@@ -96,7 +102,8 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
     // final getCustomerTransactions = ApiBaseHelper.getMethod(url: "${Urls.getCustomerTransactions(customerDetails.value.id!)}?limit=$transactionsLimit&page=${transactionsPage.value}");
     final getCustomerReviewsByServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsByServicemen(customerId)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}");
     final getCustomerReviewsToServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsToServicemen(customerId)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}");
-
+    final getCustomerRatingStats = ApiBaseHelper.getMethod(url: Urls.getCustomerRatingStats(customerId));
+    
     final responses = await Future.wait([
       getCustomerDetails,
       getCustomerActivity,
@@ -104,6 +111,7 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
       // getCustomerTransactions,
       getCustomerReviewsByServicemen,
       getCustomerReviewsToServicemen,
+      getCustomerRatingStats,
     ]);
 
     if(responses[0].success! && responses[0].data != null) customerDetails.value = Customer.fromJson(responses[0].data!);
@@ -114,8 +122,21 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
     //   transactions.addAllIf(data.isNotEmpty, data.map((e)=> Transaction.fromJson(e)));
     //   transactions.refresh();
     // }
-    if(responses[3].success! && responses[3].data != null) reviewsByServiceman.addAllIf(responses[3].data.isNotEmpty, responses[3].data.map((e) => Review.fromJson(e)));
-    if(responses[4].success! && responses[4].data != null) reviewsToServiceman.addAllIf(responses[4].data.isNotEmpty, responses[4].data.map((e) => Review.fromJson(e)));
+    if(responses[3].success! && responses[3].data != null) {
+      final data = responses[3].data as List;
+      reviewsByServiceman.addAllIf(data.isNotEmpty, data.map((e) => Review.fromJson(e)));
+    }
+
+    if(responses[4].success! && responses[4].data != null) {
+      final data = responses[4].data as List;
+      reviewsToServiceman.addAllIf(data.isNotEmpty, data.map((e) => Review.fromJson(e)));
+    }
+
+    if(responses[5].success! && responses[5].data != null) reviewStats.value = ReviewStats.fromJson(responses[5].data!);
+
+    if(responses.isEmpty || responses.every((element) => !element.success!)) {
+      showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);
+    }
 
     GlobalVariables.showLoader.value = false;
   }
@@ -141,6 +162,35 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
         final data = value.data as List;
         transactions.addAll(data.map((e) => Transaction.fromJson(e)));
         transactions.refresh();
+      }
+    });
+  }
+
+  /// API to fetch reviews related to customer
+  void fetchReviews(bool reviewsByCustomer) {
+    GlobalVariables.showLoader.value = true;
+
+    ApiBaseHelper.getMethod(
+        url: reviewsByCustomer ?
+        "${Urls.getCustomerReviewsToServicemen(customerId)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}"
+            : "${Urls.getCustomerReviewsByServicemen(customerId)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}"
+    ).then((value) {
+      GlobalVariables.showLoader.value = false;
+
+      if(value.success!) {
+        if(reviewsByCustomer) {
+          reviewsToServiceman.clear();
+          final data = value.data as List;
+          reviewsToServiceman.addAll(data.map((e) => Review.fromJson(e)));
+          reviewsToServiceman.refresh();
+        } else {
+          reviewsByServiceman.clear();
+          final data = value.data as List;
+          reviewsByServiceman.addAll(data.map((e) => Review.fromJson(e)));
+          reviewsByServiceman.refresh();
+        }
+      } else {
+        showSnackBar(message: value.message!, success: value.success!);
       }
     });
   }

@@ -23,7 +23,9 @@ class Review {
     this.ratingByServiceman,
     this.orderId,
     this.servicemanName,
-    this.customerName
+    this.customerName,
+    this.servicemanReviewDate,
+    this.customerReviewDate,
   });
 
   Review.fromJson(Map<String, dynamic> json) {
