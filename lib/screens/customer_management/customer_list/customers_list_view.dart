@@ -14,6 +14,7 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/stats_container.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/two_states_widget.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 class CustomersListView extends StatelessWidget {
   CustomersListView({super.key});
@@ -144,7 +145,7 @@ class _AllCustomersListTabView extends StatelessWidget {
                       includeView: true,
                     deleteIcon: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? CupertinoIcons.nosign : null,
                     onDeletePressed: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? () => showConfirmationDialog(onPressed: () => _viewModel.showSuspensionNoteDialog(index)) : null,
-                    onViewPressed: () {},
+                    onViewPressed: () => Get.toNamed(Routes.customerDetails, arguments: {'customerDetails': _viewModel.visibleAllCustomersList[index]}),
                   )
                 ],
               ),

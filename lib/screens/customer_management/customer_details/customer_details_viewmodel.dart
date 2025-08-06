@@ -24,10 +24,7 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
 
   TextEditingController ordersSearchController = TextEditingController();
   /// Controller(s) & Form Keys End ///
-
-  /// String for customer ID ///
-  String customerId = 'dc0ac075-01b6-4c56-9f1b-60559c0ed188';
-
+  
   /// Customer Object
   Rx<Customer> customerDetails = Customer().obs;
 
@@ -82,27 +79,26 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
   @override
   void onReady() {
     Map<String, dynamic>? args = Get.arguments;
-    // if(args == null || args.isEmpty) {
-    //   Get.offAllNamed(Routes.customersList);
-    // } else {
-    //   GlobalVariables.showLoader.value = true;
-      // customerId = args['customerId'];
-      // _fetchCustomer();
+    if(args == null || args.isEmpty) {
+      Get.offAllNamed(Routes.customersList);
+    } else {
+      GlobalVariables.showLoader.value = true;
+      customerDetails.value = args['customerDetails'];
+      _fetchCustomerData();
       animateSidePanelScrollController(scrollController, routeName: Routes.customersList);
-    // }
-    _fetchCustomerDetailsAndActivity();
+    }
     super.onReady();
   }
 
-  void _fetchCustomerDetailsAndActivity() async {
+  void _fetchCustomerData() async {
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
-    final getCustomerDetails = ApiBaseHelper.getMethod(url: Urls.getCustomer(customerId));
-    final getCustomerActivity = ApiBaseHelper.getMethod(url: Urls.getCustomerActivityStats(customerId));
-    final getCustomerOrders = ApiBaseHelper.getMethod(url: "${Urls.getCustomerOrders(customerId)}?limit=$ordersLimit&page=${ordersPage.value}");
+    final getCustomerDetails = ApiBaseHelper.getMethod(url: Urls.getCustomer(customerDetails.value.id!));
+    final getCustomerActivity = ApiBaseHelper.getMethod(url: Urls.getCustomerActivityStats(customerDetails.value.id!));
+    final getCustomerOrders = ApiBaseHelper.getMethod(url: "${Urls.getCustomerOrders(customerDetails.value.id!)}?limit=$ordersLimit&page=${ordersPage.value}");
     // final getCustomerTransactions = ApiBaseHelper.getMethod(url: "${Urls.getCustomerTransactions(customerDetails.value.id!)}?limit=$transactionsLimit&page=${transactionsPage.value}");
-    final getCustomerReviewsByServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsByServicemen(customerId)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}");
-    final getCustomerReviewsToServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsToServicemen(customerId)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}");
-    final getCustomerRatingStats = ApiBaseHelper.getMethod(url: Urls.getCustomerRatingStats(customerId));
+    final getCustomerReviewsByServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsByServicemen(customerDetails.value.id!)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}");
+    final getCustomerReviewsToServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsToServicemen(customerDetails.value.id!)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}");
+    final getCustomerRatingStats = ApiBaseHelper.getMethod(url: Urls.getCustomerRatingStats(customerDetails.value.id!));
     
     final responses = await Future.wait([
       getCustomerDetails,
@@ -172,8 +168,8 @@ class CustomerDetailsViewModel extends GetxController with SingleGetTickerProvid
 
     ApiBaseHelper.getMethod(
         url: reviewsByCustomer ?
-        "${Urls.getCustomerReviewsToServicemen(customerId)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}"
-            : "${Urls.getCustomerReviewsByServicemen(customerId)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}"
+        "${Urls.getCustomerReviewsToServicemen(customerDetails.value.id!)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}"
+            : "${Urls.getCustomerReviewsByServicemen(customerDetails.value.id!)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}"
     ).then((value) {
       GlobalVariables.showLoader.value = false;
 
