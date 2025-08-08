@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:service_app_admin_panel/helpers/determine_list_height.dart';
-import 'package:service_app_admin_panel/screens/customer_management/customer_details/customer_details_viewmodel.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/serviceman_details/serviceman_details_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_cached_network_image.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_material_button.dart';
@@ -26,10 +26,10 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 
 import '../../../utils/custom_widgets/two_states_widget.dart';
 
-class CustomerDetailsView extends StatelessWidget {
-  CustomerDetailsView({super.key});
+class ServicemanDetailsView extends StatelessWidget {
+  ServicemanDetailsView({super.key});
 
-  final CustomerDetailsViewModel _viewModel = Get.put(CustomerDetailsViewModel());
+  final ServicemanDetailsViewModel _viewModel = Get.put(ServicemanDetailsViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -37,21 +37,24 @@ class CustomerDetailsView extends StatelessWidget {
         scrollController: _viewModel.scrollController,
         selectedSidePanelItem: _viewModel.sidePanelItem.value,
         children: [
-          Obx(() => SectionHeadingText(headingText: "${lang_key.customer.tr}_${_viewModel.customerDetails.value.id}")),
-          _CustomerInfoAndActivity(),
+          Obx(() => SectionHeadingText(headingText: "${lang_key.serviceman.tr}_${_viewModel.servicemanDetails.value.id}")),
+          _ServicemanInfoAndActivity(),
+          _ServicemanWallet(),
           CustomTabBar(
               controller: _viewModel.mainTabController,
               onChanged: (value) {
                 switch(value) {
                   case 0: GlobalVariables.listHeight.value = 200;
-                  case 1: listSize(length: _viewModel.visibleCustomerOrders.length);
+                  case 1: listSize(length: _viewModel.visibleServicemanOrders.length);
                   case 2: listSize(length: _viewModel.transactions.length );
-                  case 3: GlobalVariables.listHeight.value = 600 + (_viewModel.reviewsTabController.index == 0 ? _viewModel.reviewsByServiceman.length * 40 : _viewModel.reviewsToServiceman.length * 40);
+                  case 3: listSize(length: _viewModel.servicemanDetails.value.services != null ? _viewModel.servicemanDetails.value.services!.length : 0);
+                  case 4: GlobalVariables.listHeight.value = 600 + (_viewModel.reviewsTabController.index == 0 ? _viewModel.reviewsByServiceman.length * 40 : _viewModel.reviewsToCustomer.length * 40);
                 }
               },
               tabsNames: [
                 lang_key.overView.tr,
                 lang_key.orders.tr,
+                lang_key.services.tr,
                 lang_key.transactions.tr,
                 lang_key.reviews.tr,
               ]
@@ -61,24 +64,43 @@ class CustomerDetailsView extends StatelessWidget {
               child: TabBarView(
                 controller: _viewModel.mainTabController,
                   children: [
-                    _CustomerOverviewTab(),
-                    _CustomerOrdersTab(),
-                    _CustomerTransactionsTab(),
-                    _CustomerReviewsTab(),
+                    _ServicemanOverviewTab(),
+                    _ServicemanOrdersTab(),
+                    _ServicemanServicesTab(),
+                    _ServicemanTransactionsTab(),
+                    _ServicemanReviewsTab(),
                   ]
               ),
             ),
           ),
           Obx(() => Visibility(
-              visible: _viewModel.customerDetails.value.status == UserStatuses.suspended || _viewModel.customerDetails.value.status == UserStatuses.active,
+              visible: _viewModel.servicemanDetails.value.status == UserStatuses.suspended || _viewModel.servicemanDetails.value.status == UserStatuses.active,
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: CustomMaterialButton(
-                  borderColor: _viewModel.customerDetails.value.status == UserStatuses.active ? errorRed : CupertinoColors.activeGreen,
-                  buttonColor: _viewModel.customerDetails.value.status == UserStatuses.active ? errorRed : CupertinoColors.activeGreen,
-                  width: 150,
-                  text: _viewModel.customerDetails.value.status == UserStatuses.active ? lang_key.suspend.tr : lang_key.activate.tr,
-                    onPressed: () => _viewModel.updateUserStatus(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Visibility(
+                      visible: _viewModel.servicemanDetails.value.status == UserStatuses.suspended || _viewModel.servicemanDetails.value.status == UserStatuses.pending,
+                      child: CustomMaterialButton(
+                        borderColor: CupertinoColors.activeGreen,
+                        buttonColor: CupertinoColors.activeGreen,
+                        width: 150,
+                        text: lang_key.activate.tr,
+                          onPressed: () => _viewModel.updateUserStatus(UserStatuses.active),
+                      ),
+                    ),
+                    Visibility(
+                      visible: _viewModel.servicemanDetails.value.status == UserStatuses.active || _viewModel.servicemanDetails.value.status == UserStatuses.pending,
+                      child: CustomMaterialButton(
+                        borderColor: errorRed,
+                        buttonColor: errorRed,
+                        width: 150,
+                        text: lang_key.suspend.tr,
+                        onPressed: () => _viewModel.updateUserStatus(_viewModel.servicemanDetails.value.status == UserStatuses.pending ? UserStatuses.declined : UserStatuses.suspended),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -90,8 +112,8 @@ class CustomerDetailsView extends StatelessWidget {
 }
 
 /// Customer information and activity rate section
-class _CustomerInfoAndActivity extends StatelessWidget {
-  const _CustomerInfoAndActivity();
+class _ServicemanInfoAndActivity extends StatelessWidget {
+  const _ServicemanInfoAndActivity();
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +126,7 @@ class _CustomerInfoAndActivity extends StatelessWidget {
       child: Row(
         children: [
           _CustomerInfoSection(),
-          _CustomerActivitySection(),
+          _ServicemanActivitySection(),
         ],
       ),
     );
@@ -124,8 +146,8 @@ class _CustomerInfoSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _ContainerInsideHeadingTextAndIcon(text: lang_key.customerInfo.tr),
-          _CustomerBasicInfo(),
+          _ContainerInsideHeadingTextAndIcon(text: lang_key.servicemanInfo.tr),
+          _ServicemanBasicInfo(),
         ],
       ),
     );
@@ -133,8 +155,8 @@ class _CustomerInfoSection extends StatelessWidget {
 }
 
 /// Customer activity section and rates of activities performed.
-class _CustomerActivitySection extends StatelessWidget {
-  const _CustomerActivitySection();
+class _ServicemanActivitySection extends StatelessWidget {
+  const _ServicemanActivitySection();
 
   @override
   Widget build(BuildContext context) {
@@ -145,13 +167,13 @@ class _CustomerActivitySection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _ContainerInsideHeadingTextAndIcon(text: lang_key.customerActivityRate.tr),
+          _ContainerInsideHeadingTextAndIcon(text: lang_key.servicemanActivityRate.tr),
           Expanded(
             child: Column(
               crossAxisAlignment: MediaQuery.sizeOf(context).width >= 1300 ? CrossAxisAlignment.center : CrossAxisAlignment.start,
               spacing: 15,
               children: [
-                _CustomerActivityRateBar(),
+                _ServicemanActivityRateBar(),
                 _RatesSection(),
               ],
             ),
@@ -163,10 +185,10 @@ class _CustomerActivitySection extends StatelessWidget {
 }
 
 /// Customer activity rate bar
-class _CustomerActivityRateBar extends StatelessWidget {
-  _CustomerActivityRateBar();
+class _ServicemanActivityRateBar extends StatelessWidget {
+  _ServicemanActivityRateBar();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -215,11 +237,11 @@ class _CustomerActivityRateBar extends StatelessWidget {
   }
 }
 
-/// Customer image, name, phone, rating and email
-class _CustomerBasicInfo extends StatelessWidget {
-  _CustomerBasicInfo();
+/// Serviceman image, name, phone, rating and email
+class _ServicemanBasicInfo extends StatelessWidget {
+  _ServicemanBasicInfo();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +252,7 @@ class _CustomerBasicInfo extends StatelessWidget {
         children: [
           Obx(() => ClipRRect(
               borderRadius: kContainerBorderRadius,
-              child: CustomNetworkImage(imageUrl: _viewModel.customerDetails.value.profileImage ?? '', height: MediaQuery.sizeOf(context).width * 0.1, width: MediaQuery.sizeOf(context).width * 0.1,),
+              child: CustomNetworkImage(imageUrl: _viewModel.servicemanDetails.value.profileImage ?? '', height: MediaQuery.sizeOf(context).width * 0.1, width: MediaQuery.sizeOf(context).width * 0.1,),
             ),
           ),
           Obx(() => Column(
@@ -243,15 +265,15 @@ class _CustomerBasicInfo extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_viewModel.customerDetails.value.name ?? '', style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      Text(_viewModel.servicemanDetails.value.name ?? '', style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
 
                       )),
-                      RatingAndValue(ratingValue: _viewModel.customerDetails.value.rating ?? 0.0)
+                      RatingAndValue(ratingValue: _viewModel.servicemanDetails.value.rating ?? 0.0)
                     ],
                   ),
                 Text(
-                  _viewModel.customerDetails.value.phoneNo ?? '',
+                  _viewModel.servicemanDetails.value.phoneNo ?? '',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: Colors.grey,
                       letterSpacing: 0.4
@@ -260,7 +282,7 @@ class _CustomerBasicInfo extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width * 0.15,
                   child: Text(
-                    _viewModel.customerDetails.value.email ?? '',
+                    _viewModel.servicemanDetails.value.email ?? '',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Colors.grey,
                         letterSpacing: 0.4
@@ -277,67 +299,199 @@ class _CustomerBasicInfo extends StatelessWidget {
   }
 }
 
-/// Customer Order details container
-class _CustomerOverviewTab extends StatelessWidget {
-  _CustomerOverviewTab();
+/// Serviceman Wallet section
+class _ServicemanWallet extends StatelessWidget {
+  _ServicemanWallet();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: primaryWhite,
+      padding: EdgeInsets.all(15),
+      constraints: BoxConstraints(
+        maxHeight: 280,
+        minWidth: double.infinity,
+        maxWidth: double.infinity
+      ),
+      child: Column(
+        spacing: 8,
+        children: [
+          _ContainerInsideHeadingTextAndIcon(text: lang_key.walletInfo.tr),
+          Expanded(
+            child: Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                spacing: 10,
+                children: [
+                  _WalletStatWidget(icon: CupertinoIcons.money_dollar_circle, value: _viewModel.servicemanDetails.value.totalEarning ?? 0.0, text: lang_key.totalEarnings.tr,),
+                  _WalletStatWidget(icon: Icons.local_atm_rounded, value: _viewModel.servicemanDetails.value.withdrawableAmount ?? 0.0, text: lang_key.withdrawableAmount.tr,),
+                  _WalletStatWidget(icon: Icons.money_off_rounded, value: _viewModel.servicemanDetails.value.withdrawnAmount ?? 0.0, text: lang_key.withdrawnAmount.tr,),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Serviceman Wallet single stat widget
+class _WalletStatWidget extends StatelessWidget {
+  const _WalletStatWidget({
+    required this.icon,
+    required this.value,
+    required this.text,
+});
+
+  final IconData icon;
+  final double value;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.sizeOf(context).width > 1250 ? 250 : MediaQuery.sizeOf(context).width * 0.15,
+        // maxWidth: MediaQuery.sizeOf(context).width > 1250 ? 250 : MediaQuery.sizeOf(context).width * 0.15,
+        maxHeight: 180,
+        minHeight: 180
+      ),
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: primaryWhite,
+        borderRadius: kContainerBorderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: primaryGrey,
+            blurRadius: 10,
+            offset: Offset(0, 2)
+          )
+        ]
+      ),
+      child: Column(
+        spacing: 8,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 35,
+            color: primaryBlue,
+          ),
+          Text(
+            value.toString(),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.grey,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Serviceman Order details container
+class _ServicemanOverviewTab extends StatelessWidget {
+  _ServicemanOverviewTab();
+
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.all(20),
-          constraints: BoxConstraints(
-            minWidth: 450,
-            minHeight: 200,
-            maxHeight: 200,
-            maxWidth: 450
-          ),
-          decoration: kContainerBoxDecoration,
-          child: Column(
-            spacing: 20,
-            children: [
-              _ContainerInsideHeadingTextAndIcon(text: lang_key.customerOrderDetails.tr),
-              Obx(() => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 10,
-                  children: [
-                    _OrderStatisticsTextAndValue(text: lang_key.totalCompletedOrders.tr, value: _viewModel.activityStats['total_completed_orders'] ?? 0),
-                    _OrderStatisticsTextAndValue(text: lang_key.totalCancelledOrders.tr, value: _viewModel.activityStats['total_cancelled_orders'] ?? 0),
-                    _OrderStatisticsTextAndValue(text: lang_key.highestAmountOrder.tr, value: "\$${_viewModel.activityStats['highest_amount_order'] ?? 0.0}"),
-                    _OrderStatisticsTextAndValue(text: lang_key.lowestAmountOrder.tr, value: "\$${_viewModel.activityStats['lowest_amount_order'] ?? 0.0}"),
-                  ],
-                ),
-              )
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.sizeOf(context).width * 0.35,
+                minHeight: 200,
+                maxHeight: 200,
+                maxWidth: MediaQuery.sizeOf(context).width * 0.35,
+              ),
+              decoration: kContainerBoxDecoration,
+              child: Column(
+                spacing: 20,
+                children: [
+                  _ContainerInsideHeadingTextAndIcon(text: lang_key.servicemanOrderDetails.tr),
+                  Obx(() => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 10,
+                      children: [
+                        _OrderStatisticsTextAndValue(text: lang_key.totalCompletedOrders.tr, value: _viewModel.activityStats['total_completed_orders'] ?? 0),
+                        _OrderStatisticsTextAndValue(text: lang_key.totalCancelledOrders.tr, value: _viewModel.activityStats['total_cancelled_orders'] ?? 0),
+                        _OrderStatisticsTextAndValue(text: lang_key.highestAmountOrder.tr, value: "\$${_viewModel.activityStats['highest_amount_order'] ?? 0.0}"),
+                        _OrderStatisticsTextAndValue(text: lang_key.lowestAmountOrder.tr, value: "\$${_viewModel.activityStats['lowest_amount_order'] ?? 0.0}"),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.sizeOf(context).width * 0.35,
+                minHeight: 200,
+                maxHeight: 200,
+                maxWidth: MediaQuery.sizeOf(context).width * 0.35,
+              ),
+              decoration: kContainerBoxDecoration,
+              child: Column(
+                spacing: 20,
+                children: [
+                  _ContainerInsideHeadingTextAndIcon(text: lang_key.servicemanDocs.tr),
+                  Obx(() => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 10,
+                    children: [
+                      _ServicemanDoc(text: lang_key.idCardFront.tr, value: _viewModel.servicemanDetails.value.idCardFront),
+                      _ServicemanDoc(text: lang_key.idCardBack.tr, value: _viewModel.servicemanDetails.value.idCardBack),
+                      _ServicemanDoc(text: lang_key.selfie.tr, value: ""),
+                    ],
+                  ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-/// Customer Orders tab
-class _CustomerOrdersTab extends StatelessWidget {
-  _CustomerOrdersTab();
+/// Serviceman Orders tab
+class _ServicemanOrdersTab extends StatelessWidget {
+  _ServicemanOrdersTab();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() => ListBaseContainer(
-          onRefresh: () => _viewModel.fetchCustomerOrders(),
+          onRefresh: () => _viewModel.fetchServicemanOrders(),
           onSearch: (value) {},
           expandFirstColumn: false,
           hintText: lang_key.searchOrder.tr,
           controller: _viewModel.ordersSearchController,
-          listData: _viewModel.visibleCustomerOrders,
+          listData: _viewModel.visibleServicemanOrders,
           columnsNames: [
             lang_key.sl.tr,
             lang_key.date.tr,
@@ -347,17 +501,17 @@ class _CustomerOrdersTab extends StatelessWidget {
             lang_key.orderStatus.tr,
             lang_key.actions.tr
           ],
-          entryChildren: List.generate(_viewModel.visibleCustomerOrders.length, (index) {
+          entryChildren: List.generate(_viewModel.visibleServicemanOrders.length, (index) {
             return Padding(
               padding: listEntryPadding,
               child: Row(
                 children: [
                   ListSerialNoText(index: index),
-                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleCustomerOrders[index].orderDateTime!),),
-                  ListEntryItem(text: _viewModel.visibleCustomerOrders[index].totalAmount.toString(),),
-                  ListEntryItem(text: _viewModel.visibleCustomerOrders[index].commissionAmount.toString(),),
-                  TwoStatesWidget(status: _viewModel.visibleCustomerOrders[index].paymentStatus!, trueStateText: lang_key.paid.tr, falseStateText: lang_key.unpaid.tr,),
-                  OrderStatusWidget(orderStatus: _viewModel.visibleCustomerOrders[index].status!),
+                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleServicemanOrders[index].orderDateTime!),),
+                  ListEntryItem(text: _viewModel.visibleServicemanOrders[index].totalAmount.toString(),),
+                  ListEntryItem(text: _viewModel.visibleServicemanOrders[index].commissionAmount.toString(),),
+                  TwoStatesWidget(status: _viewModel.visibleServicemanOrders[index].paymentStatus!, trueStateText: lang_key.paid.tr, falseStateText: lang_key.unpaid.tr,),
+                  OrderStatusWidget(orderStatus: _viewModel.visibleServicemanOrders[index].status!),
                   ListActionsButtons(
                     includeDelete: false,
                     includeEdit: false,
@@ -375,16 +529,57 @@ class _CustomerOrdersTab extends StatelessWidget {
   }
 }
 
-/// Customer Transactions Tab
-class _CustomerTransactionsTab extends StatelessWidget {
-  _CustomerTransactionsTab();
+/// Serviceman Services
+class _ServicemanServicesTab extends StatelessWidget {
+  _ServicemanServicesTab();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Obx(() => ListBaseContainer(
+          onRefresh: () => _viewModel.fetchServiceman(),
+          includeSearchField: false,
+          expandFirstColumn: false,
+          listData: _viewModel.servicemanServices,
+          columnsNames: [
+            lang_key.sl.tr,
+            lang_key.name.tr,
+            lang_key.additionDate.tr,
+            lang_key.subService.tr,
+          ],
+          entryChildren: List.generate(_viewModel.servicemanServices.length, (index) {
+            return Padding(
+              padding: listEntryPadding,
+              child: Row(
+                children: [
+                  ListSerialNoText(index: index),
+                  ListEntryItem(text: _viewModel.servicemanServices[index].name!),
+                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.servicemanServices[index].createdAt!),),
+                  ListEntryItem(text: _viewModel.servicemanServices[index].subServiceName!,),
+                ],
+              ),
+            );
+          }),
+        )
+        ),
+      ],
+    );
+  }
+}
+
+/// Serviceman Transactions Tab
+class _ServicemanTransactionsTab extends StatelessWidget {
+  _ServicemanTransactionsTab();
+
+  final ServicemanDetailsViewModel _viewModel = Get.find();
   
   @override
   Widget build(BuildContext context) {
     return Obx(() => ListBaseContainer(
-          onRefresh: () => _viewModel.fetchCustomerTransactions(),
+          onRefresh: () => _viewModel.fetchServicemanTransactions(),
           includeSearchField: false,
           expandFirstColumn: false,
           listData: _viewModel.transactions,
@@ -414,11 +609,11 @@ class _CustomerTransactionsTab extends StatelessWidget {
   }
 }
 
-/// Customer Reviews Tab
-class _CustomerReviewsTab extends StatelessWidget {
-  _CustomerReviewsTab();
+/// Serviceman Reviews Tab
+class _ServicemanReviewsTab extends StatelessWidget {
+  _ServicemanReviewsTab();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -453,7 +648,7 @@ class _CustomerReviewsTab extends StatelessWidget {
               if(value == 0) {
                 _viewModel.reviewsVisibilityHeight.value = 270 + _viewModel.reviewsByServiceman.length * 40;
               } else {
-                _viewModel.reviewsVisibilityHeight.value = 270 + _viewModel.reviewsToServiceman.length * 40;
+                _viewModel.reviewsVisibilityHeight.value = 270 + _viewModel.reviewsToCustomer.length * 40;
               }
           },
         ),
@@ -463,8 +658,8 @@ class _CustomerReviewsTab extends StatelessWidget {
                 child: TabBarView(
                   controller: _viewModel.reviewsTabController,
                     children: [
-                      _ReviewsByServicemanList(),
-                      _ReviewsToServicemanList(),
+                      _ReviewsByCustomerList(),
+                      _ReviewsToCustomerList(),
                     ]
                 ),
               ),
@@ -476,10 +671,10 @@ class _CustomerReviewsTab extends StatelessWidget {
 }
 
 /// Reviews given by servicemen list
-class _ReviewsByServicemanList extends StatelessWidget {
-  _ReviewsByServicemanList();
+class _ReviewsByCustomerList extends StatelessWidget {
+  _ReviewsByCustomerList();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -515,17 +710,17 @@ class _ReviewsByServicemanList extends StatelessWidget {
 }
 
 /// Reviews given to servicemen list
-class _ReviewsToServicemanList extends StatelessWidget {
-  _ReviewsToServicemanList();
+class _ReviewsToCustomerList extends StatelessWidget {
+  _ReviewsToCustomerList();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => ListBaseContainer(
         includeSearchField: false,
           expandFirstColumn: false,
-          listData: _viewModel.reviewsToServiceman,
+          listData: _viewModel.reviewsToCustomer,
           columnsNames: [
             lang_key.sl.tr,
             lang_key.serviceman.tr,
@@ -534,16 +729,16 @@ class _ReviewsToServicemanList extends StatelessWidget {
             lang_key.review.tr,
           ],
           onRefresh: () => _viewModel.fetchReviews(true),
-          entryChildren: List.generate(_viewModel.reviewsToServiceman.length, (index) {
+          entryChildren: List.generate(_viewModel.reviewsToCustomer.length, (index) {
             return Padding(
               padding: listEntryPadding,
               child: Row(
                 children: [
                   ListSerialNoText(index: index),
-                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].servicemanName ?? '',),
-                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].ratingByServiceman.toString()),
-                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.reviewsToServiceman[index].servicemanReviewDate!)),
-                  ListEntryItem(text: _viewModel.reviewsToServiceman[index].servicemanRemarks),
+                  ListEntryItem(text: _viewModel.reviewsToCustomer[index].servicemanName ?? '',),
+                  ListEntryItem(text: _viewModel.reviewsToCustomer[index].ratingByServiceman.toString()),
+                  ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.reviewsToCustomer[index].servicemanReviewDate!)),
+                  ListEntryItem(text: _viewModel.reviewsToCustomer[index].servicemanRemarks),
                 ],
               ),
             );
@@ -557,7 +752,7 @@ class _ReviewsToServicemanList extends StatelessWidget {
 class _RatingSection extends StatelessWidget {
   _RatingSection();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -613,7 +808,7 @@ class _RatingSection extends StatelessWidget {
 class _RatingValueAndStars extends StatelessWidget {
   _RatingValueAndStars();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -623,14 +818,14 @@ class _RatingValueAndStars extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            _viewModel.customerDetails.value.rating == null ? 0.0.toString() : _viewModel.customerDetails.value.rating.toString(),
+            _viewModel.servicemanDetails.value.rating == null ? 0.0.toString() : _viewModel.servicemanDetails.value.rating.toString(),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontSize: 50
             ),
           ),
           RatingStars(
             iconSize: 15,
-            initialRating: _viewModel.customerDetails.value.rating ?? 0.0,
+            initialRating: _viewModel.servicemanDetails.value.rating ?? 0.0,
           )
         ],
       ),
@@ -716,11 +911,11 @@ class _ContainerInsideHeadingTextAndIcon extends StatelessWidget {
   }
 }
 
-/// Mathematical rate stats of the customer
+/// Mathematical rate stats of the serviceman
 class _RatesSection extends StatelessWidget {
   _RatesSection();
 
-  final CustomerDetailsViewModel _viewModel = Get.find();
+  final ServicemanDetailsViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -811,6 +1006,41 @@ class _OrderStatisticsTextAndValue extends StatelessWidget {
             color: primaryGrey
           ),
         )
+      ],
+    );
+  }
+}
+
+/// Serviceman Document widget
+class _ServicemanDoc extends StatelessWidget {
+  const _ServicemanDoc({required this.text, required this.value});
+
+  final String text;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        if(value != null) InkWell(
+          onTap: () {},
+            child: CircleAvatar(
+              backgroundColor: primaryBlue,
+              radius: 10,
+              child: Icon(
+                CupertinoIcons.down_arrow,
+                color: Colors.white,
+                size: 15,
+              ),
+            ),
+          )
       ],
     );
   }

@@ -86,7 +86,7 @@ enum WithdrawMethodFieldType {text, number, email}
 /// New Method Input Field Type End ///
 
 /// User statuses ///
-enum UserStatuses {pending, active, inactive, suspended}
+enum UserStatuses {pending, active, inactive, declined, suspended}
 /// User statuses End ///
 
 /// Months list

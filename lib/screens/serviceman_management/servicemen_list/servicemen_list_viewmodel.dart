@@ -14,7 +14,7 @@ import '../../../utils/global_variables.dart';
 import '../../../utils/url_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
-class ServiceMenListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
+class ServicemenListViewModel extends GetxController with GetSingleTickerProviderStateMixin {
 
   /// Controller(s) & Form Keys
   late TabController tabController;
@@ -33,8 +33,8 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
     TextEditingController inActiveServiceMansSearchController = TextEditingController();
 
   /// All ServiceMen data list
-  List<Serviceman> allServiceMenList = <Serviceman>[];
-  RxList<Serviceman> visibleAllServiceMenList = <Serviceman>[].obs;
+  List<Serviceman> allServicemenList = <Serviceman>[];
+  RxList<Serviceman> visibleAllServicemenList = <Serviceman>[].obs;
 
   /// Active servicemen list
   List<Serviceman> allActiveServiceMenList = <Serviceman>[];
@@ -57,7 +57,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
   int inActiveTabLimit = 10;
   
   /// Analytical data variable
-  Rx<AnalyticalData> serviceMenAnalyticalData = AnalyticalData().obs;
+  Rx<AnalyticalData> servicemenAnalyticalData = AnalyticalData().obs;
   
   @override
   void onInit() {
@@ -100,7 +100,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
       fetchServicemenAnalyticalData]);
 
     // if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
-    if(responses[0].success!) populateLists<Serviceman, dynamic>(allServiceMenList, responses[0].data, visibleAllServiceMenList, (dynamic json) => Serviceman.fromJson(json));
+    if(responses[0].success!) populateLists<Serviceman, dynamic>(allServicemenList, responses[0].data, visibleAllServicemenList, (dynamic json) => Serviceman.fromJson(json));
     // if(responses[2].success!) populateLists<Serviceman, dynamic>(allInActiveServiceMenList, responses[2].data, visibleInActiveServicemenList, (dynamic json) => Serviceman.fromJson(json));
     if(responses[1].success!) populateAnalyticalData(responses[1].data);
 
@@ -134,7 +134,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
 
   /// Add data to the analytical data map variable.
   void populateAnalyticalData(Map<String, dynamic> data) {
-    serviceMenAnalyticalData.value = AnalyticalData.fromJson(data);
+    servicemenAnalyticalData.value = AnalyticalData.fromJson(data);
   }
 
   /// Search customers by name.
@@ -204,7 +204,7 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
       GlobalVariables.showLoader.value = true;
       
       ApiBaseHelper.patchMethod(
-          url: Urls.changeServicemanStatus(visibleAllServiceMenList[index].id!),
+          url: Urls.changeServicemanStatus(visibleAllServicemenList[index].id!),
           body: {
             'status': UserStatuses.suspended.name,
             'suspension_note': suspensionNoteController.text
@@ -213,12 +213,12 @@ class ServiceMenListViewModel extends GetxController with GetSingleTickerProvide
         GlobalVariables.showLoader.value = false;
 
         if(value.success!) {
-          allServiceMenList.removeAt(allServiceMenList.indexWhere((element) => element.id == visibleAllServiceMenList[index].id));
-          visibleAllServiceMenList.removeAt(index);
-          serviceMenAnalyticalData.value..active = serviceMenAnalyticalData.value.active! - 1
-            ..inActive = serviceMenAnalyticalData.value.inActive! + 1;
+          allServicemenList.removeAt(allServicemenList.indexWhere((element) => element.id == visibleAllServicemenList[index].id));
+          visibleAllServicemenList.removeAt(index);
+          servicemenAnalyticalData.value..active = servicemenAnalyticalData.value.active! - 1
+            ..inActive = servicemenAnalyticalData.value.inActive! + 1;
 
-          serviceMenAnalyticalData.value = AnalyticalData.fromJson(serviceMenAnalyticalData.value.toJson());
+          servicemenAnalyticalData.value = AnalyticalData.fromJson(servicemenAnalyticalData.value.toJson());
           suspensionNoteController.clear();
           Get.back();
           showSnackBar(message: value.message!, success: true);

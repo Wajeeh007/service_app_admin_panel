@@ -154,7 +154,7 @@ class OrderManagementViewModel extends GetxController with GetSingleTickerProvid
     
     GlobalVariables.showLoader.value = true;
     
-    if(status == null || status == '') {
+    if(status == null) {
       final fetchAllOrders = ApiBaseHelper.getMethod(url: "${Urls.getOrders}?limit=$limit&page=${page.value}");
       final fetchStats = ApiBaseHelper.getMethod(url: Urls.getOrdersStats);
       

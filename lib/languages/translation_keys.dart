@@ -117,7 +117,10 @@ const ordersList = 'ordersList',
       transactions = 'transactions',
       customerRating = 'customerRating',
       reviewFromServiceman = 'reviewFromServiceman',
-      reviewGivenToServiceman = 'reviewGivenToServiceman';
+      reviewGivenToServiceman = 'reviewGivenToServiceman',
+      activate = 'activate',
+      suspendCustomerDialogMessage = 'suspendCustomerDialogMessage',
+      activateCustomerDialogMessage = 'activateCustomerDialogMessage';
   /// Customer Details Screen End ///
 
 /// Customer Management End ///
@@ -139,6 +142,23 @@ const ordersList = 'ordersList',
   /// Active servicemen list screen end ///
 
   const searchServiceman = 'searchServiceman';
+
+  /// Serviceman Details ///
+  const servicemanInfo = 'servicemanInfo',
+      servicemanActivityRate = 'servicemanActivityRate',
+      servicemanOrderDetails = 'servicemanOrderDetails',
+      servicemanDocs = 'servicemanDocs',
+      idCardFront = 'idCardFront',
+      idCardBack = 'idCardBack',
+      selfie = 'selfie',
+      walletInfo = 'walletInfo',
+      additionDate = 'additionDate',
+      withdrawnAmount = 'withdrawnAmount',
+      withdrawableAmount = 'withdrawableAmount',
+      declineServicemanRequestDialogText = 'declineServicemanRequestDialogText',
+      activateServicemanAccountDialogText = 'activateServicemanAccountDialogText',
+      suspendServicemanAccountDialogText = 'suspendServicemanAccountDialogText';
+  /// Serviceman Details End ///
 /// Serviceman Management End ///
 
 /// Service Management ///

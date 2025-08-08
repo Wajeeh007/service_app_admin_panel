@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/populate_lists.dart';
 import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
-import 'package:service_app_admin_panel/models/customer.dart';
 import 'package:service_app_admin_panel/models/order.dart';
 import 'package:service_app_admin_panel/models/review.dart';
+import 'package:service_app_admin_panel/models/serviceman.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_viewmodel.dart';
 import 'package:service_app_admin_panel/screens/customer_management/suspended_customers_list/suspended_customers_list_viewmodel.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/servicemen_list/servicemen_list_viewmodel.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
@@ -15,13 +17,14 @@ import 'package:service_app_admin_panel/utils/url_paths.dart';
 import '../../../helpers/scroll_controller_funcs.dart';
 import '../../../languages/translation_keys.dart' as lang_key;
 import '../../../models/review_stats.dart';
+import '../../../models/service_item.dart';
 import '../../../models/transaction.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/custom_widgets/custom_material_button.dart';
 import '../../../utils/custom_widgets/custom_text_form_field.dart';
 import '../../../utils/routes.dart';
 
-class CustomerDetailsViewModel extends GetxController with GetTickerProviderStateMixin {
+class ServicemanDetailsViewModel extends GetxController with GetTickerProviderStateMixin {
 
   /// Controller(s) & Form keys ///
   ScrollController scrollController = ScrollController();
@@ -35,15 +38,15 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
   /// Controller(s) & Form Keys End ///
   
   /// Customer Object
-  Rx<Customer> customerDetails = Customer().obs;
+  Rx<Serviceman> servicemanDetails = Serviceman().obs;
 
   /// Customer Orders lists
-  List<Order> allCustomerOrders = <Order>[];
-  RxList<Order> visibleCustomerOrders = <Order>[].obs;
+  List<Order> allServicemanOrders = <Order>[];
+  RxList<Order> visibleServicemanOrders = <Order>[].obs;
 
   /// Reviews Lists
   RxList<Review> reviewsByServiceman = <Review>[].obs;
-  RxList<Review> reviewsToServiceman = <Review>[].obs;
+  RxList<Review> reviewsToCustomer = <Review>[].obs;
 
   /// Transactions List
   RxList<Transaction> transactions = <Transaction>[].obs;
@@ -53,6 +56,9 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
 
   /// Customer activity stats data
   RxMap<String, dynamic> activityStats = <String, dynamic>{}.obs;
+
+  /// Serviceman Services
+  RxList<ServiceItem> servicemanServices = <ServiceItem>[].obs;
 
   List<String> ratingPercentageBarTexts = [
     'Excellent',
@@ -66,22 +72,24 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
   Rx<ReviewStats> reviewStats = ReviewStats().obs;
   
   /// Pagination variables for reviews
-  int reviewsByServicemenLimit = 10;
-  int reviewsToServicemenLimit = 10;
+  int reviewsByCustomerLimit = 10;
+  int reviewsToCustomerLimit = 10;
   int ordersLimit = 10;
   int transactionsLimit = 10;
-  RxInt reviewsByServicemanPage = 0.obs;
-  RxInt reviewsToServicemanPage = 0.obs;
+  int servicesLimit = 10;
+  RxInt reviewsByCustomerPage = 0.obs;
+  RxInt reviewsToCustomerPage = 0.obs;
   RxInt transactionsPage = 0.obs;
   RxInt ordersPage = 0.obs;
+  RxInt servicesPage = 0.obs;
 
-  /// Strings for storing data related to side panel scroller and selected item
+  /// String for storing the previous screen name, for correct selection of sidepanel item
   RxString sidePanelItem = ''.obs;
   String sidePanelRouteName = '';
 
   @override
   void onInit() {
-    mainTabController = TabController(length: 4, vsync: this);
+    mainTabController = TabController(length: 5, vsync: this);
     reviewsTabController = TabController(length: 2, vsync: this);
     reviewsVisibilityHeight.value = 270 + (reviewsByServiceman.length * 40);
     GlobalVariables.listHeight.value = 200;
@@ -93,42 +101,47 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
   void onReady() {
     Map<String, dynamic>? args = Get.arguments;
     if(args == null || args.isEmpty) {
-      Get.offAllNamed(Routes.customersList);
+      Get.offAllNamed(Routes.servicemenList);
     } else {
       GlobalVariables.showLoader.value = true;
-      customerDetails.value = args['customerDetails'];
+      servicemanDetails.value = args['servicemanDetails'];
       sidePanelItem.value = args['sidePanelItem'];
       sidePanelRouteName = args['sidePanelRouteName'];
-      _fetchCustomerData();
+      _fetchServicemanData();
       animateSidePanelScrollController(scrollController, routeName: sidePanelRouteName);
     }
     super.onReady();
   }
 
   /// Main API function to fetch all the data at once.
-  void _fetchCustomerData() async {
+  void _fetchServicemanData() async {
     if(GlobalVariables.showLoader.isFalse) GlobalVariables.showLoader.value = true;
-    final getCustomerDetails = ApiBaseHelper.getMethod(url: Urls.getCustomer(customerDetails.value.id!));
-    final getCustomerActivity = ApiBaseHelper.getMethod(url: Urls.getCustomerActivityStats(customerDetails.value.id!));
-    final getCustomerOrders = ApiBaseHelper.getMethod(url: "${Urls.getUserOrders(customerDetails.value.id!)}?limit=$ordersLimit&page=${ordersPage.value}");
+    final getServicemanDetails = ApiBaseHelper.getMethod(url: Urls.getServiceman(servicemanDetails.value.id!));
+    final getServicemanActivity = ApiBaseHelper.getMethod(url: Urls.getServicemanActivityStats(servicemanDetails.value.id!));
+    final getServicemanOrders = ApiBaseHelper.getMethod(url: "${Urls.getUserOrders(servicemanDetails.value.id!)}?limit=$ordersLimit&page=${ordersPage.value}");
     // final getCustomerTransactions = ApiBaseHelper.getMethod(url: "${Urls.getCustomerTransactions(customerDetails.value.id!)}?limit=$transactionsLimit&page=${transactionsPage.value}");
-    final getCustomerReviewsByServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsByServicemen(customerDetails.value.id!)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}");
-    final getCustomerReviewsToServicemen = ApiBaseHelper.getMethod(url: "${Urls.getCustomerReviewsToServicemen(customerDetails.value.id!)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}");
-    final getCustomerRatingStats = ApiBaseHelper.getMethod(url: Urls.getCustomerRatingStats(customerDetails.value.id!));
-    
+    final getServicemanReviewsByCustomer = ApiBaseHelper.getMethod(url: "${Urls.getServicemanReviewsByCustomer(servicemanDetails.value.id!)}?limit=$reviewsByCustomerLimit&page=${reviewsByCustomerPage.value}");
+    final getServicemanReviewsToCustomer = ApiBaseHelper.getMethod(url: "${Urls.getServicemanReviewsToCustomer(servicemanDetails.value.id!)}?limit=$reviewsToCustomerLimit&page=${reviewsToCustomerPage.value}");
+    final getServicemanRatingStats = ApiBaseHelper.getMethod(url: Urls.getServicemanRatingStats(servicemanDetails.value.id!));
+    // final getServicemanServices = ApiBaseHelper.getMethod(url: "${Urls.getServicemanServices(servicemanDetails.value.id!)}?limit=$servicesLimit&page=${servicesPage.value}");
+
     final responses = await Future.wait([
-      getCustomerDetails,
-      getCustomerActivity,
-      getCustomerOrders,
+      getServicemanDetails,
+      getServicemanActivity,
+      getServicemanOrders,
       // getCustomerTransactions,
-      getCustomerReviewsByServicemen,
-      getCustomerReviewsToServicemen,
-      getCustomerRatingStats,
+      getServicemanReviewsByCustomer,
+      getServicemanReviewsToCustomer,
+      getServicemanRatingStats,
     ]);
 
-    if(responses[0].success! && responses[0].data != null) customerDetails.value = Customer.fromJson(responses[0].data!);
+    if(responses[0].success! && responses[0].data != null) {
+      servicemanDetails.value = Serviceman.fromJson(responses[0].data!);
+      servicemanServices.clear();
+      servicemanServices.addAll(servicemanDetails.value.services ?? []);
+    }
     if(responses[1].success! && responses[1].data != null) activityStats.value = responses[1].data!;
-    if(responses[2].success! && responses[2].data != null) populateLists(allCustomerOrders, responses[2].data, visibleCustomerOrders, (dynamic json) => Order.fromJson(json));
+    if(responses[2].success! && responses[2].data != null) populateLists(allServicemanOrders, responses[2].data, visibleServicemanOrders, (dynamic json) => Order.fromJson(json));
     // if(responses[3].success! && responses[3].data != null) {
     //   final data = responses[3].data as List;
     //   transactions.addAllIf(data.isNotEmpty, data.map((e)=> Transaction.fromJson(e)));
@@ -141,7 +154,7 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
 
     if(responses[4].success! && responses[4].data != null) {
       final data = responses[4].data as List;
-      reviewsToServiceman.addAllIf(data.isNotEmpty, data.map((e) => Review.fromJson(e)));
+      reviewsToCustomer.addAllIf(data.isNotEmpty, data.map((e) => Review.fromJson(e)));
     }
 
     if(responses[5].success! && responses[5].data != null) reviewStats.value = ReviewStats.fromJson(responses[5].data!);
@@ -154,20 +167,35 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
   }
 
   /// API to fetch customer orders on pressing the refresh button on the orders list.
-  void fetchCustomerOrders() {
+  void fetchServicemanOrders() {
     GlobalVariables.showLoader.value = true;
-    ApiBaseHelper.getMethod(url: Urls.getUserOrders(customerDetails.value.id!)).then((value) {
+    ApiBaseHelper.getMethod(url: Urls.getUserOrders(servicemanDetails.value.id!)).then((value) {
       GlobalVariables.showLoader.value = false;
-      if(value.success!) populateLists(allCustomerOrders, value.data, visibleCustomerOrders, (dynamic json) => Order.fromJson(json));
+      if(value.success!) populateLists(allServicemanOrders, value.data, visibleServicemanOrders, (dynamic json) => Order.fromJson(json));
     });
   }
 
+  /// Fetch services offered by serviceman
+  void fetchServiceman() {
+    GlobalVariables.showLoader.value = true;
+    ApiBaseHelper.getMethod(url: Urls.getServiceman(servicemanDetails.value.id!)).then((value) {
+      GlobalVariables.showLoader.value = false;
+
+      if(value.success!) {
+        servicemanDetails.value = Serviceman.fromJson(value.data);
+        servicemanServices.clear();
+        servicemanServices.addAll(servicemanDetails.value.services ?? []);
+      } else {
+        showSnackBar(message: value.message!, success: value.success!);
+      }
+    });
+  }
   /// API to fetch customer transactions on pressing the refresh button on the transactions list.
-  void fetchCustomerTransactions() {
+  void fetchServicemanTransactions() {
 
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: Urls.getCustomerTransactions(customerDetails.value.id!)).then((value) {
+    ApiBaseHelper.getMethod(url: Urls.getCustomerTransactions(servicemanDetails.value.id!)).then((value) {
       if(value.success!) {
         GlobalVariables.showLoader.value = false;
         transactions.clear();
@@ -184,17 +212,17 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
 
     ApiBaseHelper.getMethod(
         url: reviewsByCustomer ?
-        "${Urls.getCustomerReviewsToServicemen(customerDetails.value.id!)}?limit=$reviewsToServicemenLimit&page=${reviewsToServicemanPage.value}"
-            : "${Urls.getCustomerReviewsByServicemen(customerDetails.value.id!)}?limit=$reviewsByServicemenLimit&page=${reviewsByServicemanPage.value}"
+        "${Urls.getServicemanReviewsByCustomer(servicemanDetails.value.id!)}?limit=$reviewsToCustomerLimit&page=${reviewsToCustomerPage.value}"
+            : "${Urls.getServicemanReviewsToCustomer(servicemanDetails.value.id!)}?limit=$reviewsByCustomerLimit&page=${reviewsByCustomerPage.value}"
     ).then((value) {
       GlobalVariables.showLoader.value = false;
 
       if(value.success!) {
         if(reviewsByCustomer) {
-          reviewsToServiceman.clear();
+          reviewsToCustomer.clear();
           final data = value.data as List;
-          reviewsToServiceman.addAll(data.map((e) => Review.fromJson(e)));
-          reviewsToServiceman.refresh();
+          reviewsToCustomer.addAll(data.map((e) => Review.fromJson(e)));
+          reviewsToCustomer.refresh();
         } else {
           reviewsByServiceman.clear();
           final data = value.data as List;
@@ -208,11 +236,11 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
   }
 
   /// Function to update the status of the customer.
-  void updateUserStatus() {
+  void updateUserStatus(UserStatuses newStatus) {
     showConfirmationDialog(
-      message: customerDetails.value.status == UserStatuses.suspended ? lang_key.activateCustomerDialogMessage.tr : lang_key.suspendCustomerDialogMessage.tr,
-        onPressed: customerDetails.value.status == UserStatuses.active ? () {
-          Get.back();
+      message: newStatus == UserStatuses.declined ? lang_key.declineServicemanRequestDialogText.tr : newStatus == UserStatuses.suspended ? lang_key.suspendServicemanAccountDialogText.tr : lang_key.activateServicemanAccountDialogText.tr,
+        onPressed: newStatus == UserStatuses.active ? () => _changeServicemanStatus(newStatus) : () {
+          if(newStatus == UserStatuses.suspended || newStatus == UserStatuses.declined) Get.back();
           return showDialog(
               context: Get.context!,
               barrierColor: Colors.black38,
@@ -243,7 +271,7 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
                   actions: [
                     CustomMaterialButton(
                       width: 200,
-                      onPressed: () => _suspendOrActivateCustomer(),
+                      onPressed: () => _changeServicemanStatus(newStatus),
                       text: lang_key.yes.tr,
                     ),
                     CustomMaterialButton(
@@ -257,59 +285,59 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
                   ],
                 );
               });
-        } : () => _suspendOrActivateCustomer()
+        }
     );
   }
 
   /// API call to update customer's status
-  void _suspendOrActivateCustomer() {
+  void _changeServicemanStatus(UserStatuses newStatus) {
 
-    late CustomerListViewModel customerListViewModel;
-    late SuspendedCustomersListViewModel suspendedCustomerListViewModel;
+    late ServicemenListViewModel servicemanListViewModel;
+    late SuspendedServicemanListViewModel suspendedServicemanListViewModel;
 
-    if(customerDetails.value.status == UserStatuses.active) {
+    if(newStatus == UserStatuses.declined || newStatus == UserStatuses.suspended) {
       if(_suspensionNoteFormKey.currentState!.validate()) {
           GlobalVariables.showLoader.value = true;
 
           ApiBaseHelper.patchMethod(
-              url: Urls.changeCustomerStatus(customerDetails.value.id!),
+              url: Urls.changeCustomerStatus(servicemanDetails.value.id!),
               body: {
-                'status': UserStatuses.suspended.name,
+                'status': newStatus.name,
                 'suspension_note': _suspensionNoteController.text
               }
           ).then((value) {
             GlobalVariables.showLoader.value = false;
 
-            if(Get.isRegistered<CustomerListViewModel>()){
-              customerListViewModel = Get.find<CustomerListViewModel>();
-              final customerListIndex = customerListViewModel.allCustomersList.indexWhere((element) => element.id == customerDetails.value.id);
-              if(customerListIndex != -1) {
-                customerListViewModel.allCustomersList.removeAt(customerListIndex);
-                customerListViewModel.visibleAllCustomersList.clear();
-                customerListViewModel.visibleAllCustomersList.addAll(customerListViewModel.allCustomersList);
-                customerListViewModel.visibleAllCustomersList.refresh();
-                customerListViewModel.customersAnalyticalData.value..inActive = customerListViewModel.customersAnalyticalData.value.inActive! + 1
-                  ..active = customerListViewModel.customersAnalyticalData.value.active! - 1;
-              }
-            }
-
-            if(Get.isRegistered<SuspendedCustomersListViewModel>()) {
-              suspendedCustomerListViewModel = Get.find<SuspendedCustomersListViewModel>();
-              final customerListIndex = suspendedCustomerListViewModel.suspendedCustomersList.indexWhere((element) => element.id == customerDetails.value.id);
-              if(customerListIndex != -1) {
-                suspendedCustomerListViewModel.suspendedCustomersList.add(customerDetails.value);
-                suspendedCustomerListViewModel.suspendedCustomersList.sort((a,b) => a.createdAt!.compareTo(b.createdAt!));
-                suspendedCustomerListViewModel.suspendedCustomersList.refresh();
-              }
-            }
-
             if(value.success!) {
-              customerDetails.value.status = UserStatuses.suspended;
-              customerDetails.refresh();
+              servicemanDetails.value.status = newStatus;
+              servicemanDetails.refresh();
               Get.back();
               showSnackBar(message: value.message!, success: true);
             } else {
               showSnackBar(message: value.message!, success: false);
+            }
+
+            if(Get.isRegistered<CustomerListViewModel>() && newStatus == UserStatuses.suspended){
+              servicemanListViewModel = Get.find<ServicemenListViewModel>();
+              final servicemenListIndex = servicemanListViewModel.allServicemenList.indexWhere((element) => element.id == servicemanDetails.value.id);
+              if(servicemenListIndex != -1) {
+                servicemanListViewModel.allServicemenList.removeAt(servicemenListIndex);
+                servicemanListViewModel.visibleAllServicemenList.clear();
+                servicemanListViewModel.visibleAllServicemenList.addAll(servicemanListViewModel.allServicemenList);
+                servicemanListViewModel.visibleAllServicemenList.refresh();
+                servicemanListViewModel.servicemenAnalyticalData.value..inActive = servicemanListViewModel.servicemenAnalyticalData.value.inActive! + 1
+                  ..active = servicemanListViewModel.servicemenAnalyticalData.value.active! - 1;
+              }
+            }
+
+            if(Get.isRegistered<SuspendedCustomersListViewModel>() && newStatus == UserStatuses.suspended) {
+              suspendedServicemanListViewModel = Get.find<SuspendedServicemanListViewModel>();
+              final servicemenListIndex = suspendedServicemanListViewModel.suspendedServicemen.indexWhere((element) => element.id == servicemanDetails.value.id);
+              if(servicemenListIndex != -1) {
+                suspendedServicemanListViewModel.suspendedServicemen.add(servicemanDetails.value);
+                suspendedServicemanListViewModel.suspendedServicemen.sort((a,b) => a.createdAt!.compareTo(b.createdAt!));
+                suspendedServicemanListViewModel.suspendedServicemen.refresh();
+              }
             }
           });
         }
@@ -317,35 +345,36 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
         GlobalVariables.showLoader.value = true;
 
         ApiBaseHelper.patchMethod(
-            url: Urls.changeCustomerStatus(customerDetails.value.id!),
+            url: Urls.changeCustomerStatus(servicemanDetails.value.id!),
             body: {'status': UserStatuses.active.name,}
         ).then((value) {
           GlobalVariables.showLoader.value = false;
+
           if(Get.isRegistered<CustomerListViewModel>()) {
-            customerListViewModel = Get.find<CustomerListViewModel>();
-            final customerListIndex = customerListViewModel.allCustomersList.indexWhere((element) => element.id == customerDetails.value.id);
+            servicemanListViewModel = Get.find<ServicemenListViewModel>();
+            final customerListIndex = servicemanListViewModel.allServicemenList.indexWhere((element) => element.id == servicemanDetails.value.id);
             if(customerListIndex != -1) {
-              customerListViewModel.allCustomersList.add(customerDetails.value);
-              customerListViewModel.allCustomersList.sort((a,b) => a.createdAt!.compareTo(b.createdAt!));
-              customerListViewModel.visibleAllCustomersList.clear();
-              customerListViewModel.visibleAllCustomersList.addAll(customerListViewModel.allCustomersList);
-              customerListViewModel.refresh();
-              customerListViewModel.customersAnalyticalData.value..active = customerListViewModel.customersAnalyticalData.value.active! + 1
-                ..inActive = customerListViewModel.customersAnalyticalData.value.inActive! - 1;
+              servicemanListViewModel.allServicemenList.add(servicemanDetails.value);
+              servicemanListViewModel.allServicemenList.sort((a,b) => a.createdAt!.compareTo(b.createdAt!));
+              servicemanListViewModel.visibleAllServicemenList.clear();
+              servicemanListViewModel.visibleAllServicemenList.addAll(servicemanListViewModel.allServicemenList);
+              servicemanListViewModel.refresh();
+              servicemanListViewModel.servicemenAnalyticalData.value..active = servicemanListViewModel.servicemenAnalyticalData.value.active! + 1
+                ..inActive = servicemanListViewModel.servicemenAnalyticalData.value.inActive! - 1;
             }
           }
 
-          if(Get.isRegistered<SuspendedCustomersListViewModel>()) {
-            suspendedCustomerListViewModel = Get.find<SuspendedCustomersListViewModel>();
-            final customerListIndex = suspendedCustomerListViewModel.suspendedCustomersList.indexWhere((element) => element.id == customerDetails.value.id);
-            if(customerListIndex != -1) {
-              suspendedCustomerListViewModel.suspendedCustomersList.removeAt(customerListIndex);
-              suspendedCustomerListViewModel.suspendedCustomersList.refresh();
+          if(Get.isRegistered<SuspendedCustomersListViewModel>() && servicemanDetails.value.status == UserStatuses.suspended) {
+            suspendedServicemanListViewModel = Get.find<SuspendedServicemanListViewModel>();
+            final servicemenListIndex = suspendedServicemanListViewModel.suspendedServicemen.indexWhere((element) => element.id == servicemanDetails.value.id);
+            if(servicemenListIndex != -1) {
+              suspendedServicemanListViewModel.suspendedServicemen.removeAt(servicemenListIndex);
+              suspendedServicemanListViewModel.suspendedServicemen.refresh();
             }
           }
           if(value.success!) {
-            customerDetails.value.status = UserStatuses.active;
-            customerDetails.refresh();
+            servicemanDetails.value.status = UserStatuses.active;
+            servicemanDetails.refresh();
             Get.back();
             showSnackBar(message: value.message!, success: true);
           } else {

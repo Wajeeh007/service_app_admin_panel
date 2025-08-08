@@ -1,3 +1,5 @@
+import 'package:service_app_admin_panel/models/service_item.dart';
+
 import '../utils/constants.dart';
 
 class Serviceman {
@@ -22,6 +24,10 @@ class Serviceman {
   String? identificationNo;
   String? suspensionNote;
   String? selfNote;
+  double? withdrawableAmount;
+  double? withdrawnAmount;
+  double? totalEarning;
+  List<ServiceItem>? services;
   DateTime? createdAt;
   DateTime? identificationExpiry;
 
@@ -48,6 +54,10 @@ class Serviceman {
     this.identificationNo,
     this.identificationExpiry,
     this.selfNote,
+    this.withdrawableAmount,
+    this.withdrawnAmount,
+    this.totalEarning,
+    this.services
   });
 
   Serviceman.fromJson(Map<String, dynamic> json) {
@@ -73,5 +83,15 @@ class Serviceman {
     identificationExpiry = json['identification_expiry'] != null ? DateTime.tryParse(json['identification_expiry']) : null;
     suspensionNote = json['suspension_note'] ?? '';
     selfNote = json['note'] ?? '';
+    withdrawableAmount = json['withdrawable_amount'] != null ? double.tryParse(json['withdrawable_amount']) : 0.0;
+    withdrawnAmount = json['withdrawn_amount'] != null ? double.tryParse(json['withdrawn_amount']) : 0.0;
+    totalEarning = json['total_earning'] != null ? double.tryParse(json['total_earning']) : 0.0;
+    if(services != null) {
+      services = [];
+      json['service_items'].forEach((element) {
+        services?.add(ServiceItem.fromJson(element));
+      });
+
+    }
   }
 }

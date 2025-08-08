@@ -8,6 +8,7 @@ import 'package:service_app_admin_panel/screens/service_management/items/edit_it
 import 'package:service_app_admin_panel/screens/service_management/services/edit_service/edit_service_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/sub_services/edit_sub_service/edit_sub_service_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/new_requests/new_requests_view.dart';
+import 'package:service_app_admin_panel/screens/serviceman_management/serviceman_details/serviceman_details_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/edit_withdraw_method/edit_withdraw_method_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/withdraw_requests/withdraw_requests_view.dart';
@@ -34,6 +35,7 @@ class Routes {
   static const newServicemanRequests = '/newServicemanRequests';
   static const servicemenList = '/activeServicemanList';
   static const suspendedServicemanList = '/suspendedServicemanList';
+  static const servicemanDetails = '/servicemanDetails';
   static const servicesList = '/servicesList';
   static const editService = '/editService';
   static const subServicesList = '/subServicesList';
@@ -58,6 +60,7 @@ class Routes {
     GetPage(name: newServicemanRequests, page: () => NewRequestsView()),
     GetPage(name: servicemenList, page: () => ServiceMenListView()),
     GetPage(name: suspendedServicemanList, page: () => SuspendedServicemanListView()),
+    GetPage(name: servicemanDetails, page: () => ServicemanDetailsView()),
     GetPage(name: servicesList, page: () => ServiceListView()),
     GetPage(name: editService, page: () => EditServiceView()),
     GetPage(name: subServicesList, page: () => SubServicesListView()),

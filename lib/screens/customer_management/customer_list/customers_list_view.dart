@@ -145,7 +145,7 @@ class _AllCustomersListTabView extends StatelessWidget {
                       includeView: true,
                     deleteIcon: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? CupertinoIcons.nosign : null,
                     onDeletePressed: _viewModel.visibleAllCustomersList[index].status == UserStatuses.active ? () => showConfirmationDialog(onPressed: () => _viewModel.showSuspensionNoteDialog(index)) : null,
-                    onViewPressed: () => Get.toNamed(Routes.customerDetails, arguments: {'customerDetails': _viewModel.visibleAllCustomersList[index]}),
+                    onViewPressed: () => Get.toNamed(Routes.customerDetails, arguments: {'customerDetails': _viewModel.visibleAllCustomersList[index], 'sidePanelItem': lang_key.customersList.tr, 'sidePanelRouteName': Routes.customersList}),
                   )
                 ],
               ),

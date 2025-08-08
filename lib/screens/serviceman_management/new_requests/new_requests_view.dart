@@ -11,6 +11,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dar
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 import '../../../utils/custom_widgets/list_serial_no_text.dart';
 
@@ -60,7 +61,7 @@ class NewRequestsView extends StatelessWidget {
                         includeEdit: false,
                         includeView: true,
                       onDeletePressed: () => showConfirmationDialog(onPressed: () {}, message: lang_key.suspensionConfirmationMessage.tr),
-                      onViewPressed: () {},
+                      onViewPressed: () => Get.toNamed(Routes.servicemanDetails, arguments: {'servicemanDetails': _viewModel.serviceManNewRequests[index], 'sidePanelItem': lang_key.newRequests.tr, 'sidePanelRouteName': Routes.newServicemanRequests}),
                     )
                   ],
                 ),

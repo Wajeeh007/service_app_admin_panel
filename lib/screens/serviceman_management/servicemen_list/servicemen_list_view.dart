@@ -5,6 +5,7 @@ import 'package:service_app_admin_panel/helpers/show_confirmation_dialog.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/servicemen_list/servicemen_list_viewmodel.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_entry_item.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 import '../../../utils/constants.dart';
 import '../../../utils/custom_widgets/contact_info_in_list.dart';
@@ -19,7 +20,7 @@ import '../../../utils/custom_widgets/stats_container.dart';
 class ServiceMenListView extends StatelessWidget {
   ServiceMenListView({super.key});
 
-  final ServiceMenListViewModel _viewModel = Get.put(ServiceMenListViewModel());
+  final ServicemenListViewModel _viewModel = Get.put(ServicemenListViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class ServiceMenListView extends StatelessWidget {
 class _ServicemenAnalyticsData extends StatelessWidget {
   _ServicemenAnalyticsData();
 
-  final ServiceMenListViewModel _viewModel = Get.find();
+  final ServicemenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +73,21 @@ class _ServicemenAnalyticsData extends StatelessWidget {
             children: [
               StatsContainer(
                 height: 200,
-                statValue: _viewModel.serviceMenAnalyticalData.value.total ?? 0,
+                statValue: _viewModel.servicemenAnalyticalData.value.total ?? 0,
                 statName: lang_key.totalServicemen.tr,
                 iconContainerColor: Colors.purpleAccent,
                 iconData: Icons.group,
               ),
               StatsContainer(
                 height: 200,
-                statValue: _viewModel.serviceMenAnalyticalData.value.active ?? 0,
+                statValue: _viewModel.servicemenAnalyticalData.value.active ?? 0,
                 statName: lang_key.activeServicemen.tr,
                 iconData: Icons.local_activity,
                 iconContainerColor: Colors.green,
               ),
               StatsContainer(
                 height: 200,
-                statValue: _viewModel.serviceMenAnalyticalData.value.inActive ?? 0,
+                statValue: _viewModel.servicemenAnalyticalData.value.inActive ?? 0,
                 statName: lang_key.suspendedServicemen.tr,
                 iconData: Icons.block,
                 iconContainerColor: errorRed,
@@ -103,17 +104,17 @@ class _ServicemenAnalyticsData extends StatelessWidget {
 class _AllServicemenListTabView extends StatelessWidget {
   _AllServicemenListTabView();
 
-  final ServiceMenListViewModel _viewModel = Get.find();
+  final ServicemenListViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Obx(() => ListBaseContainer(
-            onSearch: (value) => _viewModel.searchList(value, _viewModel.allServiceMenList, _viewModel.visibleAllServiceMenList),
+            onSearch: (value) => _viewModel.searchList(value, _viewModel.allServicemenList, _viewModel.visibleAllServicemenList),
               onRefresh: () => _viewModel.fetchServicemenLists(),
               controller: _viewModel.allServiceMansSearchController,
-              listData: _viewModel.visibleAllServiceMenList,
+              listData: _viewModel.visibleAllServicemenList,
               expandFirstColumn: false,
               hintText: lang_key.searchServiceman.tr,
               columnsNames: [
@@ -125,29 +126,29 @@ class _AllServicemenListTabView extends StatelessWidget {
                 lang_key.gender.tr,
                 lang_key.actions.tr
               ],
-            entryChildren: List.generate(_viewModel.visibleAllServiceMenList.length, (index) {
+            entryChildren: List.generate(_viewModel.visibleAllServicemenList.length, (index) {
               return Padding(
                 padding: listEntryPadding.copyWith(bottom: 10),
                 child: Row(
                   children: [
                     ListSerialNoText(index: index),
-                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].name!),
-                    ContactInfoInList(email: _viewModel.visibleAllServiceMenList[index].email!, phoneNo: _viewModel.visibleAllServiceMenList[index].phoneNo!,),
-                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].totalOrders.toString()),
-                    ListEntryItem(text: _viewModel.visibleAllServiceMenList[index].earnings.toString()),
-                    ListEntryItem(text: switch(_viewModel.visibleAllServiceMenList[index].gender!) {
+                    ListEntryItem(text: _viewModel.visibleAllServicemenList[index].name!),
+                    ContactInfoInList(email: _viewModel.visibleAllServicemenList[index].email!, phoneNo: _viewModel.visibleAllServicemenList[index].phoneNo!,),
+                    ListEntryItem(text: _viewModel.visibleAllServicemenList[index].totalOrders.toString()),
+                    ListEntryItem(text: _viewModel.visibleAllServicemenList[index].earnings.toString()),
+                    ListEntryItem(text: switch(_viewModel.visibleAllServicemenList[index].gender!) {
                       Gender.male => lang_key.male.tr,
                       Gender.female => lang_key.female.tr,
                       Gender.other => lang_key.other.tr,
                     },),
                     // TwoStatesWidget(status: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active, falseStateText: lang_key.suspended.tr,),
                     ListActionsButtons(
-                        includeDelete: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active,
+                        includeDelete: _viewModel.visibleAllServicemenList[index].status! == UserStatuses.active,
                         includeEdit: false,
                         includeView: true,
-                      onViewPressed: () {},
-                      deleteIcon: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active ? CupertinoIcons.nosign : null,
-                      onDeletePressed: _viewModel.visibleAllServiceMenList[index].status! == UserStatuses.active ? () => showConfirmationDialog(
+                      onViewPressed: () => Get.toNamed(Routes.servicemanDetails, arguments: {'servicemanDetails': _viewModel.visibleAllServicemenList[index], 'sidePanelItem': lang_key.servicemenList.tr, 'sidePanelRouteName': Routes.servicemenList}),
+                      deleteIcon: _viewModel.visibleAllServicemenList[index].status! == UserStatuses.active ? CupertinoIcons.nosign : null,
+                      onDeletePressed: _viewModel.visibleAllServicemenList[index].status! == UserStatuses.active ? () => showConfirmationDialog(
                           onPressed: () =>_viewModel.showSuspensionNoteDialog(index),
                           message: lang_key.suspensionConfirmationMessage.tr
                       ) : null,

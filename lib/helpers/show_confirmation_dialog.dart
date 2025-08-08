@@ -22,7 +22,8 @@ Future<void> showConfirmationDialog({
       title: Text(isDeletion ? title != '' ? title : lang_key.areYouSure.tr : title),
       backgroundColor: primaryWhite,
       content: Text(
-        isDeletion ? message != '' ? message : lang_key.deletionConfirmationMessage.tr : message
+        isDeletion ? message != '' ? message : lang_key.deletionConfirmationMessage.tr : message,
+        textAlign: TextAlign.center,
       ),
       actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       actionsAlignment: MainAxisAlignment.center,

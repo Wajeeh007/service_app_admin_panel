@@ -7,6 +7,7 @@ import 'package:service_app_admin_panel/utils/custom_widgets/list_serial_no_text
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 import '../../../utils/custom_widgets/contact_info_in_list.dart';
 import '../../../utils/custom_widgets/list_actions_buttons.dart';
@@ -54,7 +55,7 @@ class SuspendedCustomersListView extends StatelessWidget {
                       includeDelete: false,
                       includeEdit: false,
                       includeView: true,
-                      onViewPressed: () {},
+                      onViewPressed: () => Get.toNamed(Routes.customerDetails, arguments: {'customerDetails': _viewModel.suspendedCustomersList[index], 'sidePanelItem': lang_key.suspendedCustomers.tr, 'sidePanelRouteName': Routes.suspendedCustomersList}),
                     )
                   ],
                 ),

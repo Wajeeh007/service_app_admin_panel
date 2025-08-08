@@ -5,6 +5,7 @@ import 'package:service_app_admin_panel/screens/serviceman_management/suspended_
 import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/contact_info_in_list.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/list_actions_buttons.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 import '../../../utils/custom_widgets/list_base_container.dart';
 import '../../../utils/custom_widgets/list_entry_item.dart';
@@ -51,11 +52,10 @@ class SuspendedServicemanListView extends StatelessWidget {
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.suspendedServicemen[index].identificationExpiry!)),
                   ListEntryItem(text: _viewModel.suspendedServicemen[index].suspensionNote, maxLines: 3,),
                   ListActionsButtons(
-                    includeDelete: true,
+                    includeDelete: false,
                     includeEdit: false,
                     includeView: true,
-                    onViewPressed: () {},
-                    onDeletePressed: () {},
+                    onViewPressed: () => Get.toNamed(Routes.servicemanDetails,arguments: {'servicemanDetails': _viewModel.suspendedServicemen[index], 'sidePanelItem': lang_key.suspendedServicemen.tr, 'sidePanelRouteName': Routes.servicemenList}),
                   )
                 ],
               ),

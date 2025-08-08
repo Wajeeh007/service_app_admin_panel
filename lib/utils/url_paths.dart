@@ -11,7 +11,7 @@ class Urls {
   static const _itemsBaseUrl = '/service_items';
   static const _withdrawsBaseUrl = '/withdraw';
   static const _customersBaseUrl = '/customers';
-  static const _serviceMenBaseUrl = '/servicemen';
+  static const _servicemenBaseUrl = '/servicemen';
   static const _ordersBaseUrl = '/orders';
   static const _transactionsBaseUrl = '/transactions';
   static const _reviewsBaseUrl = '/reviews';
@@ -129,10 +129,6 @@ class Urls {
       return '$_customersBaseUrl/$id';
     }
 
-    static String getCustomerOrders(String id) {
-      return '$_ordersBaseUrl/$id';
-    }
-
     static String getCustomerActivityStats(String id) {
       return '$_customersBaseUrl/activity/$id';
     }
@@ -140,26 +136,44 @@ class Urls {
   /// Customer Management End ///
 
   /// Serviceman Management ///
-    static const String getServicemen = '$_serviceMenBaseUrl/get';
+    static const String getServicemen = '$_servicemenBaseUrl/get';
 
     /// Serviceman List ///
 
-      static const String getServicemenStats = '$_serviceMenBaseUrl/stats';
+      static const String getServicemenStats = '$_servicemenBaseUrl/stats';
 
       static String changeServicemanStatus(String id) {
-        return '$_serviceMenBaseUrl/change_status/$id';
+        return '$_servicemenBaseUrl/change_status/$id';
       }
     /// Serviceman List End ///
 
     /// New Servicemen Requests
-      static const String getNewRequests = '$_serviceMenBaseUrl/get_new_requests';
+      static const String getNewRequests = '$_servicemenBaseUrl/new_requests';
 
     /// New Servicemen Requests End ///
 
     /// Suspended Servicemen ///
-      static const String getSuspendedServicemen = '$_serviceMenBaseUrl/get_suspended';
+      static const String getSuspendedServicemen = '$_servicemenBaseUrl/get_suspended';
     /// Suspended Servicemen End ///
 
+    /// Serviceman Details ///
+      static String getServiceman(String id) {
+        return '$_servicemenBaseUrl/$id';
+      }
+    
+      static String getServicemanOrders(String id) {
+        return '$_ordersBaseUrl/$id';
+      }
+    
+      static String getServicemanActivityStats(String id) {
+        return '$_servicemenBaseUrl/activity/$id';
+      }
+
+      static String getServicemanServices(String id) {
+        return '$_servicemenBaseUrl/services/$id';
+      }
+    /// Serviceman Details End ///
+  
   /// Serviceman Management End ///
 
   /// Orders Management ///
@@ -167,6 +181,14 @@ class Urls {
     static const String getOrders = '$_ordersBaseUrl/get';
     static const String getOrdersStats = '$_ordersBaseUrl/stats';
     /// Orders List End ///
+
+    /// Order Details ///
+
+    /// Order Details End ///
+
+    static String getUserOrders(String id) {
+      return '$_ordersBaseUrl/user/$id';
+    }
   /// Orders Management End ///
 
   /// Transactions ///
@@ -185,7 +207,19 @@ class Urls {
   }
 
   static String getCustomerRatingStats(String id) {
-    return '$_reviewsBaseUrl/customer_rating_stats/$id';
+    return '$_reviewsBaseUrl/customer/rating_stats/$id';
+  }
+
+  static String getServicemanReviewsByCustomer(String id) {
+    return '$_reviewsBaseUrl/review_to/serviceman/$id';
+  }
+
+  static String getServicemanReviewsToCustomer(String id) {
+    return '$_reviewsBaseUrl/review_by/serviceman/$id';
+  }
+
+  static String getServicemanRatingStats(String id) {
+    return '$_reviewsBaseUrl/serviceman/rating_stats/$id';
   }
   /// Reviews End ///
 }

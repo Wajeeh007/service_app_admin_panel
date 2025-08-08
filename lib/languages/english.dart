@@ -125,6 +125,9 @@ class English {
       key.customerRating: 'Customer Rating',
       key.reviewFromServiceman: 'Review From Serviceman',
       key.reviewGivenToServiceman: 'Review Given To Serviceman',
+      key.activate: 'Activate',
+      key.suspendCustomerDialogMessage: 'Suspending the customer will disable their account. Do you wish to proceed?',
+      key.activateCustomerDialogMessage: 'Activating the customer will enable their account. Do you wish to proceed?',
       /// Customer Details Screen End ///
 
 
@@ -147,6 +150,24 @@ class English {
       /// Active servicemen list screen end ///
 
     key.searchServiceman: 'Search Serviceman',
+
+      /// Serviceman Details ///
+      key.servicemanInfo: 'Serviceman Information',
+      key.servicemanActivityRate: 'Serviceman Activity Rate',
+      key.servicemanOrderDetails: 'Serviceman Order Details',
+      key.servicemanDocs: 'Serviceman Documents',
+      key.idCardFront: 'ID Card Front',
+      key.idCardBack: 'ID Card Back',
+      key.selfie: 'Selfie',
+      key.walletInfo: 'Wallet Information',
+      key.additionDate: 'Addition Date',
+      key.withdrawnAmount: 'Withdrawn Amount',
+      key.withdrawableAmount: 'Withdrawable Amount',
+      key.declineServicemanRequestDialogText: 'You want to decline this request? You will be asked to provide a reason which shall be shown to the user.',
+      key.activateServicemanAccountDialogText: 'You want to activate this account?',
+      key.suspendServicemanAccountDialogText: 'You want to suspend this account? The serviceman won\'t be able to use their account.',
+      /// Serviceman Details End ///
+
     /// Serviceman Management End ///
 
     /// Service Management ///

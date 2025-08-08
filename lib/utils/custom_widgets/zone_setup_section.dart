@@ -5,9 +5,9 @@ import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libra
 import '../constants.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 
+import '../custom_google_map/custom_google_maps.dart';
 import '../images_paths.dart';
 import '../validators.dart';
-import '../custom_google_map/custom_google_maps.dart';
 import 'custom_material_button.dart';
 import 'custom_text_form_field.dart';
 import 'heading_in_container_text.dart';
@@ -103,7 +103,7 @@ class ZoneSetupSection extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // GoogleMapWidget(isBeingEdited: isBeingEdited, mapController: mapController,),
+                      GoogleMapWidget(isBeingEdited: isBeingEdited, mapController: mapController,),
                     ],
                   ),
                 ),
