@@ -14,14 +14,14 @@ import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang
 import 'package:service_app_admin_panel/utils/custom_widgets/two_states_widget.dart';
 import 'package:service_app_admin_panel/utils/images_paths.dart';
 
-import '../../utils/custom_widgets/order_status.dart';
-import '../../utils/custom_widgets/stats_container.dart';
-import 'order_management_viewmodel.dart';
+import '../../../utils/custom_widgets/order_status.dart';
+import '../../../utils/custom_widgets/stats_container.dart';
+import 'order_listing_viewmodel.dart';
 
-class OrderManagementView extends StatelessWidget {
-  OrderManagementView({super.key});
+class OrderListingView extends StatelessWidget {
+  OrderListingView({super.key});
 
-  final OrderManagementViewModel _viewModel = Get.put(OrderManagementViewModel());
+  final OrderListingViewModel _viewModel = Get.put(OrderListingViewModel());
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class OrderManagementView extends StatelessWidget {
 class _AllOrders extends StatelessWidget {
   _AllOrders();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class _AllOrders extends StatelessWidget {
 class _AllOrdersStatsSection extends StatelessWidget {
   _AllOrdersStatsSection();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
   final double containersWidth = 180;
 
   @override
@@ -185,7 +185,7 @@ class _AllOrdersStatsSection extends StatelessWidget {
 class _PendingOrdersTabView extends StatelessWidget {
   _PendingOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +243,7 @@ class _PendingOrdersTabView extends StatelessWidget {
 class _AcceptedOrdersTabView extends StatelessWidget {
   _AcceptedOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +302,7 @@ class _AcceptedOrdersTabView extends StatelessWidget {
 class _OngoingOrdersTabView extends StatelessWidget {
   _OngoingOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -361,7 +361,7 @@ class _OngoingOrdersTabView extends StatelessWidget {
 class _CompletedOrdersTabView extends StatelessWidget {
   _CompletedOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +420,7 @@ class _CompletedOrdersTabView extends StatelessWidget {
 class _CancelledOrdersTabView extends StatelessWidget {
   _CancelledOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -478,7 +478,7 @@ class _CancelledOrdersTabView extends StatelessWidget {
 class _DisputedOrdersTabView extends StatelessWidget {
   _DisputedOrdersTabView();
 
-  final OrderManagementViewModel _viewModel = Get.find();
+  final OrderListingViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {

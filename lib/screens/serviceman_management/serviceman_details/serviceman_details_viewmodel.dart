@@ -93,7 +93,6 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
     reviewsTabController = TabController(length: 2, vsync: this);
     reviewsVisibilityHeight.value = 270 + (reviewsByServiceman.length * 40);
     GlobalVariables.listHeight.value = 200;
-    // tabController.addListener(() {})
     super.onInit();
   }
 
@@ -166,7 +165,7 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
     GlobalVariables.showLoader.value = false;
   }
 
-  /// API to fetch customer orders on pressing the refresh button on the orders list.
+  /// API to fetch serviceman orders on pressing the refresh button on the orders list.
   void fetchServicemanOrders() {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(url: Urls.getUserOrders(servicemanDetails.value.id!)).then((value) {
@@ -175,7 +174,7 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
     });
   }
 
-  /// Fetch services offered by serviceman
+  /// Fetch serviceman details including services offered
   void fetchServiceman() {
     GlobalVariables.showLoader.value = true;
     ApiBaseHelper.getMethod(url: Urls.getServiceman(servicemanDetails.value.id!)).then((value) {
@@ -190,7 +189,7 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
       }
     });
   }
-  /// API to fetch customer transactions on pressing the refresh button on the transactions list.
+  /// API to fetch serviceman transactions on pressing the refresh button on the transactions list.
   void fetchServicemanTransactions() {
 
     GlobalVariables.showLoader.value = true;
@@ -206,7 +205,7 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
     });
   }
 
-  /// API to fetch reviews related to customer
+  /// API to fetch reviews related to serviceman
   void fetchReviews(bool reviewsByCustomer) {
     GlobalVariables.showLoader.value = true;
 
@@ -235,7 +234,7 @@ class ServicemanDetailsViewModel extends GetxController with GetTickerProviderSt
     });
   }
 
-  /// Function to update the status of the customer.
+  /// Function to either show the dialog for declining or suspending the serviceman or call the API to update the status of the serviceman.
   void updateUserStatus(UserStatuses newStatus) {
     showConfirmationDialog(
       message: newStatus == UserStatuses.declined ? lang_key.declineServicemanRequestDialogText.tr : newStatus == UserStatuses.suspended ? lang_key.suspendServicemanAccountDialogText.tr : lang_key.activateServicemanAccountDialogText.tr,

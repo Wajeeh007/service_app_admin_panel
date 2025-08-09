@@ -207,7 +207,7 @@ class CustomerDetailsViewModel extends GetxController with GetTickerProviderStat
     });
   }
 
-  /// Function to update the status of the customer.
+  /// Function to either show dialog before suspension or call the API for updating the status of the customer.
   void updateUserStatus() {
     showConfirmationDialog(
       message: customerDetails.value.status == UserStatuses.suspended ? lang_key.activateCustomerDialogMessage.tr : lang_key.suspendCustomerDialogMessage.tr,

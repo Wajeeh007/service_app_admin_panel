@@ -3,7 +3,7 @@ import 'package:service_app_admin_panel/screens/customer_management/customer_det
 import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/suspended_customers_list/suspended_customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_view.dart';
-import 'package:service_app_admin_panel/screens/order_management/order_management_view.dart';
+import 'package:service_app_admin_panel/screens/order_management/order_listing/order_listing_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/items/edit_item/edit_item_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/services/edit_service/edit_service_view.dart';
 import 'package:service_app_admin_panel/screens/service_management/sub_services/edit_sub_service/edit_sub_service_view.dart';
@@ -53,7 +53,7 @@ class Routes {
     GetPage(name: dashboard, page: () => DashboardView()),
     GetPage(name: zoneListAndAddition, page: () => ZoneListAndAdditionView()),
     GetPage(name: editZone, page: () => EditZoneView()),
-    GetPage(name: orders, page: () => OrderManagementView()),
+    GetPage(name: orders, page: () => OrderListingView()),
     GetPage(name: customersList, page: () => CustomersListView()),
     GetPage(name: suspendedCustomersList, page: () => SuspendedCustomersListView()),
     GetPage(name: customerDetails, page: () => CustomerDetailsView()),
