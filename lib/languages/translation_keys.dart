@@ -5,7 +5,7 @@ const dashboard = 'dashboard';
   /// Zone Setup
   const zoneSetup = 'zoneSetup';
 
-  /// Order Management
+  /// Order Management ///
   const orderManagement = 'orderManagement',
       orders = 'orders';
 
@@ -65,26 +65,43 @@ const instructions = 'instructions',
     veryHigh = 'veryHigh';
 /// Zone Setup End ///
 
-/// Orders List Screen
-const ordersList = 'ordersList',
-    allOrders = 'allOrders',
-    pending = 'pending',
-    accepted = 'accepted',
-    ongoing = 'ongoing',
-    cancelled = 'cancelled',
-    completed = 'completed',
-    disputed = 'disputed',
-    totalAmount = 'totalAmount',
-    commission = 'commission',
-    paymentStatus = 'paymentStatus',
-    orderStatus = 'orderStatus',
-    customerName = 'customerName',
-    reason = 'reason',
-    serviceman = 'serviceman',
-    customer = 'customer',
-    paid = 'paid',
-    unpaid = 'unpaid';
-/// Orders List Screen End ///
+/// Orders Management ///
+
+  /// Orders List Screen
+  const ordersList = 'ordersList',
+      allOrders = 'allOrders',
+      pending = 'pending',
+      accepted = 'accepted',
+      ongoing = 'ongoing',
+      cancelled = 'cancelled',
+      completed = 'completed',
+      disputed = 'disputed',
+      totalAmount = 'totalAmount',
+      commission = 'commission',
+      paymentStatus = 'paymentStatus',
+      orderStatus = 'orderStatus',
+      customerName = 'customerName',
+      reason = 'reason',
+      serviceman = 'serviceman',
+      customer = 'customer',
+      paid = 'paid',
+      unpaid = 'unpaid';
+  /// Orders List Screen End ///
+
+  /// Order Details ///
+  const order = 'order',
+      activityLog = 'activityLog',
+      requestAccepted = 'requestPlaced',
+      bidingStatus = 'bidingStatus',
+      payment = 'payment',
+      orderRequestByCustomer = 'orderRequestByCustomer',
+      requestAcceptedByServiceman = 'requestAcceptedByServiceman',
+      paymentSuccessful = 'paymentSuccessful',
+      orderRequest = 'orderRequest',
+      summary = 'summary';
+  /// Order Details End ///
+
+///  Orders Management End ///
 
 /// Customer Management ///
   /// Customer List Screen

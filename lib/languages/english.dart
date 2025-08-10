@@ -69,26 +69,42 @@ class English {
     key.veryHigh: 'Very High',
     /// Zone Setup End ///
 
-    /// Orders List Screen
-    key.ordersList: 'Orders List',
-    key.allOrders: 'All Orders',
-    key.pending: 'Pending',
-    key.accepted: 'Accepted',
-    key.ongoing: 'Ongoing',
-    key.cancelled: 'Cancelled',
-    key.completed: 'Completed',
-    key.disputed: 'Disputed',
-    key.commission: 'Commission',
-    key.totalAmount: 'Total Amount',
-    key.paymentStatus: 'Payment Status',
-    key.orderStatus: 'Order Status',
-    key.customerName: 'Customer Name',
-    key.reason: 'Reason',
-    key.serviceman: 'Serviceman',
-    key.customer: 'Customer',
-    key.paid: 'Paid',
-    key.unpaid: 'Un-Paid',
-    /// Order List Screen End ///
+    /// Orders Management ///
+      /// Orders List Screen
+      key.ordersList: 'Orders List',
+      key.allOrders: 'All Orders',
+      key.pending: 'Pending',
+      key.accepted: 'Accepted',
+      key.ongoing: 'Ongoing',
+      key.cancelled: 'Cancelled',
+      key.completed: 'Completed',
+      key.disputed: 'Disputed',
+      key.commission: 'Commission',
+      key.totalAmount: 'Total Amount',
+      key.paymentStatus: 'Payment Status',
+      key.orderStatus: 'Order Status',
+      key.customerName: 'Customer Name',
+      key.reason: 'Reason',
+      key.serviceman: 'Serviceman',
+      key.customer: 'Customer',
+      key.paid: 'Paid',
+      key.unpaid: 'Un-Paid',
+      /// Order List Screen End ///
+
+      /// Order Details ///
+      key.order: 'Order',
+      key.activityLog: 'Activity Log',
+      key.requestAccepted: 'Request Accepted',
+      key.bidingStatus: 'Biding Status',
+      key.payment: 'Payment',
+      key.orderRequest: 'Order Request',
+      key.orderRequestByCustomer: 'Order Request By Customer',
+      key.requestAcceptedByServiceman: 'Request Accepted By Serviceman',
+      key.paymentSuccessful: 'Payment Successful',
+      key.summary: 'Summary',
+      /// Order Details End ///
+
+    /// Orders Management End ///
 
     /// Customer Management ///
       /// Customers List Screen ///
