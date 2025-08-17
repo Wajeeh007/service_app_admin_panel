@@ -220,7 +220,7 @@ class _PendingOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visiblePendingOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visiblePendingOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visiblePendingOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visiblePendingOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visiblePendingOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visiblePendingOrdersList[index].commissionAmount.toString(),),
                   ListActionsButtons(
@@ -279,7 +279,7 @@ class _AcceptedOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleAcceptedOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visibleAcceptedOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visibleAcceptedOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visibleAcceptedOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visibleAcceptedOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visibleAcceptedOrdersList[index].commissionAmount.toString(),),
                   ListActionsButtons(
@@ -338,7 +338,7 @@ class _OngoingOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleOngoingOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visibleOngoingOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visibleOngoingOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visibleOngoingOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visibleOngoingOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visibleOngoingOrdersList[index].commissionAmount.toString(),),
                   ListActionsButtons(
@@ -397,7 +397,7 @@ class _CompletedOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleCompletedOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visibleCompletedOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visibleCompletedOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visibleCompletedOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visibleCompletedOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visibleCompletedOrdersList[index].commissionAmount.toString(),),
                   ListActionsButtons(
@@ -455,7 +455,7 @@ class _CancelledOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleCancelledOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visibleCancelledOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visibleCancelledOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visibleCancelledOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visibleCancelledOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visibleCancelledOrdersList[index].commissionAmount.toString(),),
                   ListActionsButtons(
@@ -513,7 +513,7 @@ class _DisputedOrdersTabView extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.visibleDisputedOrdersList[index].orderDateTime!),),
                   ListEntryItem(text: _viewModel.visibleDisputedOrdersList[index].customerDetails?.name,),
-                  ListEntryItem(text: _viewModel.visibleDisputedOrdersList[index].serviceManDetails?.name,),
+                  ListEntryItem(text: _viewModel.visibleDisputedOrdersList[index].servicemanDetails?.name,),
                   ListEntryItem(text: _viewModel.visibleDisputedOrdersList[index].totalAmount.toString(),),
                   ListEntryItem(text: _viewModel.visibleDisputedOrdersList[index].note.toString(),),
                   ListActionsButtons(

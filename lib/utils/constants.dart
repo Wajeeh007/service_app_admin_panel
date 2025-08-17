@@ -89,6 +89,9 @@ enum WithdrawMethodFieldType {text, number, email}
 enum UserStatuses {pending, active, inactive, declined, suspended}
 /// User statuses End ///
 
+/// Order Type Enum
+enum OrderType {normal, quick, urgent}
+
 /// Months list
 const List<String> months = [
   'January',

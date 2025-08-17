@@ -9,7 +9,8 @@ class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
   final double radius;
   final BoxFit boxFit;
-
+  final BoxShape shape;
+  final BoxShape errorImageShape;
   const CustomNetworkImage({
     super.key,
     this.height = 70,
@@ -17,6 +18,8 @@ class CustomNetworkImage extends StatelessWidget {
     required this.imageUrl,
     this.radius = 8,
     this.boxFit = BoxFit.cover,
+    this.shape = BoxShape.rectangle,
+    this.errorImageShape = BoxShape.rectangle,
   });
 
   @override
@@ -28,6 +31,7 @@ class CustomNetworkImage extends StatelessWidget {
       imageBuilder: (context, imageProvider) {
         return Container(
           decoration: BoxDecoration(
+            shape: shape,
             borderRadius: BorderRadius.circular(radius),
             image: DecorationImage(
               image: imageProvider,
@@ -40,6 +44,7 @@ class CustomNetworkImage extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
+            shape: errorImageShape,
             image: DecorationImage(
               image: AssetImage(ImagesPaths.imagePlaceholder),
               fit: boxFit,

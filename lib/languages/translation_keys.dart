@@ -98,7 +98,21 @@ const instructions = 'instructions',
       requestAcceptedByServiceman = 'requestAcceptedByServiceman',
       paymentSuccessful = 'paymentSuccessful',
       orderRequest = 'orderRequest',
-      summary = 'summary';
+      summary = 'summary',
+      customerDetails = 'customerDetails',
+      servicemanDetails = 'servicemanDetails',
+      serviceSummary = 'serviceSummary',
+      serviceItem = 'serviceItem',
+      total = 'total',
+      orderType = 'orderType',
+      location = 'location',
+      houseOrApartment = 'houseOrApartment',
+      buildingName = 'buildingName',
+      street = 'street',
+      city = 'city',
+      state = 'state',
+      lane = 'lane',
+      country = 'country';
   /// Order Details End ///
 
 ///  Orders Management End ///

@@ -102,6 +102,20 @@ class English {
       key.requestAcceptedByServiceman: 'Request Accepted By Serviceman',
       key.paymentSuccessful: 'Payment Successful',
       key.summary: 'Summary',
+      key.customerDetails: 'Customer Details',
+      key.servicemanDetails: 'Serviceman Details',
+      key.serviceSummary: 'Service Summary',
+      key.serviceItem: 'Service Item',
+      key.total: 'Total',
+      key.orderType: 'Order Type',
+      key.location: 'Location',
+      key.houseOrApartment: 'House/Apartment',
+      key.buildingName: 'Building Name',
+      key.street: 'Street',
+      key.city: 'City',
+      key.state: 'State',
+      key.lane: 'Lane',
+      key.country: 'Country',
       /// Order Details End ///
 
     /// Orders Management End ///

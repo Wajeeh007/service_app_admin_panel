@@ -8,6 +8,7 @@ class ServiceItem {
   bool? status;
   double? price;
   String? image;
+  String? serviceName;
   DateTime? createdAt;
   
   ServiceItem({
@@ -19,6 +20,7 @@ class ServiceItem {
     this.status,
     this.price,
     this.image,
+    this.serviceName,
     this.createdAt
   });
 
@@ -31,6 +33,7 @@ class ServiceItem {
     price = json['price'] != null ? double.tryParse(json['price']) : 0.0;
     status = json['status'] == 1 ? true : false;
     image = json['image'];
+    serviceName = json['service_name'];
     createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
   }
 }

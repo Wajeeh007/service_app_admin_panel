@@ -187,7 +187,7 @@ class OrderListingViewModel extends GetxController with GetSingleTickerProviderS
     } else {
       addDataToVisibleList(
           allList.where((element) => element.customerDetails!.name!.toLowerCase().contains(value.toLowerCase().trim())
-              || element.serviceManDetails!.name!.toLowerCase().trim().contains(value.toLowerCase().trim())
+              || element.servicemanDetails!.name!.toLowerCase().trim().contains(value.toLowerCase().trim())
           ).toList(), visibleList
       );
     }
