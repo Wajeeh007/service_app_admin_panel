@@ -183,7 +183,9 @@ class Urls {
     /// Orders List End ///
 
     /// Order Details ///
-
+    static String getOrder(String id) {
+      return '$_ordersBaseUrl/$id';
+    }
     /// Order Details End ///
 
     static String getUserOrders(String id) {

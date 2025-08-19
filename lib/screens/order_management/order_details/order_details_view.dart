@@ -440,8 +440,10 @@ class _GoogleMapWidget extends StatelessWidget {
 
 /// Map and address text in Column for bigger screen resolution
 class _MapAndAddressInColumn extends StatelessWidget {
-  const _MapAndAddressInColumn();
-  
+  _MapAndAddressInColumn();
+
+  final OrderDetailsViewModel _viewModel = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -458,8 +460,7 @@ class _MapAndAddressInColumn extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "House No 252, Street No 19, Shaheen Housing Scheme, Peshawar",
-                //, "${_viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? ''} ${_viewModel.orderDetails.value.addressDetails?.buildingName ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.streetNo ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.city ?? ''}",
+                "${_viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? ''} ${_viewModel.orderDetails.value.addressDetails?.buildingName ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.streetNo ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.city ?? ''}",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: primaryGrey
                 ),
@@ -502,7 +503,6 @@ class _MapAndAddressInRow extends StatelessWidget {
     );
   }
 }
-
 
 /// Service summary
 class _ServiceAndStatusSummary extends StatelessWidget {

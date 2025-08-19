@@ -473,6 +473,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         final lat = point.lat().toStringAsFixed(6);
         final lng = point.lng().toStringAsFixed(6);
         points.add('$lng $lat');
+
+        if(i == length - 1) {
+          points.add(points.first);
+        }
       }
 
       final pointsString = points.join(', ');
@@ -484,7 +488,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         final zoneListViewModel = Get.find<ZoneListAndAdditionViewModel>();
         zoneListViewModel.areaPolygons = polygonWKT;
       }
-
+      print(polygonWKT);
       drawingManager.setDrawingMode(null);
     }));
   }
