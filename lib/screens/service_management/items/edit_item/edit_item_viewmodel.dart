@@ -83,8 +83,8 @@ class EditItemViewModel extends GetxController {
   void initializeControllers() {
     itemNameController.text = serviceItem.name!;
     itemPriceController.text = serviceItem.price.toString();
-    subServiceTypeController.text = serviceItem.subServiceName!;
-    subServiceTypeSelectedId.value = serviceItem.subServiceId!;
+    subServiceTypeController.text = serviceItem.subService!.name!;
+    subServiceTypeSelectedId.value = serviceItem.subService!.id!;
     imageUrl.value = serviceItem.image!;
   }
   
@@ -97,7 +97,7 @@ class EditItemViewModel extends GetxController {
 
       if(itemNameController.text != serviceItem.name) body.addAll({'name': itemNameController.text});
       if(itemPriceController.text != serviceItem.price.toString()) body.addAll({'price': itemPriceController.text});
-      if(subServiceTypeSelectedId.value != serviceItem.subServiceId) body.addAll({'sub_service_id': subServiceTypeSelectedId.value});
+      if(subServiceTypeSelectedId.value != serviceItem.subService!.id) body.addAll({'sub_service_id': subServiceTypeSelectedId.value});
 
       if(body.isEmpty) {
         showSnackBar(message: lang_key.noInfoChanged.tr, success: false);

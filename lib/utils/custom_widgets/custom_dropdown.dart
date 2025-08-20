@@ -27,6 +27,7 @@ class CustomDropdown extends StatelessWidget {
     this.autoValidate,
     required this.selectedValueId,
     this.onTap,
+    this.onChanged
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -53,6 +54,7 @@ class CustomDropdown extends StatelessWidget {
   final RxBool? autoValidate;
   final RxString selectedValueId;
   final VoidCallback? onTap;
+  final Function? onChanged;
 
   final LayerLink link = LayerLink();
 
@@ -78,6 +80,7 @@ class CustomDropdown extends StatelessWidget {
                         dropDownList: dropDownList,
                         width: dropDownWidth ?? width,
                         value: selectedValueId,
+                        onChanged: onChanged,
                       )
                   ),
                 ),
@@ -146,6 +149,7 @@ class Menu extends StatelessWidget {
   final TextEditingController textEditingController;
   final OverlayPortalController overlayPortalController;
   final RxString value;
+  final Function? onChanged;
 
   const Menu({
     super.key,
@@ -155,6 +159,7 @@ class Menu extends StatelessWidget {
     required this.overlayPortalController,
     this.width,
     required this.value,
+    this.onChanged
   });
 
   @override
@@ -199,6 +204,7 @@ class Menu extends StatelessWidget {
                     value.value = dropDownList[index].value!;
                     showDropDownValue.value = false;
                     overlayPortalController.hide();
+                    if(onChanged != null) onChanged!();
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,

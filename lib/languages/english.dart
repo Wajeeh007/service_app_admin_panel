@@ -111,7 +111,7 @@ class English {
       key.location: 'Location',
       key.houseOrApartment: 'House/Apartment',
       key.buildingName: 'Building Name',
-      key.street: 'Street',
+      key.streetOrFloor: 'Street/Floor',
       key.city: 'City',
       key.state: 'State',
       key.lane: 'Lane',
@@ -332,7 +332,7 @@ class English {
     key.suspend: 'Suspend',
     key.rating: 'Rating',
     key.review: 'Review',
-
+    key.na: 'N/A',
     /// Success Messages ///
 
       /// Zone Setup ///

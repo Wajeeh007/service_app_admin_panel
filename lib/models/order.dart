@@ -20,6 +20,7 @@ class Order {
   bool? paymentStatus;
   ServiceItem? serviceItem;
   OrderType? orderType;
+  DateTime? acceptedAt;
 
   Order({
     this.id,
@@ -35,6 +36,8 @@ class Order {
     this.paymentStatus,
     this.serviceItem,
     this.orderType,
+    this.acceptedAt,
+
   });
 
   Order.fromJson(Map<String, dynamic> json) {
@@ -51,5 +54,7 @@ class Order {
     paymentStatus = json['payment_status'] == 0 ? false : true;
     serviceItem = json['service_item'] != null ? ServiceItem.fromJson(json['service_item']) : null;
     orderType = json['order_type'] != null ? OrderType.values.firstWhere((element) => element.name.toLowerCase().trim() == json['order_type'].toString().toLowerCase().trim()) : OrderType.normal;
+    acceptedAt = json['accepted_at'] != null ? DateTime.parse(json['accepted_at']) : null;
+    addressDetails = json['address'] != null ? Address.fromJson(json['address']) : null;
   }
 }

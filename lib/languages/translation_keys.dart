@@ -108,7 +108,7 @@ const instructions = 'instructions',
       location = 'location',
       houseOrApartment = 'houseOrApartment',
       buildingName = 'buildingName',
-      street = 'street',
+      streetOrFloor = 'street',
       city = 'city',
       state = 'state',
       lane = 'lane',
@@ -332,6 +332,7 @@ const fieldIsRequired = 'fieldIsRequired',
     note = 'note',
     suspend = 'suspend',
     rating = 'rating',
+    na = 'na',
     review = 'review';
 
 /// Success Messages ///

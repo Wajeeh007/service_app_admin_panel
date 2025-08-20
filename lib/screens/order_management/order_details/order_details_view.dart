@@ -7,6 +7,7 @@ import 'package:service_app_admin_panel/utils/custom_google_map/custom_google_ma
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_cached_network_image.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
+import 'package:service_app_admin_panel/utils/global_variables.dart';
 
 import '../../../languages/translation_keys.dart' as lang_key;
 import '../../../utils/custom_widgets/rating_and_value.dart';
@@ -23,7 +24,7 @@ class OrderDetailsView extends StatelessWidget {
         selectedSidePanelItem: lang_key.orders.tr,
         scrollController: _viewModel.scrollController,
         children: [
-          SectionHeadingText(headingText: "${lang_key.order.tr}_"),
+          SectionHeadingText(headingText: "${lang_key.order.tr}_${_viewModel.orderDetails.value.id ?? ''}"),
           SectionHeadingText(headingText: lang_key.activityLog.tr),
           _ActivityLogs(),
           SectionHeadingText(headingText: lang_key.summary.tr),
@@ -58,30 +59,54 @@ class _ActivityLogs extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _OrderStepHeader(title: lang_key.orderRequest.tr, subtitle: '11:55 AM'),
-                            _OrderStepHeader(title: lang_key.requestAccepted.tr, subtitle: '11:57 AM'),
-                            _OrderStepHeader(title: lang_key.orderStatus.tr, subtitle: 'Completed'),
-                            _OrderStepHeader(title: lang_key.payment.tr, subtitle: 'Venmo'),
+                            _OrderStepHeader(
+                                title: lang_key.orderRequest.tr,
+                                subtitle: _viewModel.orderDetails.value.createdAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.createdAt!) : null,
+                            ),
+                            _OrderStepHeader(
+                                title: lang_key.requestAccepted.tr,
+                              subtitle: _viewModel.orderDetails.value.acceptedAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.acceptedAt!) : null,
+                            ),
+                            _OrderStepHeader(
+                                title: lang_key.orderStatus.tr,
+                                subtitle: switch(_viewModel.orderDetails.value.status) {
+                                  OrderStatus.pending || OrderStatus.accepted => '',
+                                  OrderStatus.ongoing => lang_key.ongoing.tr,
+                                  OrderStatus.completed => lang_key.completed.tr,
+                                  OrderStatus.cancelled => lang_key.cancelled.tr,
+                                  null => '',
+                                  OrderStatus.disputed => lang_key.disputed.tr,
+                                }
+                            ),
+                            _OrderStepHeader(
+                                title: lang_key.payment.tr,
+                                subtitle: switch(_viewModel.orderDetails.value.paymentStatus) {
+                                  null => '',
+                                  true => lang_key.paid.tr,
+                                  false => lang_key.unpaid.tr,
+                                }
+                            ),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             _StepConnector(isActive: true, showPreviousConnector: false,),
-                            _StepConnector(isActive: true),
-                            _StepConnector(isActive: true),
-                            _StepConnector(isActive: true, showConnector: false,),
+                            _StepConnector(isActive: _viewModel.orderDetails.value.acceptedAt != null),
+                            _StepConnector(isActive: _viewModel.orderDetails.value.status != null && _viewModel.orderDetails.value.status == OrderStatus.completed),
+                            _StepConnector(isActive: _viewModel.orderDetails.value.paymentStatus != null && _viewModel.orderDetails.value.paymentStatus!, showNextConnector: false,),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _OrderStepDetail(title: lang_key.orderRequestByCustomer.tr,),
-                            _OrderStepDetail(title: lang_key.requestAcceptedByServiceman.tr,),
+                            _OrderStepDetail(title: _viewModel.orderDetails.value.acceptedAt != null ? lang_key.requestAcceptedByServiceman.tr : null,),
                             _OrderStepDetail(title: '',),
-                            _OrderStepDetail(title: lang_key.paymentSuccessful.tr,),
+                            _OrderStepDetail(title: _viewModel.orderDetails.value.paymentStatus != null && _viewModel.orderDetails.value.paymentStatus! ? lang_key.paymentSuccessful.tr :  null,),
                           ],
                         ),
                         SizedBox(height: 15,)
@@ -105,7 +130,7 @@ class _OrderStepHeader extends StatelessWidget {
   });
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +145,8 @@ class _OrderStepHeader extends StatelessWidget {
                 fontWeight: FontWeight.w600
               )
           ),
-          Text(
-              subtitle,
+          if(subtitle != null) Text(
+              subtitle!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: primaryGrey
               )
@@ -135,12 +160,12 @@ class _OrderStepHeader extends StatelessWidget {
 /// Connector line + check icon
 class _StepConnector extends StatelessWidget {
   final bool isActive;
-  final bool showConnector;
+  final bool showNextConnector;
   final bool showPreviousConnector;
 
   const _StepConnector({
     required this.isActive,
-    this.showConnector = true,
+    this.showNextConnector = true,
     this.showPreviousConnector = true,
   });
 
@@ -148,7 +173,7 @@ class _StepConnector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center  ,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if(showPreviousConnector) Expanded(
             child: Container(
@@ -158,14 +183,14 @@ class _StepConnector extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: showPreviousConnector && showConnector ? 0: 1,
+            flex: showPreviousConnector && showNextConnector ? 0: 1,
             child: Align(
-              alignment: showPreviousConnector && showConnector ? Alignment.center : showPreviousConnector ? Alignment.centerLeft : Alignment.centerRight,
-              child: Icon(Icons.check_circle,
+              alignment: showPreviousConnector && showNextConnector ? Alignment.center : showPreviousConnector ? Alignment.centerLeft : Alignment.centerRight,
+              child: Icon(isActive ? Icons.check_circle : Icons.circle_outlined,
                   color: isActive ? Colors.green : Colors.grey, size: 20),
             ),
           ),
-          if(showConnector) Expanded(
+          if(showNextConnector) Expanded(
             child: Container(
               height: 2,
               width: 100,
@@ -180,7 +205,7 @@ class _StepConnector extends StatelessWidget {
 
 /// Detail section for each step (bottom row)
 class _OrderStepDetail extends StatelessWidget {
-  final String title;
+  final String? title;
 
   const _OrderStepDetail({
     required this.title,
@@ -189,13 +214,13 @@ class _OrderStepDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Text(
-          title,
+      child: title != null ? Text(
+          title!,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: primaryGrey
           )
-      ),
+      ) : SizedBox(),
     );
   }
 }
@@ -222,26 +247,27 @@ class _OrderSummarySection extends StatelessWidget {
                   spacing: 10,
                   children: [
                     Row(
-                      spacing: 10,
-                      children: [
-                        _UserDetailsContainer(
-                            imageUrl: _viewModel.orderDetails.value.customerDetails?.profileImage ?? '',
-                            name: _viewModel.orderDetails.value.customerDetails?.name ?? '',
-                            phoneNo: _viewModel.orderDetails.value.customerDetails?.phoneNo ?? '',
-                            email: _viewModel.orderDetails.value.customerDetails?.email ?? '',
-                            ratingValue: _viewModel.orderDetails.value.customerDetails?.rating ?? 0,
-                            headingText: lang_key.customerDetails.tr
-                        ),
-                        _UserDetailsContainer(
-                            imageUrl: _viewModel.orderDetails.value.servicemanDetails?.profileImage ?? '',
-                            name: _viewModel.orderDetails.value.servicemanDetails?.name ?? '',
-                            phoneNo: _viewModel.orderDetails.value.servicemanDetails?.phoneNo ?? '',
-                            email: _viewModel.orderDetails.value.servicemanDetails?.email ?? '',
-                            ratingValue: _viewModel.orderDetails.value.servicemanDetails?.rating ?? 0,
-                            headingText: lang_key.servicemanDetails.tr
-                        ),
-                      ],
-                    ),
+                        spacing: 10,
+                        children: [
+                          _UserDetailsContainer(
+                              imageUrl: _viewModel.orderDetails.value.customerDetails?.profileImage ?? '',
+                              name: _viewModel.orderDetails.value.customerDetails?.name ?? '',
+                              phoneNo: _viewModel.orderDetails.value.customerDetails?.phoneNo ?? '',
+                              email: _viewModel.orderDetails.value.customerDetails?.email ?? '',
+                              ratingValue: _viewModel.orderDetails.value.customerDetails?.rating ?? 0,
+                              headingText: lang_key.customerDetails.tr
+                          ),
+                          if(GlobalVariables.showLoader.isFalse && _viewModel.orderDetails.value.servicemanDetails != null) _UserDetailsContainer(
+                              imageUrl: _viewModel.orderDetails.value.servicemanDetails?.profileImage ?? '',
+                              name: _viewModel.orderDetails.value.servicemanDetails?.name ?? '',
+                              phoneNo: _viewModel.orderDetails.value.servicemanDetails?.phoneNo ?? '',
+                              email: _viewModel.orderDetails.value.servicemanDetails?.email ?? '',
+                              ratingValue: _viewModel.orderDetails.value.servicemanDetails?.rating ?? 0,
+                              headingText: lang_key.servicemanDetails.tr
+                          ),
+                        ],
+                      ),
+
                     _ServiceAndStatusSummary(),
                     if(MediaQuery.sizeOf(context).width < 1150) _LocationContainer()
                   ],
@@ -460,7 +486,7 @@ class _MapAndAddressInColumn extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                "${_viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? ''} ${_viewModel.orderDetails.value.addressDetails?.buildingName ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.streetNo ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.city ?? ''}",
+                "${_viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? ''} ${_viewModel.orderDetails.value.addressDetails?.buildingName ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.streetNo ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.lane ?? ''}, ${_viewModel.orderDetails.value.addressDetails?.city ?? ''}",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: primaryGrey
                 ),
@@ -492,11 +518,26 @@ class _MapAndAddressInRow extends StatelessWidget {
           spacing: 5,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _ServiceSummaryRowTextAndValue(text: lang_key.houseOrApartment.tr, value: _viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? ''),
-            _ServiceSummaryRowTextAndValue(text: lang_key.buildingName.tr, value: _viewModel.orderDetails.value.addressDetails?.buildingName ?? ''),
-            _ServiceSummaryRowTextAndValue(text: lang_key.street.tr, value: _viewModel.orderDetails.value.addressDetails?.streetNo ?? ''),
-            _ServiceSummaryRowTextAndValue(text: lang_key.lane.tr, value: _viewModel.orderDetails.value.addressDetails?.lane ?? ''),
-            _ServiceSummaryRowTextAndValue(text: lang_key.city.tr, value: _viewModel.orderDetails.value.addressDetails?.city ?? ''),
+            _ServiceSummaryRowTextAndValue(
+                text: lang_key.houseOrApartment.tr,
+                value: _viewModel.orderDetails.value.addressDetails?.houseApartmentNo ?? lang_key.na.tr,
+            ),
+            _ServiceSummaryRowTextAndValue(
+                text: lang_key.buildingName.tr,
+                value: _viewModel.orderDetails.value.addressDetails?.buildingName ?? lang_key.na.tr,
+            ),
+            _ServiceSummaryRowTextAndValue(
+                text: lang_key.streetOrFloor.tr,
+                value: _viewModel.orderDetails.value.addressDetails?.streetNo ?? lang_key.na.tr,
+            ),
+            _ServiceSummaryRowTextAndValue(
+                text: lang_key.lane.tr,
+                value: _viewModel.orderDetails.value.addressDetails?.lane ?? lang_key.na.tr,
+            ),
+            _ServiceSummaryRowTextAndValue(
+                text: lang_key.city.tr,
+                value: _viewModel.orderDetails.value.addressDetails?.city ?? lang_key.na.tr,
+            ),
           ],
         )
       ],
@@ -506,8 +547,10 @@ class _MapAndAddressInRow extends StatelessWidget {
 
 /// Service summary
 class _ServiceAndStatusSummary extends StatelessWidget {
-  const _ServiceAndStatusSummary();
-  
+  _ServiceAndStatusSummary();
+
+  final OrderDetailsViewModel _viewModel = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -529,14 +572,21 @@ class _ServiceAndStatusSummary extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CustomNetworkImage(
-                        imageUrl: '',
+                        imageUrl: _viewModel.orderDetails.value.serviceItem?.image ?? '',
                       height: 50,
                       width: 50,
                       boxFit: BoxFit.fill,
                       shape: BoxShape.circle,
                     ),
-                    _ServiceItemAndPriceDetails(),
-                    _ServiceSubServiceNameAndOrderStatus()
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _ServiceItemAndPriceDetails(),
+                          _ServiceSubServiceNameAndOrderStatus(),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ],
@@ -555,28 +605,25 @@ class _ServiceItemAndPriceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Column(
-        spacing: 5,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            lang_key.serviceItem.tr,
-            style: Theme.of(context).textTheme.bodyMedium,
+    return Column(
+      spacing: 5,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _viewModel.orderDetails.value.serviceItem?.name ?? '',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        if(_viewModel.orderDetails.value.createdAt != null) Text(
+          DateFormat('dd/MM/yyyy hh:mm a').format(_viewModel.orderDetails.value.createdAt!),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: primaryGrey
           ),
-          Text(
-            DateFormat('dd/MM/yyyy hh:mm a').format(_viewModel.orderDetails.value.createdAt ?? DateTime.now()),
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: primaryGrey
-            ),
-          ),
-          Text(
-            '${lang_key.total.tr}: \$${_viewModel.orderDetails.value.totalAmount ?? 35}',
-            style: Theme.of(context).textTheme.bodyMedium,
-          )
-        ],
-      ),
+        ),
+        if(_viewModel.orderDetails.value.totalAmount != null) Text(
+          '${lang_key.total.tr}: \$${_viewModel.orderDetails.value.totalAmount!}',
+          style: Theme.of(context).textTheme.bodyMedium,
+        )
+      ],
     );
   }
 }
@@ -589,33 +636,39 @@ class _ServiceSubServiceNameAndOrderStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        spacing: 5,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _ServiceSummaryRowTextAndValue(
-              text: lang_key.orderStatus.tr,
-              value: _viewModel.orderDetails.value.status != null ? _viewModel.orderDetails.value.status!.name : OrderStatus.completed.name.toString().capitalizeFirst!
-          ),
-          _ServiceSummaryRowTextAndValue(
-            text: lang_key.paymentStatus.tr,
-            value: _viewModel.orderDetails.value.paymentStatus != null && _viewModel.orderDetails.value.paymentStatus! ? lang_key.paid.tr : lang_key.unpaid.tr,
-          ),
-          _ServiceSummaryRowTextAndValue(
-              text: lang_key.service.tr,
-              value: _viewModel.orderDetails.value.serviceItem?.serviceName ?? ''
-          ),
-          _ServiceSummaryRowTextAndValue(
-              text: lang_key.subServiceName.tr,
-              value: _viewModel.orderDetails.value.serviceItem?.subServiceName ?? ''
-          ),
-          _ServiceSummaryRowTextAndValue(
-              text: lang_key.orderType.tr,
-              value: _viewModel.orderDetails.value.orderType?.name.capitalizeFirst ?? OrderType.normal.name.capitalizeFirst!
-          ),
-        ],
-      ),
+    return Column(
+      spacing: 5,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _ServiceSummaryRowTextAndValue(
+            text: lang_key.orderStatus.tr,
+            value: switch(_viewModel.orderDetails.value.status) {
+              null => '',
+              OrderStatus.pending => lang_key.pending.tr,
+              OrderStatus.accepted => lang_key.accepted.tr,
+              OrderStatus.ongoing => lang_key.ongoing.tr,
+              OrderStatus.completed => lang_key.completed.tr,
+              OrderStatus.cancelled => lang_key.cancelled.tr,
+              OrderStatus.disputed => lang_key.disputed.tr,
+            }
+        ),
+        _ServiceSummaryRowTextAndValue(
+          text: lang_key.paymentStatus.tr,
+          value: _viewModel.orderDetails.value.paymentStatus != null && _viewModel.orderDetails.value.paymentStatus! ? lang_key.paid.tr : lang_key.unpaid.tr,
+        ),
+        _ServiceSummaryRowTextAndValue(
+            text: lang_key.service.tr,
+            value: _viewModel.orderDetails.value.serviceItem?.service?.name ?? ''
+        ),
+        _ServiceSummaryRowTextAndValue(
+            text: lang_key.subServiceName.tr,
+            value: _viewModel.orderDetails.value.serviceItem?.subService?.name ?? ''
+        ),
+        _ServiceSummaryRowTextAndValue(
+            text: lang_key.orderType.tr,
+            value: _viewModel.orderDetails.value.orderType?.name.capitalizeFirst ?? OrderType.normal.name.capitalizeFirst!
+        ),
+      ],
     );
   }
 }

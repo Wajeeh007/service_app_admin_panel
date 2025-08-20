@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
+import 'package:service_app_admin_panel/utils/api_base_helper.dart';
 import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/url_paths.dart';
 
 import '../../helpers/scroll_controller_funcs.dart';
+import '../../languages/translation_keys.dart' as lang_key;
 import '../../models/drop_down_entry.dart';
+import 'models/user_summary_model.dart';
 import 'models/zone_wise_order_volume.dart';
 
 class DashboardViewModel extends GetxController {
@@ -53,16 +58,13 @@ class DashboardViewModel extends GetxController {
   RxBool adminEarningZoneSelectionShowDropDown = false.obs;
 
   /// Zones order volume result list
-  RxList<ZoneWiseOrderVolume> zoneWiseOrderVolumeList = <ZoneWiseOrderVolume>[
-    ZoneWiseOrderVolume(
-      id: 0,
-      zoneName: 'USA',
-      percentage: 0.3,
-    )
-  ].obs;
+  RxList<ZoneWiseOrderVolume> zoneWiseOrderVolumeList = <ZoneWiseOrderVolume>[].obs;
 
   /// List to perform functions collectively on all dropdowns and suffix icons
   List<Map<OverlayPortalController, RxBool>> overlayPortalControllersAndDropDownValues = [];
+
+  /// Map data for user statistics
+  Rx<UserSummary> userStats = UserSummary().obs;
 
   @override
   void onInit() {
@@ -76,7 +78,7 @@ class DashboardViewModel extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     overlayPortalControllersAndDropDownValues = [
       {zoneWiseStatOverlayPortalController: zoneWiseStatsShowDropDown},
       {adminEarningTimePeriodOverlayPortalController: adminEarningTimePeriodShowDropDown},
@@ -92,8 +94,8 @@ class DashboardViewModel extends GetxController {
         }
       });
     }
-
     animateSidePanelScrollController(scrollController);
+    _fetchInitialDataForDashboard();
     super.onReady();
   }
 
@@ -103,6 +105,46 @@ class DashboardViewModel extends GetxController {
     super.onClose();
   }
 
+  /// Collective API calls to fetch data for dashboard
+  void _fetchInitialDataForDashboard() async {
+    GlobalVariables.showLoader.value = true;
+
+    final fetchUserStats = ApiBaseHelper.getMethod(url: Urls.getUserStatsForDashboard);
+    final fetchZoneWiseOrderVolume = ApiBaseHelper.getMethod(url: Urls.getZoneWiseOrderVolume(zoneWiseStatController.text));
+
+    final responses = await Future.wait([fetchUserStats, fetchZoneWiseOrderVolume]);
+
+    if(responses[0].success! && responses[0].data != null) userStats.value = UserSummary.fromJson(responses[0].data);
+    if(responses[1].success! && responses[1].data != null) {
+      final data = responses[1].data as List;
+      zoneWiseOrderVolumeList.clear();
+      zoneWiseOrderVolumeList.addAllIf(data.isNotEmpty, data.map((e) => ZoneWiseOrderVolume.fromJson(e)));
+      zoneWiseOrderVolumeList.refresh();
+    }
+
+    if(responses.isEmpty || responses.every((element) => !element.success!)) {
+      showSnackBar(message: "${lang_key.generalApiError.tr}. ${lang_key.retry.tr}", success: false);
+    }
+
+    GlobalVariables.showLoader.value = false;
+  }
+
+  /// API call to fetch zone-wise order volume
+  void fetchZoneWiseOrderVolume() async {
+    GlobalVariables.showLoader.value = true;
+    
+    ApiBaseHelper.getMethod(url: Urls.getZoneWiseOrderVolume(zoneWiseStatController.text)).then((value) {
+      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
+      
+      if(value.success!) {
+        final data = value.data as List;
+        zoneWiseOrderVolumeList.clear();
+        zoneWiseOrderVolumeList.addAllIf(data.isNotEmpty, data.map((e) => ZoneWiseOrderVolume.fromJson(e)));
+        zoneWiseOrderVolumeList.refresh();
+      }
+    });
+  }
+  
   void toggleOverlayPortalController({
     required OverlayPortalController overlayPortalController,
     required RxBool showDropDown

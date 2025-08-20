@@ -15,6 +15,7 @@ class Urls {
   static const _ordersBaseUrl = '/orders';
   static const _transactionsBaseUrl = '/transactions';
   static const _reviewsBaseUrl = '/reviews';
+  static const _dashboardBaseUrl = '/dashboard';
   /// Zone Setup
 
   static String editZone(String id) {
@@ -224,4 +225,12 @@ class Urls {
     return '$_reviewsBaseUrl/serviceman/rating_stats/$id';
   }
   /// Reviews End ///
+
+  /// Dashboard ///
+  static String getZoneWiseOrderVolume(String timePeriod) {
+      return '$_dashboardBaseUrl/zone_stats?time_period=$timePeriod';
+  }
+
+  static const String getUserStatsForDashboard = '$_dashboardBaseUrl/user_stats';
+  /// Dashboard End ///
 }

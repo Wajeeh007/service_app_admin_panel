@@ -76,7 +76,7 @@ class ItemsListView extends StatelessWidget {
                           )
                       ),
                       ListEntryItem(text: _viewModel.visibleItemsList[index].name,),
-                      ListEntryItem(text: _viewModel.visibleItemsList[index].subServiceName,),
+                      ListEntryItem(text: _viewModel.visibleItemsList[index].subService!.name!,),
                       ListEntryItem(text: "\$${_viewModel.visibleItemsList[index].price}",),
                       ListEntryItem(
                         child: CustomSwitch(

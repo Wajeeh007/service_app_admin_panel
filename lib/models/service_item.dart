@@ -1,39 +1,36 @@
+import 'package:service_app_admin_panel/models/service_category.dart';
+import 'package:service_app_admin_panel/models/sub_service.dart';
+
 class ServiceItem {
 
   String? id;
-  String? subServiceId;
-  String? serviceId;
   String? name;
-  String? subServiceName;
+  SubService? subService;
   bool? status;
   double? price;
   String? image;
-  String? serviceName;
+  ServiceCategory? service;
   DateTime? createdAt;
   
   ServiceItem({
     this.id,
-    this.subServiceId,
-    this.serviceId,
     this.name,
-    this.subServiceName,
+    this.subService,
     this.status,
     this.price,
     this.image,
-    this.serviceName,
+    this.service,
     this.createdAt
   });
 
   ServiceItem.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
-    serviceId = json['service_id'].toString();
-    subServiceId = json['sub_service_id'].toString();
-    subServiceName = json['sub_service_name'];
+    subService = json['sub_service'] != null ? SubService.fromJson(json['sub_service']) : null;
     name = json['name'];
     price = json['price'] != null ? double.tryParse(json['price']) : 0.0;
     status = json['status'] == 1 ? true : false;
     image = json['image'];
-    serviceName = json['service_name'];
+    service = json['service'] != null ? ServiceCategory.fromJson(json['service']) : null;
     createdAt = json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null;
   }
 }

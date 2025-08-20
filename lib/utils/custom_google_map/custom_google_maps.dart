@@ -43,7 +43,7 @@ class GoogleMapWidget extends StatefulWidget {
     this.longitude,
     this.mapHeight = 280,
     this.mapWidth = double.infinity
-  }) : assert((moveCamera && latitude != null && longitude != null) || (moveCamera == false && latitude == null && longitude == null), 'Provide latitude and longitude if you want to move the map camera.');
+  });
 
   @override
   State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
@@ -98,6 +98,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       ),
     );
 
+    final rawMap = js_util.jsify(js_util.getProperty(_gMap, '__proto__') != null ? _gMap : js_util.getProperty(_gMap, 'map'));
+
     widget.mapController.addToPolygonRefs = (Map<String, dynamic> zoneData) {
       if(zoneData['id'] != null && (zoneData['polylines'] != null || zoneData['polylines'] != '')) {
         _drawPolygons(_gMap);
@@ -106,7 +108,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     widget.mapController.updateZonePolygon = (Map<String, dynamic> zoneData) => updatePolygonData(zoneData);
 
-    final rawMap = js_util.jsify(js_util.getProperty(_gMap, '__proto__') != null ? _gMap : js_util.getProperty(_gMap, 'map'));
+    widget.mapController.moveCamera = (double lat, double lng) => _moveCamera(_gMap, rawMap, moveToCustomLocation: true, lng: lng, lat: lat);
 
     drawingManager = DrawingManager(
         DrawingManagerOptions(
@@ -137,10 +139,25 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   /// Move camera to the given location
-  void _moveCamera(GMap map, dynamic rawMap, {bool moveToCustomLocation = false}) async {
+  void _moveCamera(GMap map, dynamic rawMap, {bool moveToCustomLocation = false, double? lat, double? lng}) async {
     try{
       if(moveToCustomLocation) {
-        map.panTo(ltln.LatLng(lat: widget.latitude!, lng: widget.longitude!));
+        print('Moving map');
+        map.panTo(ltln.LatLng(lat: lat!, lng: lng!));
+
+        final markerOptions = js_util.jsify({
+          'position': js_util.jsify({'lat': lat, 'lng': lng}),
+          'map': map,
+          'title': 'Custom Location',
+          'icon': {
+            'url': 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          }
+        });
+
+        final google = js_util.getProperty(html.window, 'google');
+        final maps = js_util.getProperty(google, 'maps');
+        final markerConstructor = js_util.getProperty(maps, 'Marker');
+        js_util.callConstructor(markerConstructor, [markerOptions]);
       } else {
         final zoneListViewModel = Get.find<ZoneListAndAdditionViewModel>();
         final position = await zoneListViewModel.determinePosition();
@@ -217,7 +234,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         final point = path.getAt(i);
         final lat = js_util.callMethod(point, 'lat', []);
         final lng = js_util.callMethod(point, 'lng', []);
-        points.add('${lng.toStringAsFixed(6)} ${lat.toStringAsFixed(6)}');
+        points.add('${lng.toStringAsFixed(8)} ${lat.toStringAsFixed(8)}');
       }
 
       if (points.isNotEmpty && points.first != points.last) {
@@ -470,8 +487,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
       for (var i = 0; i < length; i++) {
         final point = path.getAt(i);
-        final lat = point.lat().toStringAsFixed(6);
-        final lng = point.lng().toStringAsFixed(6);
+        final lat = point.lat().toStringAsFixed(8);
+        final lng = point.lng().toStringAsFixed(8);
         points.add('$lng $lat');
 
         if(i == length - 1) {

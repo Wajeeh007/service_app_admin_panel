@@ -65,51 +65,54 @@ class _WelcomeText extends StatelessWidget {
 
 /// Total active customers, servicemen, total earnings and orders section
 class _TextStats extends StatelessWidget {
-  const _TextStats();
+  _TextStats();
+
+  final DashboardViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 10,
-            children: [
-              SmallStatisticTile(
-                text: lang_key.activeCustomers.tr,
-                value: '05',
-                iconOrImageBgColor: primaryBlue,
-                icon: Icons.person,
-              ),
-              SmallStatisticTile(
-                text: lang_key.totalEarnings.tr,
-                value: '\$ 10',
-                iconOrImageBgColor: Color(0xffF89D1F),
-                icon: Icons.currency_exchange_outlined,
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 10,
-            children: [
-              SmallStatisticTile(
-                text: lang_key.activeServicemen.tr,
-                value: '05',
-                iconOrImageBgColor: Colors.purpleAccent,
-                image: ImagesPaths.servicemen,
-              ),
-              SmallStatisticTile(
-                text: lang_key.totalOrders.tr,
-                value: '10',
-                iconOrImageBgColor: Colors.green,
-                icon: Icons.receipt,
-              )
-            ],
-          ),
-        ],
+      child: Obx(() => Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
+              children: [
+                SmallStatisticTile(
+                  text: lang_key.activeCustomers.tr,
+                  value: _viewModel.userStats.value.totalActiveCustomers != null ? _viewModel.userStats.value.totalActiveCustomers.toString() : '',
+                  iconOrImageBgColor: primaryBlue,
+                  icon: Icons.person,
+                ),
+                SmallStatisticTile(
+                  text: lang_key.totalEarnings.tr,
+                  value: '\$ ${_viewModel.userStats.value.totalEarning ?? ''}',
+                  iconOrImageBgColor: Color(0xffF89D1F),
+                  icon: Icons.currency_exchange_outlined,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
+              children: [
+                SmallStatisticTile(
+                  text: lang_key.activeServicemen.tr,
+                  value: _viewModel.userStats.value.totalActiveServicemen != null ? _viewModel.userStats.value.totalActiveServicemen.toString() : '',
+                  iconOrImageBgColor: Colors.purpleAccent,
+                  image: ImagesPaths.servicemen,
+                ),
+                SmallStatisticTile(
+                  text: lang_key.totalOrders.tr,
+                  value: _viewModel.userStats.value.totalOrders != null ? _viewModel.userStats.value.totalOrders.toString() : '',
+                  iconOrImageBgColor: Colors.green,
+                  icon: Icons.receipt,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -151,6 +154,7 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                   showDropDown: _viewModel.zoneWiseStatsShowDropDown,
                   dropDownList: _viewModel.zoneWiseStatsDropDownList,
                   overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
+                  onChanged: () => _viewModel.fetchZoneWiseOrderVolume(),
                   onTap: () => _viewModel.zoneWiseStatsShowDropDown.value = !_viewModel.zoneWiseStatsShowDropDown.value,
                 ),
               ],
@@ -159,11 +163,12 @@ class _ZoneWiseOrderStats extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  children: List.generate(_viewModel.zoneWiseOrderVolumeList.length, (index) {
-                    return _ZoneOrderVolumeItem(index: index);
-                        
-                  }),
+                child: Obx(() => Column(
+                    children: List.generate(_viewModel.zoneWiseOrderVolumeList.length, (index) {
+                      return _ZoneOrderVolumeItem(index: index);
+
+                    }),
+                  ),
                 ),
               ),
             )
@@ -184,53 +189,56 @@ class _ZoneOrderVolumeItem extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 5,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              _viewModel.zoneWiseOrderVolumeList[index].zoneName!,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: primaryGrey
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Column(
+        spacing: 5,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _viewModel.zoneWiseOrderVolumeList[index].zoneName!,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: primaryGrey
+                ),
               ),
-            ),
-            Text(
-              '${_viewModel.zoneWiseOrderVolumeList[index].percentage! * 100}% Order Volume',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: primaryGrey
-              ),
-            )
-          ],
-        ),
-        Container(
-          width: double.infinity,
-          height: 5,
-          decoration: BoxDecoration(
-              borderRadius: kContainerBorderRadius,
-              border: Border.all(
-                  color: Colors.transparent,
-                  width: 0.1
-              ),
-              gradient: LinearGradient(
-                  colors: [
-                    primaryBlue,
-                    primaryBlue,
-                    primaryGrey.withValues(alpha: 0.2),
-                    primaryGrey.withValues(alpha: 0.2)
-                  ],
-                  stops: [
-                    0,
-                    _viewModel.zoneWiseOrderVolumeList[index].percentage!,
-                    _viewModel.zoneWiseOrderVolumeList[index].percentage!,
-                    1
-                  ]
+              Text(
+                '${_viewModel.zoneWiseOrderVolumeList[index].percentage!.toStringAsFixed(0)}% Order Volume',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: primaryGrey
+                ),
               )
+            ],
           ),
-        )
-      ],
+          Container(
+            width: double.infinity,
+            height: 5,
+            decoration: BoxDecoration(
+                borderRadius: kContainerBorderRadius,
+                border: Border.all(
+                    color: Colors.transparent,
+                    width: 0.1
+                ),
+                gradient: LinearGradient(
+                    colors: [
+                      primaryBlue,
+                      primaryBlue,
+                      primaryGrey.withValues(alpha: 0.2),
+                      primaryGrey.withValues(alpha: 0.2)
+                    ],
+                    stops: [
+                      0,
+                      _viewModel.zoneWiseOrderVolumeList[index].percentage!,
+                      _viewModel.zoneWiseOrderVolumeList[index].percentage!,
+                      1
+                    ]
+                )
+            ),
+          )
+        ],
+      ),
     );
   }
 }

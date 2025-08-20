@@ -6,6 +6,8 @@ import 'package:service_app_admin_panel/utils/custom_google_map/models_and_libra
 import 'package:service_app_admin_panel/utils/global_variables.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
+import '../../../helpers/stop_loader_and_show_snackbar.dart';
+
 class OrderDetailsViewModel extends GetxController {
 
   /// Controller(s)
@@ -24,9 +26,22 @@ class OrderDetailsViewModel extends GetxController {
   void _fetchOrderDetails() {
     GlobalVariables.showLoader.value = true;
 
-    ApiBaseHelper.getMethod(url: Urls.getOrder(orderDetails.value.id ?? '1')).then((value) {
+    ApiBaseHelper.getMethod(
+        url: Urls.getOrder(orderDetails.value.id ?? '333ae3af-203f-41c3-87c1-eb91effd8921')
+    ).then((value) {
       GlobalVariables.showLoader.value = false;
+
+      if(value.success!) {
+        orderDetails.value = Order.fromJson(value.data);
+        orderDetails.refresh();
+        mapController.moveCamera!(orderDetails.value.addressDetails!.latitude!, orderDetails.value.addressDetails!.longitude!);
+      } else {
+        showSnackBar(message: value.message!, success: value.success!);
+      }
+
+      if(value.statusCode == 404) {
+        Get.close(1);
+      }
     });
   }
-
 }

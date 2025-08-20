@@ -558,7 +558,7 @@ class _ServicemanServicesTab extends StatelessWidget {
                   ListSerialNoText(index: index),
                   ListEntryItem(text: _viewModel.servicemanServices[index].name!),
                   ListEntryItem(text: DateFormat('dd/MM/yyyy').format(_viewModel.servicemanServices[index].createdAt!),),
-                  ListEntryItem(text: _viewModel.servicemanServices[index].subServiceName!,),
+                  ListEntryItem(text: _viewModel.servicemanServices[index].subService!.name!,),
                 ],
               ),
             );

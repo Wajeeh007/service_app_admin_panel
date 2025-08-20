@@ -30,7 +30,7 @@ class Address {
     latitude = json['latitude'] != null ? double.tryParse(json['latitude']) : null;
     longitude = json['longitude'] != null ? double.tryParse(json['longitude']) : null;
     houseApartmentNo = json['house_apartment_no'].toString();
-    streetNo = json['street_no'].toString();
+    streetNo = json['street_floor_no'].toString();
     lane = json['lane'];
     city = json['city'];
     buildingName = json['building_name'];
