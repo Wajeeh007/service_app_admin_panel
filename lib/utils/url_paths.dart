@@ -232,5 +232,7 @@ class Urls {
   }
 
   static const String getUserStatsForDashboard = '$_dashboardBaseUrl/user_stats';
+
+  static const String getAdminEarningStats = '$_dashboardBaseUrl/admin_earnings';
   /// Dashboard End ///
 }

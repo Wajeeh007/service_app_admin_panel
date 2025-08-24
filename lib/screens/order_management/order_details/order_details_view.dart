@@ -24,7 +24,7 @@ class OrderDetailsView extends StatelessWidget {
         selectedSidePanelItem: lang_key.orders.tr,
         scrollController: _viewModel.scrollController,
         children: [
-          SectionHeadingText(headingText: "${lang_key.order.tr}_${_viewModel.orderDetails.value.id ?? ''}"),
+          Obx(() => SectionHeadingText(headingText: "${lang_key.order.tr}_${_viewModel.orderDetails.value.id ?? ''}")),
           SectionHeadingText(headingText: lang_key.activityLog.tr),
           _ActivityLogs(),
           SectionHeadingText(headingText: lang_key.summary.tr),
@@ -58,38 +58,39 @@ class _ActivityLogs extends StatelessWidget {
                       spacing: 10,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _OrderStepHeader(
-                                title: lang_key.orderRequest.tr,
-                                subtitle: _viewModel.orderDetails.value.createdAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.createdAt!) : null,
-                            ),
-                            _OrderStepHeader(
-                                title: lang_key.requestAccepted.tr,
-                              subtitle: _viewModel.orderDetails.value.acceptedAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.acceptedAt!) : null,
-                            ),
-                            _OrderStepHeader(
-                                title: lang_key.orderStatus.tr,
-                                subtitle: switch(_viewModel.orderDetails.value.status) {
-                                  OrderStatus.pending || OrderStatus.accepted => '',
-                                  OrderStatus.ongoing => lang_key.ongoing.tr,
-                                  OrderStatus.completed => lang_key.completed.tr,
-                                  OrderStatus.cancelled => lang_key.cancelled.tr,
-                                  null => '',
-                                  OrderStatus.disputed => lang_key.disputed.tr,
-                                }
-                            ),
-                            _OrderStepHeader(
-                                title: lang_key.payment.tr,
-                                subtitle: switch(_viewModel.orderDetails.value.paymentStatus) {
-                                  null => '',
-                                  true => lang_key.paid.tr,
-                                  false => lang_key.unpaid.tr,
-                                }
-                            ),
-                          ],
+                        Obx(() => Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _OrderStepHeader(
+                                  title: lang_key.orderRequest.tr,
+                                  subtitle: _viewModel.orderDetails.value.createdAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.createdAt!) : null,
+                              ),
+                              _OrderStepHeader(
+                                  title: lang_key.requestAccepted.tr,
+                                subtitle: _viewModel.orderDetails.value.acceptedAt != null ? DateFormat('hh:mm a').format(_viewModel.orderDetails.value.acceptedAt!) : null,
+                              ),
+                              _OrderStepHeader(
+                                  title: lang_key.orderStatus.tr,
+                                  subtitle: switch(_viewModel.orderDetails.value.status) {
+                                    OrderStatus.pending || OrderStatus.accepted => '',
+                                    OrderStatus.ongoing => lang_key.ongoing.tr,
+                                    OrderStatus.completed => lang_key.completed.tr,
+                                    OrderStatus.cancelled => lang_key.cancelled.tr,
+                                    null => '',
+                                    OrderStatus.disputed => lang_key.disputed.tr,
+                                  }
+                              ),
+                              _OrderStepHeader(
+                                  title: lang_key.payment.tr,
+                                  subtitle: switch(_viewModel.orderDetails.value.paymentStatus) {
+                                    null => '',
+                                    true => lang_key.paid.tr,
+                                    false => lang_key.unpaid.tr,
+                                  }
+                              ),
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

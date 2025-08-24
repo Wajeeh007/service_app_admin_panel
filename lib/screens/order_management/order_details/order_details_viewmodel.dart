@@ -34,7 +34,7 @@ class OrderDetailsViewModel extends GetxController {
       if(value.success!) {
         orderDetails.value = Order.fromJson(value.data);
         orderDetails.refresh();
-        mapController.moveCamera!(orderDetails.value.addressDetails!.latitude!, orderDetails.value.addressDetails!.longitude!);
+        Future.delayed(Duration(milliseconds: 500), () => mapController.moveCamera!(orderDetails.value.addressDetails!.latitude!, orderDetails.value.addressDetails!.longitude!));
       } else {
         showSnackBar(message: value.message!, success: value.success!);
       }
