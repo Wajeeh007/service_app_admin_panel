@@ -325,8 +325,6 @@ class _AdminEarningStatsGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // print(DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day.toDouble());
-
     return Container(
       padding: EdgeInsets.all(20),
       width: double.infinity,
@@ -354,16 +352,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                     showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
                     onTap: () => _viewModel.adminEarningTimePeriodShowDropDown.value = !_viewModel.adminEarningTimePeriodShowDropDown.value,
                     onChanged: () {
-                      if(_viewModel.adminEarningTimePeriodSelectedId.value != _viewModel.adminEarningTimePeriodController.text){
-                        _viewModel.adminEarningTimePeriodSelectedId.value =
-                            _viewModel.adminEarningTimePeriodDropdownList
-                                .firstWhere((element) =>
-                                    element.label ==
-                                    _viewModel
-                                        .adminEarningTimePeriodController.text)
-                                .value;
                         _viewModel.fetchAdminEarningStats();
-                      }
                     },
                   ),
                   CustomDropdown(
@@ -374,10 +363,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                     showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown,
                     onTap: () => _viewModel.adminEarningZoneSelectionShowDropDown.value = !_viewModel.adminEarningZoneSelectionShowDropDown.value,
                     onChanged: () {
-                      if(_viewModel.adminEarningZoneSelectionSelectedId.value != _viewModel.adminEarningZoneSelectionController.text) {
-                        _viewModel.adminEarningZoneSelectionSelectedId.value = _viewModel.adminEarningZoneSelectionList.firstWhere((element) => element.label == _viewModel.adminEarningZoneSelectionController.text).value;
                         _viewModel.fetchAdminEarningStats();
-                      }
                     },
                   ),
                 ],
@@ -428,8 +414,6 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               reservedSize: 30,
-                              // interval: 1,
-                              // reservedSize: _viewModel.adminEarningTimePeriodSelectedId.value == 'Daily' ? DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day.toDouble() : _viewModel.adminEarningTimePeriodSelectedId.value == 'Monthly' ? 12 : 10,
                               interval: _viewModel.adminEarningTimePeriodSelectedId.value == 'Daily' ? 0.5 : 1,
                               getTitlesWidget: (value, meta) => BottomTitleWidget(value: value, meta: meta,),
                             ),
@@ -449,7 +433,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                         maxY: _viewModel.graphData.value.min != null ? _viewModel.graphData.value.max == 0 ? 6 : _viewModel.graphData.value.max!.toDouble() : 6,
                         lineBarsData: [
                           LineChartBarData(
-                            spots: _viewModel.graphData.value.dailyPoints ?? [
+                            spots: _viewModel.graphData.value.dailyPoints ?? _viewModel.graphData.value.monthlyPoints ?? _viewModel.graphData.value.yearlyPoints ?? [
                               FlSpot(0, 0.1),
                               FlSpot(11, 0.1)
                             ],

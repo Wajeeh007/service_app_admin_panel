@@ -115,7 +115,7 @@ class _SidePanelItem extends StatelessWidget {
         child: ListTile(
           contentPadding: EdgeInsets.only(left: 15),
           minVerticalPadding: 0,
-          onTap: () => Get.offNamed(routeName, arguments: args,),
+          onTap: () => Get.offAllNamed(routeName, arguments: args,),
           leading: icon != null ? Icon(
             icon!,
             size: 25,

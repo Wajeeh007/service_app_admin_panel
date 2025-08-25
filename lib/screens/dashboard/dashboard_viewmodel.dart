@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/helpers/stop_loader_and_show_snackbar.dart';
@@ -149,9 +150,10 @@ class DashboardViewModel extends GetxController {
     GlobalVariables.showLoader.value = true;
     
     ApiBaseHelper.getMethod(url: Urls.getZoneWiseOrderVolume(zoneWiseStatController.text)).then((value) {
-      stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
-      
+      if(!value.success!) stopLoaderAndShowSnackBar(message: value.message!, success: value.success!);
+
       if(value.success!) {
+        GlobalVariables.showLoader.value = false;
         final data = value.data as List;
         zoneWiseOrderVolumeList.clear();
         zoneWiseOrderVolumeList.addAllIf(data.isNotEmpty, data.map((e) => ZoneWiseOrderVolume.fromJson(e)));
@@ -167,6 +169,26 @@ class DashboardViewModel extends GetxController {
       GlobalVariables.showLoader.value = false;
       if(value.success!) {
         graphData.value = GraphData.fromJson(value.data);
+        if(graphData.value.dailyPoints != null) {
+          final hasZeroSpot = graphData.value.dailyPoints?.indexWhere((element) => element.x == 0);
+          if(hasZeroSpot == -1) {
+            graphData.value.dailyPoints?.insert(0, FlSpot(0, 0));
+          }
+        }
+
+        if(graphData.value.monthlyPoints != null) {
+          final hasZeroSpot = graphData.value.monthlyPoints?.indexWhere((element) => element.x == 0);
+          if(hasZeroSpot == -1) {
+            graphData.value.monthlyPoints?.insert(0, FlSpot(0, 0));
+          }
+        }
+
+        if(graphData.value.yearlyPoints != null) {
+          final hasZeroSpot = graphData.value.yearlyPoints?.indexWhere((element) => element.x == 0);
+          if(hasZeroSpot == -1) {
+            graphData.value.yearlyPoints?.insert(0, FlSpot(0, 0));
+          }
+        }
         // print(graphData.value.points?.first);
       }
     });

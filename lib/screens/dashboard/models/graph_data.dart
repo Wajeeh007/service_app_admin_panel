@@ -18,27 +18,21 @@ class GraphData {
     if(json['daily_graph_points'] != null) {
       dailyPoints = <FlSpot>[];
       json['daily_graph_points'].forEach((v) {
-        dailyPoints!.add(FlSpot((v['x']/2).toDouble(), v['y'].toDouble()));
+        dailyPoints!.add(FlSpot(((v['x']/2) - 0.5).toDouble(), v['y'].toDouble()));
       });
-      dailyPoints!.insert(0, FlSpot(0, 0));
-      // points!.insert(points!.length, FlSpot(11, 0));
 
     }
     if(json['monthly_graph_points'] != null) {
       monthlyPoints = <FlSpot>[];
       json['monthly_graph_points'].forEach((v) {
-        monthlyPoints!.add(FlSpot((v['x']/2).toDouble(), v['y'].toDouble()));
+        monthlyPoints!.add(FlSpot((v['x']).toDouble(), v['y'].toDouble()));
       });
-      monthlyPoints!.insert(0, FlSpot(0, 0));
-      // points!.insert(points!.length, FlSpot(11, 0));
     }
     if(json['yearly_graph_points'] != null) {
       yearlyPoints = <FlSpot>[];
       json['yearly_graph_points'].forEach((v) {
-        yearlyPoints!.add(FlSpot((v['x']/2).toDouble(), v['y'].toDouble()));
+        yearlyPoints!.add(FlSpot((DateTime.now().year - v['x'] + 11).toDouble(), v['y'].toDouble()));
       });
-      yearlyPoints!.insert(0, FlSpot(0, 0));
-      // points!.insert(points!.length, FlSpot(11, 0));
     }
   }
 }
