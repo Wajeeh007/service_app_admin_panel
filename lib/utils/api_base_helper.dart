@@ -24,7 +24,6 @@ class ApiBaseHelper {
   }) async {
     try {
 
-      print(GlobalVariables.token);
       Map<String, String> header = {
         'Content-Type': 'application/json',
         // 'Cookie': 'XSRF-token=${GlobalVariables.token}'
