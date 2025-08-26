@@ -9,6 +9,7 @@ class ImagesPaths {
   static final String noData = '${_imagesPath}no_data.png';
   static final String imagePlaceholder = '${_imagesPath}image_placeholder.png';
   static final String dummyCustomerImage = '${_imagesPath}dummy_customer_image.png';
+  static final String loginImage = '${_imagesPath}login.png';
 
   /// Logos
   static String adawatLogo = '${_logosPath}adawat.jpg';

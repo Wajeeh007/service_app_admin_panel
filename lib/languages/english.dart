@@ -4,6 +4,26 @@ class English {
 
   Map<String, String> get translations => {
 
+    /// Auth
+      /// Login
+      key.password: 'Password',
+      key.welcomeBack: 'Welcome Back',
+      key.welcomeBackDesc: 'Welcome back! Please enter your credentials',
+      key.rememberMe: 'Remember Me',
+      key.signIn: 'Sign In',
+
+      /// Forgot Password
+      key.forgotPassword: 'Forgot Password?',
+      key.forgotPasswordDesc: 'No worries, we\'ll send you instructions to reset your password.',
+      key.resetPassword: 'Reset Password',
+      key.backToLogin: 'Back To Login',
+
+      /// Check Email
+      key.checkEmail: 'Check Email',
+      key.checkEmailDesc: 'We sent a password reset link to',
+      key.didntReceiveEmail: 'Didn\'t receive email?',
+      key.resendEmail: 'Resend Email',
+
     /// Dashboard
     key.dashboard: 'Dashboard',
 
@@ -365,6 +385,7 @@ class English {
     key.addReceiptImageToProceed: 'Add receipt image to proceed',
     key.locationServiceDisabled: 'Location services disabled',
     key.locationPermissionsDenied: 'Location permissions denied',
+    key.expiredToken: 'Your session has expired. Please login again.',
     key.locationPermissionsPermanentlyDenied: 'Location permissions are permanently denied, we cannot request permissions.',
     /// Errors End ///
   };

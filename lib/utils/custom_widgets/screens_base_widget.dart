@@ -27,41 +27,37 @@ class ScreensBaseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => hideAllOverlayPortalControllers(overlayPortalControllersAndIcons: overlayPortalControllersAndShowDropDown),
-        child: Stack(
-          children: [
-
-            Row(
-              children: [
-                SidePanel(
-                  scrollController: scrollController,
-                  selectedItemIndex: selectedSidePanelItem,
-                  args: args,
-                ),
-                Expanded(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          spacing: 15,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: children,
+    return LoaderView(
+      child: Scaffold(
+        appBar: CustomAppBar(),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => hideAllOverlayPortalControllers(overlayPortalControllersAndIcons: overlayPortalControllersAndShowDropDown),
+          child: Row(
+                children: [
+                  SidePanel(
+                    scrollController: scrollController,
+                    selectedItemIndex: selectedSidePanelItem,
+                    args: args,
+                  ),
+                  Expanded(
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            spacing: 15,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: children,
+                          ),
                         ),
-                      ),
-                    )
-                ),
-              ],
-            ),
-            ProfileDropDown(),
-            ProfileDropDownContainer(),
-            LoaderView(),
-          ],
-        ),
+                      )
+                  ),
+              ProfileDropDown(),
+              ProfileDropDownContainer(),
+            ],
+          ),
+        )
       ),
     );
   }

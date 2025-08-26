@@ -133,10 +133,7 @@ class ZoneListAndAdditionViewModel extends GetxController {
 
       GlobalVariables.showLoader.value = false;
 
-      if(value.success!) {
-        print('Fetched data');
-        populateLists(allZonesList, value.data, visibleZoneList, (dynamic json) => ZoneModel.fromJson(json));
-      }
+      if(value.success!) populateLists(allZonesList, value.data, visibleZoneList, (dynamic json) => ZoneModel.fromJson(json));
     });
   }
 

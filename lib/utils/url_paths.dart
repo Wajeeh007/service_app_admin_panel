@@ -16,6 +16,12 @@ class Urls {
   static const _transactionsBaseUrl = '/transactions';
   static const _reviewsBaseUrl = '/reviews';
   static const _dashboardBaseUrl = '/dashboard';
+  static const _authBaseUrl = '/auth';
+
+  /// Auth
+    /// Login
+    static const String login = '$_authBaseUrl/login';
+    static const String getUserProfile = '$_authBaseUrl/user_profile';
   /// Zone Setup
 
   static String editZone(String id) {

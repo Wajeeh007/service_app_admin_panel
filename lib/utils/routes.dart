@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:service_app_admin_panel/screens/auth/check_email/check_email_view.dart';
+import 'package:service_app_admin_panel/screens/auth/forgot_password/forgot_password_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_details/customer_details_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/customer_list/customers_list_view.dart';
 import 'package:service_app_admin_panel/screens/customer_management/suspended_customers_list/suspended_customers_list_view.dart';
@@ -11,11 +13,13 @@ import 'package:service_app_admin_panel/screens/service_management/sub_services/
 import 'package:service_app_admin_panel/screens/serviceman_management/new_requests/new_requests_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/serviceman_details/serviceman_details_view.dart';
 import 'package:service_app_admin_panel/screens/serviceman_management/suspended_servicemen_list/suspended_serviceman_list_view.dart';
+import 'package:service_app_admin_panel/screens/splash/splash_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/edit_withdraw_method/edit_withdraw_method_view.dart';
 import 'package:service_app_admin_panel/screens/withdraw/withdraw_requests/withdraw_requests_view.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/edit_zone/edit_zone_view.dart';
 import 'package:service_app_admin_panel/screens/zone_setup/zone_list_and_addition/zone_list_and_addition_view.dart';
 
+import '../screens/auth/login/login_view.dart';
 import '../screens/service_management/items/items_list/items_list_view.dart';
 import '../screens/service_management/services/service_list/service_list_view.dart';
 import '../screens/service_management/sub_services/sub_service_list/sub_services_list_view.dart';
@@ -25,7 +29,10 @@ import '../screens/withdraw/withdraw_methods_list/withdraw_methods_list_view.dar
 
 class Routes {
 
-  static const baseScreen = '/baseScreen';
+  static const initRoute = '/initRoute';
+  static const login = '/login';
+  static const forgotPassword = '/forgotPassword';
+  static const checkEmail = '/checkEmail';
   static const dashboard = '/dashboard';
   static const zoneListAndAddition = '/zoneListAndAddition';
   static const editZone = '/editZone';
@@ -51,7 +58,10 @@ class Routes {
 
   static final pages = [
 
-    // GetPage(name: baseScreen, page: () => BaseScreenView(),)
+    GetPage(name: initRoute, page: () => SplashView(),),
+    GetPage(name: login, page: () => LoginView()),
+    GetPage(name: forgotPassword, page: () => ForgotPasswordView()),
+    GetPage(name: checkEmail, page: () => CheckEmailView()),
     GetPage(name: dashboard, page: () => DashboardView()),
     GetPage(name: zoneListAndAddition, page: () => ZoneListAndAdditionView()),
     GetPage(name: editZone, page: () => EditZoneView()),

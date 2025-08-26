@@ -1,3 +1,23 @@
+/// Auth
+  /// Login
+  const password = 'password',
+    welcomeBack = 'welcomeBack',
+    welcomeBackDesc = 'welcomeBackDesc',
+    rememberMe = 'rememberMe',
+    signIn = 'signIn';
+
+  /// Forgot Password
+  const forgotPassword = 'forgotPassword',
+      forgotPasswordDesc = 'forgotPasswordDesc',
+      resetPassword = 'resetPassword',
+      backToLogin = 'backToLogin';
+
+  /// Check Email
+  const checkEmail = 'checkEmail',
+      checkEmailDesc = 'checkEmailDesc',
+      didntReceiveEmail = 'didntReceiveEmail',
+      resendEmail = 'resendEmail';
+
 /// Dashboard
 const dashboard = 'dashboard';
 
@@ -359,5 +379,6 @@ const addServiceError = 'addServiceError',
     addReceiptImageToProceed = 'addReceiptImageToProceed',
     locationServiceDisabled = 'locationServicesDisabled',
     locationPermissionsDenied = 'locationPermissionsDenied',
+    expiredToken = 'expiredToken',
     locationPermissionsPermanentlyDenied = 'locationPermissionsPermanentlyDenied';
 /// Errors End ///

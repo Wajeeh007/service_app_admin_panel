@@ -45,4 +45,12 @@ class Errors {
       success: false,
     );
   }
+
+  ApiResponse showExpiredTokenError() {
+    return ApiResponse(
+      message: lang_key.expiredToken.tr,
+      statusCode: 403,
+      success: false,
+    );
+  }
 }

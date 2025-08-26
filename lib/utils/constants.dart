@@ -142,3 +142,14 @@ enum WithdrawRequestStatus {pending, approved, settled, denied}
 
 /// Transactions Payment Status
 enum TransactionPaymentStatus {paid, unpaid}
+
+/// Container names for Local Storage
+String userDataContainerName = 'admin_data';
+String languageContainerName = 'language';
+
+/// Keys for storing data in the local storage 
+const String adminDetailsKey = 'admin_details';
+const String languageCodeKey = 'language_key';
+const String tokenKey = 'token';
+const String isLoggedInKey = 'isLoggedIn';
+const String isNotFirstTimeKey = 'isNotFirstTime';

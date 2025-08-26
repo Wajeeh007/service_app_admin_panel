@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Admin Panel',
       getPages: Routes.pages,
-      initialRoute: Routes.orderDetails,
+      initialRoute: Routes.initRoute,
       translations: AppLanguages(),
       fallbackLocale: const Locale('en', 'US'),
       initialBinding: InitBinding(),
@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
   }
 
   Locale getLocale(String languageKey) {
+    if(languageKey == '') return Locale('en', 'US');
     return Locale(
         initLanguageController.optionsLocales[languageKey]['languageCode'],
         initLanguageController.optionsLocales[languageKey]['countryCode']

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import '../helpers/local_storage_functions.dart';
+import '../utils/constants.dart';
 
 class LanguageController extends GetxController {
-
-  final storage = GetStorage();
 
   var languageKey = ''.obs;
   var countryKey = ''.obs;
@@ -20,13 +19,13 @@ class LanguageController extends GetxController {
       'selected': false,
       'color': Colors.blue[600],
     },
-    'ar_SA': {
-      'languageCode': 'ar',
-      'countryCode': 'SA',
-      'description': 'العربية',
-      'selected': false,
-      'color': Colors.black,
-    },
+    // 'ar_SA': {
+    //   'languageCode': 'ar',
+    //   'countryCode': 'SA',
+    //   'description': 'العربية',
+    //   'selected': false,
+    //   'color': Colors.black,
+    // },
   };
 
   @override
@@ -36,9 +35,10 @@ class LanguageController extends GetxController {
   }
 
   Future getLanguageState() async {
-    if(storage.read('language_key') != null) {
-      languageKey.value = storage.read('language_key');
-      return setLanguage(key: storage.read('language_key'));
+    if(await LocalStorageFunctions.readFromStorage(key: languageCodeKey, container: languageContainerName) != null) {
+      final langKey = await LocalStorageFunctions.readFromStorage(key: languageCodeKey, container: languageContainerName);
+      languageKey.value = langKey;
+      return setLanguage(key: langKey);
     }
 
     setLanguage(key: 'en_US');
@@ -53,7 +53,7 @@ class LanguageController extends GetxController {
 
     locale.value = Get.locale.toString();
     languageKey(key);
-    storage.write('language_key', key);
+    await LocalStorageFunctions.writeToStorage(key: languageCodeKey, value: key, container: languageContainerName);
     language(optionsLocales[key]['description']);
     countryKey(optionsLocales[key]['countryCode']);
 

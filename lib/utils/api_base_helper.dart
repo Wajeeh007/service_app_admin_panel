@@ -2,9 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:service_app_admin_panel/helpers/local_storage_functions.dart';
 import 'package:service_app_admin_panel/models/api_response.dart';
+import 'package:service_app_admin_panel/utils/constants.dart';
 import 'package:service_app_admin_panel/utils/errors.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 import 'package:service_app_admin_panel/utils/url_paths.dart';
 
 import 'global_variables.dart';
@@ -14,11 +18,13 @@ class ApiBaseHelper {
   /// Function for HTTP GET method
   static Future<ApiResponse> getMethod({
     required String url,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
     Object? body,
   }) async {
     try {
+
+      print(GlobalVariables.token);
       Map<String, String> header = {
         'Content-Type': 'application/json',
         // 'Cookie': 'XSRF-token=${GlobalVariables.token}'
@@ -49,7 +55,16 @@ class ApiBaseHelper {
       }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        LocalStorageFunctions.removeKey(key: tokenKey);
+        LocalStorageFunctions.removeKey(key: adminDetailsKey);
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException {
       return Errors().showSocketExceptionError();
     } on TimeoutException {
@@ -67,8 +82,8 @@ class ApiBaseHelper {
   static Future<ApiResponse> postMethod({
     required String url,
     required Object body,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
@@ -99,7 +114,14 @@ class ApiBaseHelper {
       }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
     } on FormatException catch (_) {
@@ -113,8 +135,8 @@ class ApiBaseHelper {
   static Future<ApiResponse> putMethod({
     required String url,
     Object? body,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
@@ -146,7 +168,14 @@ class ApiBaseHelper {
       }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
     } on TimeoutException catch (_) {
@@ -162,8 +191,8 @@ class ApiBaseHelper {
   static Future<ApiResponse> patchMethod({
     required String url,
     Object? body,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
@@ -195,7 +224,14 @@ class ApiBaseHelper {
       }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
     } on TimeoutException catch (_) {
@@ -210,8 +246,8 @@ class ApiBaseHelper {
   /// Function for HTTP DELETE method
   static Future<ApiResponse> deleteMethod({
     required String url,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'application/json'};
@@ -239,7 +275,14 @@ class ApiBaseHelper {
       }
 
       Map<String, dynamic> parsedJSON = jsonDecode(response.body);
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException {
       return Errors().showSocketExceptionError();
     } on TimeoutException {
@@ -252,8 +295,8 @@ class ApiBaseHelper {
     required String url,
     required List<http.MultipartFile> files,
     required Map<String, String> fields,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'multipart/form-data'};
@@ -282,7 +325,14 @@ class ApiBaseHelper {
         print(urlValue);
         print(parsedJSON.toString());
       }
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
     } on TimeoutException catch (_) {
@@ -299,8 +349,8 @@ class ApiBaseHelper {
     required String url,
     required List<http.MultipartFile> files,
     required Map<String, String> fields,
-    bool withBearer = false,
-    bool withAuthorization = false,
+    bool withBearer = true,
+    bool withAuthorization = true,
   }) async {
     try {
       Map<String, String> header = {'Content-Type': 'multipart/form-data'};
@@ -332,7 +382,14 @@ class ApiBaseHelper {
         print(urlValue);
         print(parsedJSON.toString());
       }
-      return ApiResponse.fromJson(parsedJSON);
+      final apiResponse = ApiResponse.fromJson(parsedJSON);
+
+      if(apiResponse.statusCode == 401 && apiResponse.message == 'Expired Token') {
+        Get.offAllNamed(Routes.login);
+        return Errors().showExpiredTokenError();
+      } else {
+        return apiResponse;
+      }
     } on SocketException catch (_) {
       return Errors().showSocketExceptionError();
     } on TimeoutException catch (_) {

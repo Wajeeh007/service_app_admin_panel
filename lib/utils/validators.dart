@@ -24,7 +24,7 @@ class Validators {
   static String? validateEmail(String? value) {
     if(value == null || value == '' || value.isEmpty) {
       return lang_key.fieldIsRequired.tr;
-    } else if(GetUtils.isEmail(value)) {
+    } else if(!GetUtils.isEmail(value)) {
       return lang_key.invalidEmail.tr;
     } else {
       return null;

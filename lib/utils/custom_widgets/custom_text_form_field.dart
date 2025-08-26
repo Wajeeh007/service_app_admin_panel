@@ -39,7 +39,8 @@ class CustomTextFormField extends StatelessWidget {
     this.title,
     this.enabled,
     this.includeAsterisk = false,
-    this.boxConstraints
+    this.boxConstraints,
+    this.titleColor,
   });
 
   final String? hint;
@@ -73,6 +74,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool? enabled;
   final bool includeAsterisk;
   final BoxConstraints? boxConstraints;
+  final Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class CustomTextFormField extends StatelessWidget {
             text: TextSpan(
               text: title!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: primaryGrey
+                  color: titleColor ?? primaryGrey
               ),
               children: includeAsterisk ? [
                 TextSpan(
