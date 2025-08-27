@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:service_app_admin_panel/utils/routes.dart';
 
 /// Colors
 
@@ -21,13 +22,21 @@ Color primaryGrey50 = primaryGrey.withValues(alpha: 0.5);
   /// Border
   Border kContainerBorderSide = Border.all(
     color: primaryGrey.withValues(alpha: 0.5),
-    width: 0.6
+    width: 0.8
   );
 
+  /// Standard Container BoxDecoration
+  BoxDecoration kContainerBoxDecoration = BoxDecoration(
+    color: primaryWhite,
+    borderRadius: kContainerBorderRadius,
+    border: kContainerBorderSide
+  );
 /// Container Decorations End ///
 
 /// Constant Paddings ///
 const EdgeInsets basePaddingForScreens = EdgeInsets.all(20);
+const EdgeInsets basePaddingForContainers = EdgeInsets.all(20);
+const EdgeInsets listEntryPadding = EdgeInsets.only(left: 16.0,);
 /// Constant Paddings End ///
 
 /// Input Decorations ///
@@ -66,6 +75,22 @@ CameraPosition initialCameraPosition = CameraPosition(
 );
 
 double mapsZoomLevel = 14.0;
+/// Google Maps constant values End ///
+
+/// Order Status Enum
+enum OrderStatus {pending, accepted, ongoing, completed, cancelled, disputed}
+/// Order Status Enum End ///
+
+/// New Method Input Field Type ///
+enum WithdrawMethodFieldType {text, number, email}
+/// New Method Input Field Type End ///
+
+/// User statuses ///
+enum UserStatuses {pending, active, inactive, declined, suspended}
+/// User statuses End ///
+
+/// Order Type Enum
+enum OrderType {normal, quick, urgent}
 
 /// Months list
 const List<String> months = [
@@ -82,3 +107,49 @@ const List<String> months = [
   'November',
   'December'
 ];
+
+/// Sidepanel animation variables
+Duration sidePanelAnimationDuration = Duration(milliseconds: 300);
+Curve sidePanelAnimationCurve = Curves.easeIn;
+
+/// Sidepanel scroll positions
+List<Map<String, double>> sidePanelScrollPositions = [
+  {Routes.dashboard: 0.0},
+  {Routes.zoneListAndAddition: 90},
+  {Routes.editZone: 90},
+  {Routes.ordersListing: 170},
+  {Routes.customersList: 260},
+  {Routes.suspendedCustomersList: 260},
+  {Routes.newServicemanRequests: 390},
+  {Routes.servicemenList: 390},
+  {Routes.suspendedServicemanList: 390},
+  {Routes.servicesList: 600},
+  {Routes.subServicesList: 600},
+  {Routes.itemsList: 600},
+  {Routes.withdrawMethods: 600},
+  {Routes.withdrawRequests: 600},
+  {Routes.businessSetup: 600}
+];
+
+/// Zone Order Volume Enum
+enum ZoneOrderVolume {veryLow, low, medium, high, veryHigh}
+
+/// Gender Enum
+enum Gender {male, female, other}
+
+/// Withdraw Request Status
+enum WithdrawRequestStatus {pending, approved, settled, denied}
+
+/// Transactions Payment Status
+enum TransactionPaymentStatus {paid, unpaid}
+
+/// Container names for Local Storage
+String userDataContainerName = 'admin_data';
+String languageContainerName = 'language';
+
+/// Keys for storing data in the local storage 
+const String adminDetailsKey = 'admin_details';
+const String languageCodeKey = 'language_key';
+const String tokenKey = 'token';
+const String isLoggedInKey = 'isLoggedIn';
+const String isNotFirstTimeKey = 'isNotFirstTime';

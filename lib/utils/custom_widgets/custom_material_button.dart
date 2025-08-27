@@ -67,7 +67,7 @@ class CustomMaterialButton extends StatelessWidget {
         onPressed: onPressed,
         child: text != null ? Text(
           text!,
-          style: textStyle ?? Theme.of(context).textTheme.bodySmall?.copyWith(
+          style: textStyle ?? Theme.of(context).textTheme.labelLarge?.copyWith(
             color: textColor ?? primaryWhite,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.2

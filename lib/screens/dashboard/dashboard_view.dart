@@ -2,10 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/custom_appbar.dart';
 import 'package:service_app_admin_panel/utils/custom_widgets/custom_dropdown.dart';
-import 'package:service_app_admin_panel/utils/custom_widgets/sidepanel.dart';
-import 'package:service_app_admin_panel/utils/global_variables.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/screens_base_widget.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/section_heading_text.dart';
 import 'package:service_app_admin_panel/utils/images_paths.dart';
 import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
 import 'package:service_app_admin_panel/screens/dashboard/dashboard_viewmodel.dart';
@@ -17,55 +16,27 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        centerTitle: false,
-      ),
-      body: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => _viewModel.hideAllOverlayPortalControllers(),
-        child: Stack(
-          children: [
-            Row(
-              children: [
-                SidePanel(selectedItem: lang_key.dashboard.tr,),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 10,
-                        children: [
-                          _WelcomeText(),
-                          LayoutBuilder(builder: (context, constraints) {
-                            return SizedBox(
-                              height: 313,
-                              width: constraints.maxWidth,
-                              child: Row(
-                                spacing: 15,
-                                children: [
-                                  _TextStats(),
-                                  _ZoneWiseOrderStats()
-                                ],
-                              ),
-                            );
-                          }),
-                          _AdminEarningStatsGraph()
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            ProfileDropDown(),
-            ProfileDropDownContainer(),
-
-          ],
-        ),
-      )
+    return ScreensBaseWidget(
+      scrollController: _viewModel.scrollController,
+        selectedSidePanelItem: lang_key.dashboard.tr,
+        overlayPortalControllersAndShowDropDown: _viewModel.overlayPortalControllersAndDropDownValues,
+        children: [
+          _WelcomeText(),
+          LayoutBuilder(builder: (context, constraints) {
+            return SizedBox(
+              height: 313,
+              width: constraints.maxWidth,
+              child: Row(
+                spacing: 15,
+                children: [
+                  _TextStats(),
+                  _ZoneWiseOrderStats()
+                ],
+              ),
+            );
+          }),
+          _AdminEarningStatsGraph()
+        ]
     );
   }
 }
@@ -80,15 +51,12 @@ class _WelcomeText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
       children: [
-        Text(
-          lang_key.welcomeAdmin.tr,
-          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.w600
-          ),
-        ),
+        SectionHeadingText(headingText: lang_key.welcomeAdmin.tr),
         Text(
           lang_key.monitorYourBusinessStatistics.tr,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.w500
+          ),
         )
       ],
     );
@@ -97,51 +65,54 @@ class _WelcomeText extends StatelessWidget {
 
 /// Total active customers, servicemen, total earnings and orders section
 class _TextStats extends StatelessWidget {
-  const _TextStats();
+  _TextStats();
+
+  final DashboardViewModel _viewModel = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        spacing: 10,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 10,
-            children: [
-              SmallStatisticTile(
-                text: lang_key.activeCustomers.tr,
-                value: '05',
-                iconOrImageBgColor: primaryBlue,
-                icon: Icons.person,
-              ),
-              SmallStatisticTile(
-                text: lang_key.totalEarnings.tr,
-                value: '\$ 10',
-                iconOrImageBgColor: Color(0xffF89D1F),
-                icon: Icons.currency_exchange_outlined,
-              )
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 10,
-            children: [
-              SmallStatisticTile(
-                text: lang_key.activeServicemen.tr,
-                value: '05',
-                iconOrImageBgColor: Colors.purpleAccent,
-                image: ImagesPaths.servicemen,
-              ),
-              SmallStatisticTile(
-                text: lang_key.totalOrders.tr,
-                value: '10',
-                iconOrImageBgColor: Colors.green,
-                icon: Icons.receipt,
-              )
-            ],
-          ),
-        ],
+      child: Obx(() => Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
+              children: [
+                SmallStatisticTile(
+                  text: lang_key.activeCustomers.tr,
+                  value: _viewModel.userStats.value.totalActiveCustomers != null ? _viewModel.userStats.value.totalActiveCustomers.toString() : '',
+                  iconOrImageBgColor: primaryBlue,
+                  icon: Icons.person,
+                ),
+                SmallStatisticTile(
+                  text: lang_key.totalEarnings.tr,
+                  value: '\$ ${_viewModel.userStats.value.totalEarning ?? ''}',
+                  iconOrImageBgColor: Color(0xffF89D1F),
+                  icon: Icons.currency_exchange_outlined,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
+              children: [
+                SmallStatisticTile(
+                  text: lang_key.activeServicemen.tr,
+                  value: _viewModel.userStats.value.totalActiveServicemen != null ? _viewModel.userStats.value.totalActiveServicemen.toString() : '',
+                  iconOrImageBgColor: Colors.purpleAccent,
+                  image: ImagesPaths.servicemen,
+                ),
+                SmallStatisticTile(
+                  text: lang_key.totalOrders.tr,
+                  value: _viewModel.userStats.value.totalOrders != null ? _viewModel.userStats.value.totalOrders.toString() : '',
+                  iconOrImageBgColor: Colors.green,
+                  icon: Icons.receipt,
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -175,20 +146,16 @@ class _ZoneWiseOrderStats extends StatelessWidget {
                   lang_key.zoneWiseOrders.tr,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600
-                  ),
+                  )
                 ),
-                Flexible(
-                  child: CustomDropdown(
-                    suffixIcon: _viewModel.zoneWiseStatsSuffixIcon,
-                    overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
-                      suffixIcon: _viewModel.zoneWiseStatsSuffixIcon
-                    ),
-                    selectedItemIndex: _viewModel.zoneWiseStatSelectedItemIndex,
-                    dropDownList: _viewModel.zoneWiseStatsDropDownList,
-                    overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
-                    link: _viewModel.zoneWiseStatLink,
-                  ),
+                CustomDropdown(
+                  selectedValueId: _viewModel.zoneWiseStatSelectedId,
+                  textEditingController: _viewModel.zoneWiseStatController,
+                  showDropDown: _viewModel.zoneWiseStatsShowDropDown,
+                  dropDownList: _viewModel.zoneWiseStatsDropDownList,
+                  overlayPortalController: _viewModel.zoneWiseStatOverlayPortalController,
+                  onChanged: () => _viewModel.fetchZoneWiseOrderVolume(),
+                  onTap: () => _viewModel.zoneWiseStatsShowDropDown.value = !_viewModel.zoneWiseStatsShowDropDown.value,
                 ),
               ],
             ),
@@ -196,11 +163,12 @@ class _ZoneWiseOrderStats extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 10),
-                child: Column(
-                  children: List.generate(_viewModel.zoneWiseOrderVolumeList.length, (index) {
-                    return _ZoneOrderVolumeItem(index: index);
-                        
-                  }),
+                child: Obx(() => Column(
+                    children: List.generate(_viewModel.zoneWiseOrderVolumeList.length, (index) {
+                      return _ZoneOrderVolumeItem(index: index);
+
+                    }),
+                  ),
                 ),
               ),
             )
@@ -221,55 +189,56 @@ class _ZoneOrderVolumeItem extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 5,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              _viewModel.zoneWiseOrderVolumeList[index].zoneName!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: primaryGrey
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Column(
+        spacing: 5,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _viewModel.zoneWiseOrderVolumeList[index].zoneName!,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: primaryGrey
+                ),
               ),
-            ),
-            Text(
-              '${_viewModel.zoneWiseOrderVolumeList[index].percentage! * 100}% Order Volume',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: primaryGrey
-              ),
-            )
-          ],
-        ),
-        Container(
-          width: double.infinity,
-          height: 5,
-          decoration: BoxDecoration(
-              borderRadius: kContainerBorderRadius,
-              border: Border.all(
-                  color: Colors.transparent,
-                  width: 0.1
-              ),
-              gradient: LinearGradient(
-                  colors: [
-                    primaryBlue,
-                    primaryBlue,
-                    primaryGrey.withValues(alpha: 0.2),
-                    primaryGrey.withValues(alpha: 0.2)
-                  ],
-                  stops: [
-                    0,
-                    _viewModel.zoneWiseOrderVolumeList[index].percentage!,
-                    _viewModel.zoneWiseOrderVolumeList[index].percentage!,
-                    1
-                  ]
+              Text(
+                '${_viewModel.zoneWiseOrderVolumeList[index].percentage!.toStringAsFixed(0)}% Order Volume',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: primaryGrey
+                ),
               )
+            ],
           ),
-        )
-      ],
+          Container(
+            width: double.infinity,
+            height: 5,
+            decoration: BoxDecoration(
+                borderRadius: kContainerBorderRadius,
+                border: Border.all(
+                    color: Colors.transparent,
+                    width: 0.1
+                ),
+                gradient: LinearGradient(
+                    colors: [
+                      primaryBlue,
+                      primaryBlue,
+                      primaryGrey.withValues(alpha: 0.2),
+                      primaryGrey.withValues(alpha: 0.2)
+                    ],
+                    stops: [
+                      0,
+                      _viewModel.zoneWiseOrderVolumeList[index].percentage!,
+                      _viewModel.zoneWiseOrderVolumeList[index].percentage!,
+                      1
+                    ]
+                )
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -308,7 +277,7 @@ class SmallStatisticTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               decoration: BoxDecoration(
                 borderRadius: kContainerBorderRadius,
                 border: Border.all(color: iconOrImageBgColor),
@@ -335,7 +304,7 @@ class SmallStatisticTile extends StatelessWidget {
             ),
             Text(
               text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: primaryGrey
               ),
               maxLines: 1,
@@ -355,6 +324,7 @@ class _AdminEarningStatsGraph extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+
     return Container(
       padding: EdgeInsets.all(20),
       width: double.infinity,
@@ -375,24 +345,26 @@ class _AdminEarningStatsGraph extends StatelessWidget {
                 spacing: 10,
                 children: [
                   CustomDropdown(
-                      dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
-                      overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                      link: _viewModel.adminEarningTimePeriodLink,
-                      selectedItemIndex: _viewModel.adminEarningTimePeriodSelectedItemIndex,
-                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
-                        suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon
-                      ), suffixIcon: _viewModel.adminEarningTimePeriodSuffixIcon,
+                    textEditingController: _viewModel.adminEarningTimePeriodController,
+                    dropDownList: _viewModel.adminEarningTimePeriodDropdownList,
+                    overlayPortalController: _viewModel.adminEarningTimePeriodOverlayPortalController,
+                    selectedValueId: _viewModel.adminEarningTimePeriodSelectedId,
+                    showDropDown: _viewModel.adminEarningTimePeriodShowDropDown,
+                    onTap: () => _viewModel.adminEarningTimePeriodShowDropDown.value = !_viewModel.adminEarningTimePeriodShowDropDown.value,
+                    onChanged: () {
+                        _viewModel.fetchAdminEarningStats();
+                    },
                   ),
                   CustomDropdown(
-                      dropDownList: _viewModel.adminEarningZoneSelectionList,
-                      overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                      link: _viewModel.adminEarningZoneSelectionLink,
-                      selectedItemIndex: _viewModel.adminEarningZoneSelectionSelectedItemIndex,
-                      overlayToggleFunc: () => _viewModel.toggleOverlayPortalController(
-                        overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
-                        suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon
-                      ), suffixIcon: _viewModel.adminEarningZoneSelectionSuffixIcon,
+                    textEditingController: _viewModel.adminEarningZoneSelectionController,
+                    dropDownList: _viewModel.adminEarningZoneSelectionList,
+                    overlayPortalController: _viewModel.adminEarningZoneSelectionOverlayPortalController,
+                    selectedValueId: _viewModel.adminEarningZoneSelectionSelectedId,
+                    showDropDown: _viewModel.adminEarningZoneSelectionShowDropDown,
+                    onTap: () => _viewModel.adminEarningZoneSelectionShowDropDown.value = !_viewModel.adminEarningZoneSelectionShowDropDown.value,
+                    onChanged: () {
+                        _viewModel.fetchAdminEarningStats();
+                    },
                   ),
                 ],
               )
@@ -402,83 +374,84 @@ class _AdminEarningStatsGraph extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(top: 10),
-              child: LineChart(
-                  LineChartData(
-                    lineTouchData: const LineTouchData(
-                        enabled: false
-                    ),
-                    borderData: FlBorderData(
-                        show: false,
-                        // border: Border.all(
-                        //     color: Theme.of(context).colorScheme.secondary
-                        // )
-                    ),
-                    gridData: FlGridData(
-                        show: true,
-                        drawVerticalLine: false,
-                        horizontalInterval: 1,
-                        verticalInterval: 1,
-                        getDrawingHorizontalLine: (value) {
-                          return FlLine(
-                              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
-                              strokeWidth: 1
-                          );
-                        },
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 30,
-                          interval: 1,
-                          getTitlesWidget: (value, meta) => BottomTitleWidget(value: value, meta: meta,),
+              child: Obx(() => LineChart(
+                      LineChartData(
+                        lineTouchData: const LineTouchData(
+                            enabled: false
                         ),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: 1,
-                          getTitlesWidget: (value, meta) => LeftTitleWidget(value: value, meta: meta),
-                          reservedSize: 42,
-                        ),
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: 11,
-                    minY: 0,
-                    maxY: 6,
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: const [
-                          FlSpot(0, 3),
-                          FlSpot(2.6, 2),
-                          FlSpot(4.9, 5),
-                          FlSpot(6.8, 3.1),
-                          FlSpot(8, 4),
-                          FlSpot(9.5, 3),
-                          FlSpot(11, 4),
-                        ],
-                        isCurved: false,
-                        barWidth: 2,
-                        color: Theme.of(context).colorScheme.primary,
-                        isStrokeCapRound: true,
-                        dotData: const FlDotData(
-                          show: false,
-                        ),
-                        belowBarData: BarAreaData(
+                        borderData: FlBorderData(
                             show: true,
-                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
+                            border: Border(
+                                left: BorderSide(
+                                  color: Theme.of(context).colorScheme.secondary
+                                ),
+                              bottom: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary
+                              )
+                            )
                         ),
-                      ),
-                    ],
-                  )
+                        gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: false,
+                            horizontalInterval: 1,
+                            verticalInterval: 1,
+                            getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
+                                  strokeWidth: 1
+                              );
+                            },
+                        ),
+                        titlesData: FlTitlesData(
+                          show: true,
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 30,
+                              interval: _viewModel.adminEarningTimePeriodSelectedId.value == 'Daily' ? 0.5 : 1,
+                              getTitlesWidget: (value, meta) => BottomTitleWidget(value: value, meta: meta,),
+                            ),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) => LeftTitleWidget(value: value, meta: meta),
+                              reservedSize: 42,
+                            ),
+                          ),
+                        ),
+                        minX: 0,
+                        maxX: _viewModel.adminEarningTimePeriodSelectedId.value == 'Daily' ? ((DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day - 1) / 2).toDouble() : 11,
+                        minY: _viewModel.graphData.value.min != null ? _viewModel.graphData.value.min == _viewModel.graphData.value.max ? 0 : _viewModel.graphData.value.min!.toDouble() : 0,
+                        maxY: _viewModel.graphData.value.min != null ? _viewModel.graphData.value.max == 0 ? 6 : _viewModel.graphData.value.max!.toDouble() : 6,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: _viewModel.graphData.value.dailyPoints ?? _viewModel.graphData.value.monthlyPoints ?? _viewModel.graphData.value.yearlyPoints ?? [
+                              FlSpot(0, 0.1),
+                              FlSpot(11, 0.1)
+                            ],
+                            isCurved: true,
+                            barWidth: 2,
+                            color: Theme.of(context).colorScheme.primary,
+                            isStrokeCapRound: true,
+                            dotData: const FlDotData(
+                              show: false,
+                            ),
+                            belowBarData: BarAreaData(
+                                show: true,
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
+                            ),
+                          ),
+                        ],
+                      )
+                  ),
               ),
             ),
           )
@@ -490,18 +463,25 @@ class _AdminEarningStatsGraph extends StatelessWidget {
 
 /// Widget for returning text at the bottom of chart
 class BottomTitleWidget extends StatelessWidget {
-  const BottomTitleWidget({super.key, required this.value, required this.meta});
+  BottomTitleWidget({super.key, required this.value, required this.meta});
 
   final double value;
   final TitleMeta meta;
 
+  final DashboardViewModel _viewModel = Get.find();
+
   @override
   Widget build(BuildContext context) {
-
     String text;
     final style = Theme.of(context).textTheme.labelMedium;
 
-    text = months[value.toInt()].substring(0, 3);
+    if(_viewModel.adminEarningTimePeriodSelectedId.value == 'Daily') {
+        text = ((value * 2) + 1).toString();
+    } else if(_viewModel.adminEarningTimePeriodSelectedId.value == 'Monthly') {
+      text = months[value.toInt()].substring(0, 3);
+    } else {
+      text = (DateTime.now().year - 11 + value).toString();
+    }
 
     return SideTitleWidget(
       meta: meta,
@@ -512,31 +492,66 @@ class BottomTitleWidget extends StatelessWidget {
 
 /// Widget for returning text at left side of the chart
 class LeftTitleWidget extends StatelessWidget {
-  const LeftTitleWidget({super.key, required this.value, required this.meta});
+  LeftTitleWidget({super.key, required this.value, required this.meta});
 
   final double value;
   final TitleMeta meta;
 
+  final DashboardViewModel _viewModel = Get.find();
+
   @override
   Widget build(BuildContext context) {
+
     final style = Theme.of(context).textTheme.labelMedium;
     String text;
-    switch (value.toInt()) {
-      case 0:
+
+    if(_viewModel.graphData.value.min != null) {
+
+      if(_viewModel.graphData.value.min == _viewModel.graphData.value.max) {
+        if(value == 0) {
+          text = '0';
+        } else if(value == _viewModel.graphData.value.max!/2) {
+          text = (_viewModel.graphData.value.max! / 2).toInt().toString();
+        } else if(value == _viewModel.graphData.value.max){
+          text = _viewModel.graphData.value.max.toString();
+        } else {
+          text = '';
+        }
+      } else {
+        if (value == _viewModel.graphData.value.min) {
+          text = _viewModel.graphData.value.min.toString();
+        } else if (value == _viewModel.graphData.value.avg) {
+          text = _viewModel.graphData.value.avg.toString();
+        } else if (value == _viewModel.graphData.value.max) {
+          text = _viewModel.graphData.value.max.toString();
+        } else {
+          text = '';
+        }
+      }
+    } else {
+      if(value.toInt() == 0) {
         text = '0';
-        break;
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30K';
-        break;
-      case 5:
-        text = '50K';
-        break;
-      default:
-        return Container();
+      } else {
+        text = '';
+      }
     }
+
+    // switch (value.toInt()) {
+    //   case 0:
+    //     text = _viewModel.graphData.value.min != null ? _viewModel.graphData.value.min == _viewModel.graphData.value.max ? '0' : _viewModel.graphData.value.min.toString() : '';
+    //     break;
+    //   // case 1:
+    //   //   text = '10K';
+    //   //   break;
+    //   case _viewModel.graphData.value.avg != null ? :
+    //     text = _viewModel.graphData.value.avg != null ? _viewModel.graphData.value.min == _viewModel.graphData.value.max ? (_viewModel.graphData.value.max! / 2).toString() : _viewModel.graphData.value.avg.toString() : '';
+    //     break;
+    //   case 5:
+    //     text = _viewModel.graphData.value.max != null ? _viewModel.graphData.value.max.toString() : '';
+    //     break;
+    //   default:
+    //     return SizedBox();
+    // }
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
@@ -560,120 +575,13 @@ class _AdminEarningHeadingAndZoneName extends StatelessWidget {
               fontWeight: FontWeight.w600
           ),
         ),
-        Obx(() => Text(
-          _viewModel.adminEarningZoneSelectionList[_viewModel.adminEarningZoneSelectionSelectedItemIndex.value].label,
+        Text(
+          _viewModel.adminEarningZoneSelectionController.text,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: primaryGrey
           ),
-        ))
+        )
       ],
     );
-  }
-}
-
-/// Base widget for the profile dropdown
-class ProfileDropDown extends StatelessWidget {
-  const ProfileDropDown({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
-      right: 20,
-      top: 0,
-      child: CustomPaint(
-        painter: TrianglePainter(
-            strokeColor: primaryWhite,
-            strokeWidth: 10,
-            paintingStyle: PaintingStyle.fill
-        ),
-        child: const SizedBox(
-          height: 8,
-          width: 10,
-        ),
-      ),
-    ) : const SizedBox()
-    );
-  }
-}
-
-/// Container beneath the triangle for the profile dropdown
-class ProfileDropDownContainer extends StatelessWidget {
-  const ProfileDropDownContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() => GlobalVariables.openProfileDropdown.value ? Positioned(
-      right: 10,
-      top: 7,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: primaryWhite
-        ),
-        child: SizedBox(
-          width: 180,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                minTileHeight: 20,
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 3),
-                title: Text(
-                  lang_key.logout.tr,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.logout_rounded,
-                  size: 20,
-                  color: Colors.red,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ) : const SizedBox()
-    );
-  }
-}
-
-/// Custom painter class for creating a triangle
-class TrianglePainter extends CustomPainter {
-
-  final Color strokeColor;
-  final PaintingStyle paintingStyle;
-  final double strokeWidth;
-
-  TrianglePainter({
-    this.strokeColor = Colors.black,
-    this.strokeWidth = 3,
-    this.paintingStyle = PaintingStyle.stroke
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = strokeColor
-      ..strokeWidth = strokeWidth
-      ..style = paintingStyle;
-    canvas.drawPath(getTrianglePath(size.width, size.height), paint);
-  }
-
-  Path getTrianglePath(double x, double y) {
-    return Path()
-      ..moveTo(0, y)
-      ..lineTo(x / 2, 0)
-      ..lineTo(x, y)
-      ..lineTo(0, y);
-  }
-
-  @override
-  bool shouldRepaint(TrianglePainter oldDelegate) {
-    return oldDelegate.strokeColor != strokeColor ||
-        oldDelegate.paintingStyle != paintingStyle ||
-        oldDelegate.strokeWidth != strokeWidth;
   }
 }

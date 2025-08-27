@@ -38,6 +38,9 @@ class CustomTextFormField extends StatelessWidget {
     this.prefixTextStyle,
     this.title,
     this.enabled,
+    this.includeAsterisk = false,
+    this.boxConstraints,
+    this.titleColor,
   });
 
   final String? hint;
@@ -69,22 +72,36 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? prefixTextStyle;
   final String? title;
   final bool? enabled;
+  final bool includeAsterisk;
+  final BoxConstraints? boxConstraints;
+  final Color? titleColor;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if(title != null && title != '') Padding(
           padding: EdgeInsets.only(left: 8, bottom: 5),
-          child: Text(
-            title!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500
+          child: RichText(
+            text: TextSpan(
+              text: title!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: titleColor ?? primaryGrey
+              ),
+              children: includeAsterisk ? [
+                TextSpan(
+                  text: ' *',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: errorRed,
+                  ),
+                ),
+              ] : []
             ),
           ),
         ),
         TextFormField(
+          onChanged: onChanged,
           enabled: enabled,
           readOnly: readOnly,
           maxLines: maxLines,
@@ -101,6 +118,7 @@ class CustomTextFormField extends StatelessWidget {
           inputFormatters: inputFormatters,
           style: Theme.of(context).textTheme.bodySmall,
           decoration: InputDecoration(
+            constraints: boxConstraints,
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             prefixStyle: prefixTextStyle,
@@ -109,7 +127,7 @@ class CustomTextFormField extends StatelessWidget {
             errorText: errorText,
             errorStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: errorRed,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w600
             ),
             suffixIconConstraints: BoxConstraints(minWidth: suffixIconSize ?? 40, maxWidth: suffixIconSize ?? 40, minHeight: suffixIconSize ?? kMinInteractiveDimension),
             suffixIcon: suffixIcon != null ? InkWell(
@@ -119,7 +137,7 @@ class CustomTextFormField extends StatelessWidget {
               child: suffixIcon,
             ) : SizedBox(),
             hintText: hint,
-            hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+            hintStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: primaryGrey,
             ),
             fillColor: primaryWhite,

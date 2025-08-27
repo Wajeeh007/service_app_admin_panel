@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         this.action,
         this.leading,
         this.height = 60,
-        this.leadingWidth = 40,
+        this.leadingWidth = 10,
         this.elevation = 15,
         this.showLeading = true,
         this.bgColor,
@@ -76,18 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         )
       ] : null),
       title: Image.asset(ImagesPaths.adawatLogo, fit: BoxFit.cover, width: 180,),
-      // leading: showLeading! ? Padding(
-      //   padding: const EdgeInsets.only(left: 8.0),
-      //   child: InkWell(
-      //     customBorder: CircleBorder(),
-      //     // onTap: onLeadingTap ?? () => Get.back(),
-      //     // child: leading ??
-      //     //     IconBaseCircularAvatar(
-      //     //   radius: 17,
-      //     //   icon: Icons.arrow_back_ios_rounded,
-      //     // ),
-      //   ),
-      // ) : SizedBox(),
+      leading: SizedBox(),
       bottom: bottom != null ? PreferredSize(preferredSize: preferredSize, child: bottom!) : null,
     );
   }

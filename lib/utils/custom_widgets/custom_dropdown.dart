@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:service_app_admin_panel/utils/constants.dart';
+import 'package:service_app_admin_panel/utils/custom_widgets/custom_text_form_field.dart';
+import 'package:service_app_admin_panel/languages/translation_keys.dart' as lang_key;
+import 'package:service_app_admin_panel/utils/validators.dart';
+import '../../models/drop_down_entry.dart';
 
 class CustomDropdown extends StatelessWidget {
+
   CustomDropdown({
     super.key,
     required this.dropDownList,
     required this.overlayPortalController,
-    required this.link,
-    required this.selectedItemIndex,
-    required this.overlayToggleFunc,
-    required this.suffixIcon,
-    this.width = 130,
+    required this.showDropDown,
+    required this.textEditingController,
     this.value,
+    this.width = 130,
     this.height = 30,
     this.suffixIconColor = const Color(0xff212121),
+    this.hintText = '',
+    this.padding,
+    this.dropDownFieldColor = primaryWhite,
+    this.title,
+    this.dropDownWidth,
+    this.includeAsterisk = false,
+    this.autoValidate,
+    required this.selectedValueId,
+    this.onTap,
+    this.onChanged
   }) : assert(dropDownList.isEmpty || value == null ||
       dropDownList.where((DropDownEntry item) {
         return item.value == value;
@@ -30,69 +43,99 @@ class CustomDropdown extends StatelessWidget {
   final Color suffixIconColor;
   final List<DropDownEntry> dropDownList;
   final OverlayPortalController overlayPortalController;
-  final LayerLink link;
-  final RxInt selectedItemIndex;
-  final Rx<IconData> suffixIcon;
-  final VoidCallback overlayToggleFunc;
+  final RxBool showDropDown;
+  final String hintText;
+  final EdgeInsets? padding;
+  final Color dropDownFieldColor;
+  final String? title;
+  final double? dropDownWidth;
+  final bool includeAsterisk;
+  final TextEditingController textEditingController;
+  final RxBool? autoValidate;
+  final RxString selectedValueId;
+  final VoidCallback? onTap;
+  final Function? onChanged;
+
+  final LayerLink link = LayerLink();
 
   @override
   Widget build(BuildContext context) {
 
     return CompositedTransformTarget(
-      link: link,
-      child: OverlayPortal(
-        controller: overlayPortalController,
-        overlayChildBuilder: (BuildContext context) {
-          return CompositedTransformFollower(
-            link: link,
-            targetAnchor: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0.0),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Menu(
-                    overlayToggleFunc: overlayToggleFunc,
-                    selectedItemIndex: selectedItemIndex,
-                    dropDownList: dropDownList,
-                    width: width,
-                  )
-              ),
-            ),
-          );
-        },
-        child: Obx(() => Container(
-          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-          constraints: BoxConstraints(
-              maxWidth: width,
-              minWidth: 120,
-              maxHeight: height,
-              minHeight: height - 10
-          ),
-          decoration: BoxDecoration(
-            color: primaryGrey20,
-            borderRadius: kContainerBorderRadius,
-            border: kContainerBorderSide
-          ),
-          child: InkWell(
-            onTap: overlayToggleFunc,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  dropDownList[selectedItemIndex.value].label,
-                  style: Theme.of(context).textTheme.bodySmall,
+          link: link,
+          child: OverlayPortal(
+            controller: overlayPortalController,
+            overlayChildBuilder: (BuildContext context) {
+              return CompositedTransformFollower(
+                link: link,
+                targetAnchor: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Menu(
+                        overlayPortalController: overlayPortalController,
+                        textEditingController: textEditingController,
+                        showDropDownValue: showDropDown,
+                        dropDownList: dropDownList,
+                        width: dropDownWidth ?? width,
+                        value: selectedValueId,
+                        onChanged: onChanged,
+                      )
+                  ),
                 ),
-                Icon(
-                  suffixIcon.value,
-                  size: 22,
-                  color: suffixIconColor,
-                )
+              );
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if(title != null && title != '') Padding(
+                  padding: EdgeInsets.only(left: 8, bottom: 5),
+                  child: RichText(
+                    text: TextSpan(
+                        text: title!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: primaryGrey
+                        ),
+                        children: includeAsterisk ? [
+                          TextSpan(
+                            text: ' *',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: errorRed,
+                            ),
+                          ),
+                        ] : []
+                    ),
+                  ),
+                ),
+                Obx(() => CustomTextFormField(
+
+                  validator: (value) => Validators.validateEmptyField(value),
+                  controller: textEditingController,
+                  hint: hintText,
+                  fillColor: dropDownFieldColor,
+                  boxConstraints: BoxConstraints(
+                      maxWidth: width,
+                      minWidth: 120,
+                      maxHeight: height,
+                      minHeight: height - 30
+                  ),
+                  readOnly: true,
+                  suffixIcon: Icon(
+                    showDropDown.value ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                    size: 22,
+                    color: suffixIconColor,
+                  ),
+                  onTap: onTap ?? () {
+                    showDropDown.value = !showDropDown.value;
+                    overlayPortalController.toggle();
+                    },
+                  contentPadding: padding ?? EdgeInsets.symmetric(horizontal: 8),
+                  autoValidateMode: autoValidate != null && autoValidate!.value ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                ))
               ],
             ),
           ),
-        )
-        ),
-      ),
     );
   }
 }
@@ -102,23 +145,31 @@ class Menu extends StatelessWidget {
 
   final double? width;
   final List<DropDownEntry> dropDownList;
-  final RxInt selectedItemIndex;
-  final VoidCallback overlayToggleFunc;
+  final RxBool showDropDownValue;
+  final TextEditingController textEditingController;
+  final OverlayPortalController overlayPortalController;
+  final RxString value;
+  final Function? onChanged;
 
   const Menu({
     super.key,
     required this.dropDownList,
-    required this.selectedItemIndex,
-    required this.overlayToggleFunc,
+    required this.showDropDownValue,
+    required this.textEditingController,
+    required this.overlayPortalController,
     this.width,
+    required this.value,
+    this.onChanged
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
-      width: width ?? 200 ,
-      height: 150,
+      constraints: BoxConstraints(
+        maxWidth: width ?? 200,
+        maxHeight: 180,
+      ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.white,
@@ -135,49 +186,45 @@ class Menu extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(dropDownList.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: InkWell(
-                onTap: () {
-                  selectedItemIndex.value = index;
-                  overlayToggleFunc();
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dropDownList[index].label,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                    if(index != dropDownList.length - 1) Divider(thickness: 0.7, color: primaryGrey,)
-                  ],
+          children: dropDownList.isEmpty ? [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Center(
+                child: Text(
+                  lang_key.noDataAvailable.tr,
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
+            )] : List.generate(dropDownList.length, (index) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: InkWell(
+                  onTap: () {
+                    textEditingController.text = dropDownList[index].label!;
+                    value.value = dropDownList[index].value!;
+                    showDropDownValue.value = false;
+                    overlayPortalController.hide();
+                    if(onChanged != null) onChanged!();
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        dropDownList[index].label!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      if(index != dropDownList.length - 1) Divider(thickness: 0.7, color: primaryGrey,)
+                    ],
+                  ),
+                ),
             );
           }),
         ),
       ),
     );
   }
-}
-
-void tap(OverlayPortalController overlayPortalController, Rx<IconData> suffixIcon) {
-  overlayPortalController.toggle();
-  if(overlayPortalController.isShowing) {
-    suffixIcon.value = Icons.keyboard_arrow_up_rounded;
-  } else {
-    suffixIcon.value = Icons.keyboard_arrow_down_rounded;
-  }
-}
-
-class DropDownEntry {
-  final dynamic value;
-  final String label;
-
-  DropDownEntry({required this.value, required this.label});
 }
